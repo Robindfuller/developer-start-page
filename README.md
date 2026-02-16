@@ -56,6 +56,8 @@ Click the music note (♪) button to open the playlist manager. Use the on-scree
 ### Playlist controls
 
 - **Play / Pause / Prev / Next** – Standard transport controls. Playback automatically advances to the next track when one finishes.
+- **Resume on refresh** – If music was playing when you refresh the page, it tries to continue from the same track and position. Browsers often block autoplay without a user gesture; if it doesn’t auto-resume, click anywhere to start playback. To allow full auto-resume on refresh, run Chrome with:  
+  `chrome.exe --autoplay-policy=no-user-gesture-required`
 - **Remove** – Delete tracks from the playlist.
 - **Reorder** – Drag tracks to change the playback order.
 

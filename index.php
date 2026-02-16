@@ -16,6 +16,7 @@ if (file_exists($dataFile)) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Developer Start Page</title>
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/chicagoflf" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/webaudiofont@3.0.4/npm/dist/WebAudioFontPlayer.min.js"></script>
@@ -427,6 +428,72 @@ if (file_exists($dataFile)) {
       max-width: 14rem;
       font-size: 0.8rem;
     }
+    .midi-mode-group {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .midi-mode-sep {
+      color: var(--content-muted);
+      font-size: 0.65rem;
+      opacity: 0.6;
+    }
+    .midi-mode-btn .material-icons {
+      font-size: 1rem;
+      font-family: 'Material Icons' !important;
+    }
+    .midi-mode-btn {
+      font-size: 0.85rem;
+    }
+    .midi-mode-btn.active,
+    .midi-player-widget .midi-mode-btn.active {
+      background: var(--button-bg);
+      color: var(--button-fg, white);
+      border-color: var(--button-bg);
+    }
+    .midi-mode-btn.active:hover {
+      background: var(--button-hover);
+      border-color: var(--button-hover);
+      color: var(--button-fg, white);
+    }
+
+    .midi-progress-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .midi-progress-bar {
+      flex: 1;
+      min-width: 0;
+      height: 12px;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 1px 1px 0 var(--bevel-light), inset -1px -1px 0 var(--bevel-dark);
+    }
+    .midi-progress-bar:focus {
+      outline: none;
+      border-color: var(--button-bg);
+    }
+    .midi-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--button-hover, var(--button-bg));
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
+      pointer-events: none;
+    }
+    .midi-progress-bar:hover .midi-progress-fill {
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35), 0 0 8px var(--button-bg);
+    }
+    .midi-progress-time {
+      font-size: 0.7rem;
+      color: var(--content-muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 6.5rem;
+    }
     .midi-player-widget .midi-playlist-btn {
       padding: 0 0.25rem;
       font-size: 0.7rem;
@@ -512,6 +579,22 @@ if (file_exists($dataFile)) {
       overflow-y: auto;
       display: none;
       z-index: 101;
+      scrollbar-color: var(--card-border) var(--bevel-dark);
+      scrollbar-width: thin;
+    }
+    .theme-dropdown::-webkit-scrollbar {
+      width: 8px;
+    }
+    .theme-dropdown::-webkit-scrollbar-track {
+      background: var(--bevel-dark);
+    }
+    .theme-dropdown::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border: 2px solid var(--bevel-dark);
+      border-radius: 2px;
+    }
+    .theme-dropdown::-webkit-scrollbar-thumb:hover {
+      background: var(--button-bg);
     }
     .theme-dropdown.open { display: block; }
     .theme-dropdown-option {
@@ -756,6 +839,12 @@ if (file_exists($dataFile)) {
     #musicControlsModal .modal h3,
     #musicControlsModal .time-block-row {
       font-family: inherit;
+    }
+    #midiPlaylistList .time-block-row {
+      cursor: pointer;
+    }
+    #midiPlaylistList .time-block-row:hover {
+      background: var(--card-border);
     }
     #musicControlsModal input::placeholder {
       color: var(--content-muted);
@@ -1151,6 +1240,16 @@ if (file_exists($dataFile)) {
     html[data-theme="gb"] .midi-player-widget .midi-track-name {
       color: #0f380f;
     }
+    html[data-theme="gb"] .midi-player-widget .midi-mode-btn.active {
+      background: #9bbc0f;
+      color: #0f380f;
+      border-color: #9bbc0f;
+    }
+    html[data-theme="gb"] .midi-player-widget .midi-mode-btn.active:hover {
+      background: #8bac0f;
+      border-color: #8bac0f;
+      color: #0f380f;
+    }
     html[data-theme="gb"] .midi-player-widget,
     html[data-theme="gb"] .midi-player-widget *,
     html[data-theme="gb"] #musicControlsModal .modal,
@@ -1183,6 +1282,16 @@ if (file_exists($dataFile)) {
     html[data-theme="sms"] .scratch-pad-tab.active { background: #181830; color: #b8d4f0; }
     html[data-theme="sms"] .scratch-pad,
     html[data-theme="sms"] .scratch-pad * { font-family: 'VT323', monospace; }
+    html[data-theme="sms"] .midi-player-widget .midi-mode-btn.active {
+      background: #00aaff;
+      color: #181830;
+      border-color: #00aaff;
+    }
+    html[data-theme="sms"] .midi-player-widget .midi-mode-btn.active:hover {
+      background: #33bbff;
+      border-color: #33bbff;
+      color: #181830;
+    }
     html[data-theme="sms"] .midi-player-widget,
     html[data-theme="sms"] .midi-player-widget *,
     html[data-theme="sms"] #musicControlsModal .modal,
@@ -1368,6 +1477,16 @@ if (file_exists($dataFile)) {
     html[data-theme="macintosh"] .midi-player-widget .midi-track-name {
       color: #000000;
     }
+    html[data-theme="macintosh"] .midi-player-widget .midi-mode-btn.active {
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+    }
+    html[data-theme="macintosh"] .midi-player-widget .midi-mode-btn.active:hover {
+      background: #333333;
+      border-color: #333333;
+      color: #ffffff;
+    }
     html[data-theme="macintosh"] .edit-mode-btn.active {
       background: #000000;
       border-color: #000000;
@@ -1472,6 +1591,16 @@ if (file_exists($dataFile)) {
     html[data-theme="msdos"] .edit-mode-btn.active {
       background: #0000aa;
       border-color: #0000aa;
+      color: #ffffff;
+    }
+    html[data-theme="msdos"] .midi-player-widget .midi-mode-btn.active {
+      background: #0000aa;
+      color: #ffffff;
+      border-color: #0000aa;
+    }
+    html[data-theme="msdos"] .midi-player-widget .midi-mode-btn.active:hover {
+      background: #0000cc;
+      border-color: #0000cc;
       color: #ffffff;
     }
     html[data-theme="msdos"] .theme-select {
@@ -1746,6 +1875,12 @@ if (file_exists($dataFile)) {
       pointer-events: none;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
+    body.screensaver-active .modal-overlay {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
   </style>
 </head>
 <body>
@@ -1867,6 +2002,18 @@ if (file_exists($dataFile)) {
         <button class="midi-btn" id="midiPauseBtn" type="button" title="Pause" aria-label="Pause" style="display:none">⏸</button>
         <button class="midi-btn" id="midiNextBtn" type="button" title="Next" aria-label="Next">⏭</button>
         <span class="midi-track-name" id="midiTrackName">—</span>
+        <div class="midi-mode-group">
+          <span class="midi-mode-sep" aria-hidden="true">|</span>
+          <button class="midi-btn midi-mode-btn" id="midiShuffleBtn" type="button" title="Shuffle" aria-label="Shuffle" aria-pressed="false"><span class="material-icons">shuffle</span></button>
+          <button class="midi-btn midi-mode-btn" id="midiRepeatOneBtn" type="button" title="Repeat current song" aria-label="Repeat one" aria-pressed="false"><span class="material-icons">repeat_one</span></button>
+          <button class="midi-btn midi-mode-btn" id="midiRepeatAllBtn" type="button" title="Repeat playlist" aria-label="Repeat all" aria-pressed="false"><span class="material-icons">repeat</span></button>
+        </div>
+      </div>
+      <div class="midi-progress-wrap" style="margin-top:0.5rem">
+        <div class="midi-progress-bar" id="midiProgressBar" role="slider" aria-label="Track position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0" title="Click to seek">
+          <div class="midi-progress-fill" id="midiProgressFill"></div>
+        </div>
+        <span class="midi-progress-time" id="midiProgressTime">0:00 / 0:00</span>
       </div>
       <div class="music-modal-playlist" style="margin-top:1rem">
         <p class="empty-state-msg" id="midiPlaylistEmpty" style="display:none">No tracks. Add a MIDI file via URL or upload.</p>
@@ -2099,6 +2246,7 @@ if (file_exists($dataFile)) {
       let mystifyLastDraw = 0;
       let mystifyPoints = [];
       let mystifyHistory = [];
+      let manualActivationGraceUntil = 0;
 
       const MYSTIFY_THEME = {
         ps5: { fps: 60, scale: 1 },
@@ -2218,9 +2366,10 @@ if (file_exists($dataFile)) {
         mystifyHistory = [];
       }
 
-      function enterScreensaver() {
+      function enterScreensaver(manualActivation) {
         if (window._screensaverActive) return;
         window._screensaverActive = true;
+        manualActivationGraceUntil = manualActivation ? Date.now() + 2000 : 0;
         window._screensaverClockEl = screensaverClock;
         window._screensaverDayBarsEl = screensaverDayBars;
         document.body.classList.add('screensaver-active');
@@ -2252,7 +2401,7 @@ if (file_exists($dataFile)) {
       const screensaverBtn = document.getElementById('screensaverBtn');
       if (screensaverBtn) {
         screensaverBtn.addEventListener('click', function() {
-          enterScreensaver();
+          enterScreensaver(true);
         });
       }
       resizeMystify();
@@ -2264,7 +2413,14 @@ if (file_exists($dataFile)) {
         mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
       })();
       resetIdleTimer();
-      ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(function(ev) {
+      document.addEventListener('mousemove', function() {
+        if (window._screensaverActive) {
+          if (manualActivationGraceUntil > 0 && Date.now() < manualActivationGraceUntil) return;
+          exitScreensaver();
+        }
+        resetIdleTimer();
+      });
+      ['mousedown', 'keydown', 'touchstart', 'scroll'].forEach(function(ev) {
         document.addEventListener(ev, function() {
           if (window._screensaverActive) exitScreensaver();
           resetIdleTimer();
@@ -2550,8 +2706,10 @@ if (file_exists($dataFile)) {
         render();
         updateDayBars();
         if (window._midiPlayerRefresh) window._midiPlayerRefresh();
+        if (window._midiPlayerTryRestore) window._midiPlayerTryRestore();
       }).catch(() => {
         render();
+        if (window._midiPlayerTryRestore) window._midiPlayerTryRestore();
       });
     }
 
@@ -2993,6 +3151,61 @@ if (file_exists($dataFile)) {
       const prevBtn = document.getElementById('midiPrevBtn');
       const nextBtn = document.getElementById('midiNextBtn');
       const trackNameEl = document.getElementById('midiTrackName');
+      const shuffleBtn = document.getElementById('midiShuffleBtn');
+      const repeatOneBtn = document.getElementById('midiRepeatOneBtn');
+      const repeatAllBtn = document.getElementById('midiRepeatAllBtn');
+      const progressBar = document.getElementById('midiProgressBar');
+      const progressFill = document.getElementById('midiProgressFill');
+      const progressTime = document.getElementById('midiProgressTime');
+
+      function formatMidiTime(sec) {
+        if (sec == null || !isFinite(sec) || sec < 0) return '0:00';
+        var m = Math.floor(sec / 60);
+        var s = Math.floor(sec % 60);
+        return m + ':' + (s < 10 ? '0' : '') + s;
+      }
+      function updateProgressBar() {
+        var current = midiCurrentTime;
+        var total = midiSong ? midiSong.duration : 0;
+        var pct = total > 0 ? Math.min(100, (current / total) * 100) : 0;
+        if (progressFill) progressFill.style.width = pct + '%';
+        if (progressTime) progressTime.textContent = formatMidiTime(current) + ' / ' + formatMidiTime(total);
+        if (progressBar) progressBar.setAttribute('aria-valuenow', Math.round(pct));
+      }
+
+      function loadMidiMode() {
+        var s = localStorage.getItem('devStartPageMidiShuffle') === '1';
+        var o = localStorage.getItem('devStartPageMidiRepeatOne') === '1';
+        var a = localStorage.getItem('devStartPageMidiRepeatAll');
+        if (a === null) a = true; else a = a === '1';
+        if (s && !o && !a) { midiShuffle = true; midiRepeatOne = false; midiRepeatAll = false; }
+        else if (!s && o && !a) { midiShuffle = false; midiRepeatOne = true; midiRepeatAll = false; }
+        else { midiShuffle = false; midiRepeatOne = false; midiRepeatAll = true; }
+      }
+      function saveMidiMode() {
+        localStorage.setItem('devStartPageMidiShuffle', midiShuffle ? '1' : '0');
+        localStorage.setItem('devStartPageMidiRepeatOne', midiRepeatOne ? '1' : '0');
+        localStorage.setItem('devStartPageMidiRepeatAll', midiRepeatAll ? '1' : '0');
+      }
+      function updateModeButtons() {
+        if (shuffleBtn) {
+          shuffleBtn.classList.toggle('active', midiShuffle);
+          shuffleBtn.setAttribute('aria-pressed', String(midiShuffle));
+        }
+        if (repeatOneBtn) {
+          repeatOneBtn.classList.toggle('active', midiRepeatOne);
+          repeatOneBtn.setAttribute('aria-pressed', String(midiRepeatOne));
+        }
+        if (repeatAllBtn) {
+          repeatAllBtn.classList.toggle('active', midiRepeatAll);
+          repeatAllBtn.setAttribute('aria-pressed', String(midiRepeatAll));
+        }
+      }
+      let midiShuffle = false;
+      let midiRepeatOne = false;
+      let midiRepeatAll = true;
+      loadMidiMode();
+      updateModeButtons();
 
       let midiContext = null;
       let midiPlayer = null;
@@ -3005,6 +3218,7 @@ if (file_exists($dataFile)) {
       let midiPlaying = false;
       let midiOnEnded = null;
       let wasPlayingBeforeTabHide = false;
+      let resumeFromTime = 0;
 
       function getPlaylist() {
         return (data.midiPlaylist || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -3036,15 +3250,83 @@ if (file_exists($dataFile)) {
         var btn = document.getElementById('musicCharmBtn');
         if (!btn) return;
         if (midiPlaying) {
+          var tracks = getPlaylist();
+          var track = tracks[midiCurrentTrackIndex];
+          var trackName = track ? (track.name || track.url) : '';
           btn.textContent = '\u25B6';
           btn.classList.add('music-charm-playing');
+          btn.title = trackName ? 'Now playing: ' + trackName : 'Music controls';
+          btn.setAttribute('aria-label', trackName ? 'Now playing: ' + trackName : 'Music controls');
         } else {
           btn.textContent = '\u266A';
           btn.classList.remove('music-charm-playing');
+          btn.title = 'Music controls';
+          btn.setAttribute('aria-label', 'Music controls');
         }
       }
 
       let midiCurrentTrackIndex = 0;
+      let lastMidiResumeSave = 0;
+      let pendingResumeOnInteraction = false;
+
+      function saveMidiResumeState() {
+        try {
+          var tracks = getPlaylist();
+          if (tracks.length === 0) return;
+          var idx = Math.max(0, Math.min(midiCurrentTrackIndex, tracks.length - 1));
+          localStorage.setItem('devStartPageMidiTrackIndex', String(idx));
+          localStorage.setItem('devStartPageMidiPosition', String(midiCurrentTime));
+          localStorage.setItem('devStartPageMidiWasPlaying', midiPlaying ? '1' : '0');
+        } catch (e) {}
+      }
+      function tryRestoreMidiPlayback() {
+        if (window._midiRestoreAttempted) return;
+        window._midiRestoreAttempted = true;
+        try {
+          var wasPlaying = localStorage.getItem('devStartPageMidiWasPlaying') === '1';
+          var idxStr = localStorage.getItem('devStartPageMidiTrackIndex');
+          var posStr = localStorage.getItem('devStartPageMidiPosition');
+          var tracks = getPlaylist();
+          if (tracks.length === 0 || idxStr == null) return;
+          var idx = Math.max(0, Math.min(parseInt(idxStr, 10) || 0, tracks.length - 1));
+          var pos = parseFloat(posStr) || 0;
+          if (pos < 0) pos = 0;
+          midiCurrentTrackIndex = idx;
+          if (wasPlaying) {
+            pendingResumeOnInteraction = true;
+            playCurrent(pos, true);
+            function doResumeOnInteraction() {
+              if (!pendingResumeOnInteraction) return;
+              if (!midiSong) return;
+              pendingResumeOnInteraction = false;
+              document.removeEventListener('click', doResumeOnInteraction, true);
+              document.removeEventListener('mousedown', doResumeOnInteraction, true);
+              document.removeEventListener('keydown', doResumeOnInteraction, true);
+              document.removeEventListener('touchstart', doResumeOnInteraction, true);
+              if (midiPlaying) {
+                if (midiContext && midiContext.state === 'suspended') midiContext.resume();
+                return;
+              }
+              midiPlaying = true;
+              playBtn.style.display = 'none';
+              pauseBtn.style.display = '';
+              updateScreensaverMidiTrack();
+              updateMusicCharmIcon();
+              if (midiContext) {
+                midiContext.resume().then(function() { midiRaf = requestAnimationFrame(tick); });
+              } else {
+                midiRaf = requestAnimationFrame(tick);
+              }
+            }
+            document.addEventListener('click', doResumeOnInteraction, true);
+            document.addEventListener('mousedown', doResumeOnInteraction, true);
+            document.addEventListener('keydown', doResumeOnInteraction, true);
+            document.addEventListener('touchstart', doResumeOnInteraction, true);
+          } else {
+            playCurrent(pos, false);
+          }
+        } catch (e) {}
+      }
 
       var SOUNDBLASTER_BASE = 'https://surikov.github.io/webaudiofontdata/sound/';
       function preferSoundBlasterInstrument(loader, program) {
@@ -3132,11 +3414,18 @@ if (file_exists($dataFile)) {
           }
           sendNotes(midiSong, midiSongStart, start, midiCurrentTime);
         }
+        updateProgressBar();
+        if (midiPlaying && Date.now() - lastMidiResumeSave > 2000) {
+          lastMidiResumeSave = Date.now();
+          saveMidiResumeState();
+        }
         midiRaf = requestAnimationFrame(tick);
       }
 
-      function loadAndPlayMidi(url) {
+      function loadAndPlayMidi(url, startTime, autoPlay) {
         if (!window.MIDIFile || !window.WebAudioFontPlayer) return;
+        var resumeAt = typeof startTime === 'number' && startTime > 0 ? startTime : 0;
+        if (autoPlay === undefined) autoPlay = true;
         fetch(url).then(r => r.arrayBuffer()).then(function(arrayBuffer) {
           var midiFile = new window.MIDIFile(arrayBuffer);
           var song = midiFile.parseSong();
@@ -3159,14 +3448,16 @@ if (file_exists($dataFile)) {
           midiPlayer.loader.waitLoad(function() {
             midiContext.resume();
             midiSong = song;
-            midiSongStart = midiContext.currentTime;
-            midiCurrentTime = 0;
-            midiPlaying = true;
-            playBtn.style.display = 'none';
-            pauseBtn.style.display = '';
+            resumeAt = Math.min(resumeAt, Math.max(0, song.duration - 0.001));
+            midiSongStart = midiContext.currentTime - resumeAt;
+            midiCurrentTime = resumeAt;
+            midiPlaying = !!autoPlay;
+            playBtn.style.display = autoPlay ? 'none' : '';
+            pauseBtn.style.display = autoPlay ? '' : 'none';
             updateScreensaverMidiTrack();
             updateMusicCharmIcon();
-            midiRaf = requestAnimationFrame(tick);
+            updateProgressBar();
+            if (autoPlay) midiRaf = requestAnimationFrame(tick);
           });
         }).catch(function(err) {
           console.error('MIDI load error:', err);
@@ -3174,18 +3465,20 @@ if (file_exists($dataFile)) {
         });
       }
 
-      function stopMidi() {
+      function stopMidi(skipSave) {
         midiPlaying = false;
         if (midiRaf) cancelAnimationFrame(midiRaf);
         midiRaf = null;
         if (midiPlayer && midiContext) midiPlayer.cancelQueue(midiContext);
         pauseBtn.style.display = 'none';
         playBtn.style.display = '';
+        if (!skipSave) saveMidiResumeState();
         updateScreensaverMidiTrack();
         updateMusicCharmIcon();
+        updateProgressBar();
       }
 
-      function playCurrent() {
+      function playCurrent(startTime, autoPlay) {
         const tracks = getPlaylist();
         if (tracks.length === 0) return;
         midiCurrentTrackIndex = Math.max(0, Math.min(midiCurrentTrackIndex, tracks.length - 1));
@@ -3193,19 +3486,37 @@ if (file_exists($dataFile)) {
         var base = window.location.href.split('/').slice(0, -1).join('/') + '/';
         var url = track.url.startsWith('http') ? track.url : (base + track.url.replace(/^\//, ''));
         updateTrackDisplay();
-        loadAndPlayMidi(url);
+        loadAndPlayMidi(url, startTime, autoPlay);
       }
 
       midiOnEnded = function() {
         const tracks = getPlaylist();
         if (tracks.length === 0) return;
-        midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        if (midiRepeatOne) {
+          playCurrent();
+          return;
+        }
+        if (midiShuffle) {
+          if (tracks.length > 1) {
+            let next = Math.floor(Math.random() * tracks.length);
+            while (next === midiCurrentTrackIndex) next = Math.floor(Math.random() * tracks.length);
+            midiCurrentTrackIndex = next;
+          }
+        } else {
+          const atLast = midiCurrentTrackIndex >= tracks.length - 1;
+          if (atLast && !midiRepeatAll) {
+            stopMidi();
+            return;
+          }
+          midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        }
         playCurrent();
       };
 
       playBtn.addEventListener('click', function() {
+        if (pendingResumeOnInteraction && midiSong) return;
         const tracks = getPlaylist();
-        if (tracks.length === 0) { playlistModal.classList.add('open'); return; }
+        if (tracks.length === 0) { if (musicModal) musicModal.classList.add('open'); return; }
         playCurrent();
       });
       pauseBtn.addEventListener('click', stopMidi);
@@ -3220,18 +3531,92 @@ if (file_exists($dataFile)) {
         stopMidi();
         const tracks = getPlaylist();
         if (tracks.length === 0) return;
-        midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        if (midiShuffle && tracks.length > 1) {
+          let next = Math.floor(Math.random() * tracks.length);
+          while (next === midiCurrentTrackIndex) next = Math.floor(Math.random() * tracks.length);
+          midiCurrentTrackIndex = next;
+        } else if (!midiShuffle) {
+          midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        }
         playCurrent();
       });
+
+      if (shuffleBtn) {
+        shuffleBtn.addEventListener('click', function() {
+          if (midiShuffle) return;
+          midiShuffle = true;
+          midiRepeatOne = false;
+          midiRepeatAll = false;
+          saveMidiMode();
+          updateModeButtons();
+        });
+      }
+      if (repeatOneBtn) {
+        repeatOneBtn.addEventListener('click', function() {
+          if (midiRepeatOne) return;
+          midiShuffle = false;
+          midiRepeatOne = true;
+          midiRepeatAll = false;
+          saveMidiMode();
+          updateModeButtons();
+        });
+      }
+      if (repeatAllBtn) {
+        repeatAllBtn.addEventListener('click', function() {
+          if (midiRepeatAll) return;
+          midiShuffle = false;
+          midiRepeatOne = false;
+          midiRepeatAll = true;
+          saveMidiMode();
+          updateModeButtons();
+        });
+      }
+
+      if (progressBar) {
+        progressBar.addEventListener('click', function(e) {
+          const tracks = getPlaylist();
+          if (tracks.length === 0 || !midiSong) return;
+          const rect = progressBar.getBoundingClientRect();
+          const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+          const seekTime = pct * midiSong.duration;
+          const wasPlaying = midiPlaying;
+          stopMidi();
+          playCurrent(seekTime, wasPlaying);
+        });
+        progressBar.addEventListener('keydown', function(e) {
+          if (!midiSong || !progressBar.getAttribute('aria-valuenow')) return;
+          const step = e.shiftKey ? 10 : 1;
+          let pct = parseInt(progressBar.getAttribute('aria-valuenow') || '0', 10);
+          if (e.key === 'ArrowLeft' || e.key === 'Home') pct = e.key === 'Home' ? 0 : Math.max(0, pct - step);
+          else if (e.key === 'ArrowRight' || e.key === 'End') pct = e.key === 'End' ? 100 : Math.min(100, pct + step);
+          else return;
+          const seekTime = (pct / 100) * midiSong.duration;
+          const wasPlaying = midiPlaying;
+          stopMidi();
+          playCurrent(seekTime, wasPlaying);
+          e.preventDefault();
+        });
+      }
 
       function renderPlaylist() {
         const tracks = getPlaylist();
         playlistEmpty.style.display = tracks.length === 0 ? 'block' : 'none';
         playlist.innerHTML = tracks.map(function(t, i) {
-          return '<div class="time-block-row" data-id="' + escapeHtml(t.id) + '"><span>' + escapeHtml(t.name || t.url) + '</span><button class="tb-delete" type="button">Remove</button></div>';
+          return '<div class="time-block-row" data-id="' + escapeHtml(t.id) + '" data-index="' + i + '"><span>' + escapeHtml(t.name || t.url) + '</span><button class="tb-delete" type="button">Remove</button></div>';
         }).join('');
+        playlist.querySelectorAll('.time-block-row').forEach(function(row) {
+          row.addEventListener('click', function(e) {
+            if (e.target.closest('.tb-delete')) return;
+            var idx = parseInt(row.dataset.index, 10);
+            if (isNaN(idx) || idx < 0) return;
+            midiCurrentTrackIndex = idx;
+            stopMidi();
+            playCurrent();
+          });
+        });
         playlist.querySelectorAll('.tb-delete').forEach(function(btn) {
-          btn.addEventListener('click', function() {
+          btn.addEventListener('click', function(e) {
+            e.stopPropagation();
             api('removeMidiTrack', { id: btn.closest('.time-block-row').dataset.id }).then(function() {
               data.midiPlaylist = (data.midiPlaylist || []).filter(function(x) { return x.id !== btn.closest('.time-block-row').dataset.id; });
               renderPlaylist();
@@ -3245,22 +3630,29 @@ if (file_exists($dataFile)) {
       if (musicCharmBtn) {
         musicCharmBtn.addEventListener('click', function() {
           renderPlaylist();
+          updateProgressBar();
           if (musicModal) musicModal.classList.add('open');
         });
       }
       if (musicModalCloseBtn) musicModalCloseBtn.addEventListener('click', function() { if (musicModal) musicModal.classList.remove('open'); });
       if (musicModal) musicModal.addEventListener('click', function(e) { if (e.target === musicModal) musicModal.classList.remove('open'); });
 
+      window.addEventListener('pagehide', saveMidiResumeState);
+
       document.addEventListener('visibilitychange', function() {
         if (document.hidden) {
           if (midiPlaying) {
-            stopMidi();
+            resumeFromTime = midiCurrentTime;
+            saveMidiResumeState();
+            stopMidi(true);
             wasPlayingBeforeTabHide = true;
           }
         } else {
           if (wasPlayingBeforeTabHide) {
             wasPlayingBeforeTabHide = false;
-            playCurrent();
+            var timeToResume = resumeFromTime;
+            resumeFromTime = 0;
+            playCurrent(timeToResume);
           }
         }
       });
@@ -3315,6 +3707,7 @@ if (file_exists($dataFile)) {
         updateTrackDisplay();
         updateNavButtons();
       };
+      window._midiPlayerTryRestore = tryRestoreMidiPlayback;
       window._midiPlayerUpdateScreensaverTrack = updateScreensaverMidiTrack;
 
       updateTrackDisplay();
