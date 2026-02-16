@@ -1019,6 +1019,7 @@ if (file_exists($dataFile)) {
       box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05), 0 0 10px rgba(0, 255, 255, 0.1);
     }
     html[data-theme="tron"] .link-card:hover {
+      background: rgba(0, 255, 255, 0.12);
       box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.2);
     }
     html[data-theme="tron"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
@@ -1091,6 +1092,7 @@ if (file_exists($dataFile)) {
       box-shadow: inset 0 0 20px rgba(255, 0, 64, 0.05), 0 0 10px rgba(255, 0, 64, 0.1);
     }
     html[data-theme="tron-ares"] .link-card:hover {
+      background: rgba(255, 0, 64, 0.12);
       box-shadow: inset 0 0 20px rgba(255, 0, 64, 0.1), 0 0 15px rgba(255, 0, 64, 0.2);
     }
     html[data-theme="tron-ares"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
@@ -1912,7 +1914,7 @@ if (file_exists($dataFile)) {
       <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
       <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
       <div class="theme-switcher-charms">
-        <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme" aria-label="Theme">&#9881;</button>
+        <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme (Alt+Shift+T to cycle)" aria-label="Theme">&#9881;</button>
         <div class="theme-dropdown" id="themeDropdown">
           <button class="theme-dropdown-option" data-theme="megadrive">16-bit</button>
           <button class="theme-dropdown-option" data-theme="tron">Tron</button>
@@ -2125,6 +2127,23 @@ if (file_exists($dataFile)) {
         });
       });
       document.addEventListener('click', function() { dropdown.classList.remove('open'); });
+    })();
+
+    (function initThemeShortcut() {
+      var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'sms', 'gb', 'ps5', 'macintosh', 'msdos'];
+      document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var current = html.getAttribute('data-theme') || 'megadrive';
+          var idx = THEME_ORDER.indexOf(current);
+          var next = THEME_ORDER[(idx + 1) % THEME_ORDER.length];
+          if (themeSelect) {
+            themeSelect.value = next;
+            themeSelect.dispatchEvent(new Event('change'));
+          }
+        }
+      });
     })();
     const clockEl = document.getElementById('clock');
     let data = <?= json_encode($initialData) ?>;
