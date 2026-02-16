@@ -109,9 +109,9 @@ RUN
 
 - Max 10,000 execution steps (prevents infinite loops from hanging the tab)
 - Output truncated at 50,000 characters
-- No `IF`, `FOR`, `INPUT`, or other advanced statementsit's intentionally minimal
+- No `IF`, `FOR`, `INPUT`, or other advanced statements ? ?it's intentionally minimal
 
-Its It's a nostalgic throwback: line numbers, `PRINT`, `GOTO`, and `LET` in a modern start page.
+It's a nostalgic throwback: line numbers, `PRINT`, `GOTO`, and `LET` in a modern start page.
 
 ## Screen Saver
 
