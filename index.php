@@ -962,10 +962,10 @@ if (file_exists($dataFile)) {
     .scratch-pad-run-js-btn:hover { background: var(--content); color: var(--bg); }
     .scratch-pad-stop-btn {
       background: var(--bg);
-      color: #c44;
+      color: var(--card-border);
       border-color: var(--bg);
     }
-    .scratch-pad-stop-btn:hover { background: #c44; color: white; }
+    .scratch-pad-stop-btn:hover:not(:disabled) { background: var(--card-border); color: var(--button-fg, var(--content)); }
     .scratch-pad-title { opacity: 0.9; }
     .scratch-pad-body {
       flex: 1;
@@ -1080,8 +1080,6 @@ if (file_exists($dataFile)) {
     html[data-theme="tron"] .scratch-pad-tab.active { background: #0a0e17; color: #00ffff; }
     html[data-theme="tron"] .scratch-pad-maximize-btn { background: #0a0e17; color: #00ffff; border-color: #00ffff; }
     html[data-theme="tron"] .scratch-pad-maximize-btn:hover { background: #00ffff; color: #0a0e17; }
-    html[data-theme="tron"] .scratch-pad-stop-btn { color: #ff4466; background: #0a0e17; border-color: #ff4466; }
-    html[data-theme="tron"] .scratch-pad-stop-btn:hover:not(:disabled) { background: #ff4466; color: #0a0e17; }
 
     /* Tron Ares theme overrides */
     html[data-theme="tron-ares"] .clock {
@@ -1662,12 +1660,12 @@ if (file_exists($dataFile)) {
       color: #ffffff;
     }
     html[data-theme="msdos"] .scratch-pad-stop-btn {
-      color: #ff8080;
+      color: #ffffff;
       background: transparent;
       border: 1px solid rgba(255,255,255,0.5);
     }
     html[data-theme="msdos"] .scratch-pad-stop-btn:hover:not(:disabled) {
-      background: rgba(255, 0, 0, 0.3);
+      background: rgba(255,255,255,0.2);
       color: #ffffff;
     }
     html[data-theme="msdos"] .section-title { color: #404040; }
