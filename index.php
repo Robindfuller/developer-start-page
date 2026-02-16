@@ -1,0 +1,2571 @@
+<?php
+$dataFile = __DIR__ . '/data.json';
+$initialData = ['categories' => []];
+if (file_exists($dataFile)) {
+    $json = file_get_contents($dataFile);
+    $decoded = json_decode($json, true);
+    if ($decoded) {
+        $initialData = $decoded;
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Start Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/chicagoflf" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <style>
+    :root {
+      --bg: #1a1630;
+      --bg-alt: #2a2450;
+      --content: #e0e0ff;
+      --content-muted: #a0a0c0;
+      --button-bg: #ff6600;
+      --button-hover: #ff8833;
+      --card-bg: #2a2450;
+      --card-border: #4a4480;
+      --bevel-light: #5a54a0;
+      --bevel-dark: #1a1630;
+    }
+
+    /* Tron theme */
+    html[data-theme="tron"] {
+      --bg: #0a0e17;
+      --bg-alt: #0d1520;
+      --content: #00ffff;
+      --content-muted: #00b8d4;
+      --button-bg: #00ffff;
+      --button-hover: #00e5ff;
+      --card-bg: rgba(0, 200, 255, 0.05);
+      --card-border: #00ffff;
+      --bevel-light: rgba(0, 255, 255, 0.3);
+      --bevel-dark: #050810;
+    }
+
+    /* Tron Ares theme (red) */
+    html[data-theme="tron-ares"] {
+      --bg: #170a0a;
+      --bg-alt: #200d0d;
+      --content: #ff0040;
+      --content-muted: #d40038;
+      --button-bg: #ff0040;
+      --button-hover: #ff3366;
+      --card-bg: rgba(255, 0, 64, 0.05);
+      --card-border: #ff0040;
+      --bevel-light: rgba(255, 0, 64, 0.3);
+      --bevel-dark: #100505;
+    }
+
+    /* Matrix theme */
+    html[data-theme="matrix"] {
+      --bg: #0d0d0d;
+      --bg-alt: #0a0a0a;
+      --content: #00ff41;
+      --content-muted: #00cc34;
+      --button-bg: #00ff41;
+      --button-hover: #33ff66;
+      --card-bg: rgba(0, 255, 65, 0.05);
+      --card-border: #00ff41;
+      --bevel-light: rgba(0, 255, 65, 0.2);
+      --bevel-dark: #050505;
+    }
+
+    /* Sega Master System theme (8-bit) */
+    html[data-theme="sms"] {
+      --bg: #181830;
+      --bg-alt: #282850;
+      --content: #b8d4f0;
+      --content-muted: #8098b8;
+      --button-bg: #00aaff;
+      --button-hover: #33bbff;
+      --card-bg: #202048;
+      --card-border: #4040a0;
+      --bevel-light: #6060c0;
+      --bevel-dark: #101030;
+    }
+
+    /* PlayStation 5 theme (ultra modern) */
+    html[data-theme="ps5"] {
+      --bg: #0c0c0c;
+      --bg-alt: #121212;
+      --content: #ffffff;
+      --content-muted: #8e8e93;
+      --button-bg: #006fcd;
+      --button-hover: #0077e6;
+      --card-bg: rgba(255, 255, 255, 0.04);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --bevel-light: rgba(255, 255, 255, 0.08);
+      --bevel-dark: #050505;
+    }
+
+    /* Original Game Boy theme */
+    html[data-theme="gb"] {
+      --bg: #9bbc0f;
+      --bg-alt: #8bac0f;
+      --content: #0f380f;
+      --content-muted: #306230;
+      --button-bg: #0f380f;
+      --button-hover: #306230;
+      --card-bg: #8bac0f;
+      --card-border: #306230;
+      --bevel-light: #9bbc0f;
+      --bevel-dark: #0f380f;
+    }
+
+    /* Original Macintosh (1984) theme – 1-bit black and white */
+    html[data-theme="macintosh"] {
+      --bg: #ffffff;
+      --bg-alt: #ffffff;
+      --content: #000000;
+      --content-muted: #000000;
+      --button-bg: #000000;
+      --button-hover: #000000;
+      --card-bg: #ffffff;
+      --card-border: #000000;
+      --bevel-light: #ffffff;
+      --bevel-dark: #000000;
+    }
+
+    /* MS-DOS theme – mid-90s window (gray chrome, black/white content, subtle color) */
+    html[data-theme="msdos"] {
+      --bg: #c0c0c0;
+      --bg-alt: #a8a8a8;
+      --content: #000000;
+      --content-muted: #404040;
+      --button-bg: #c0c0c0;
+      --button-hover: #d4d0c8;
+      --card-bg: #ffffff;
+      --card-border: #808080;
+      --bevel-light: #ffffff;
+      --bevel-dark: #808080;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      background-image: 
+        repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 50%, var(--bg) 100%);
+      color: var(--content);
+      font-family: 'Silkscreen', monospace;
+      font-size: 14px;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    html[data-theme="tron"] body {
+      background-image: 
+        linear-gradient(rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 50%, var(--bg) 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+    }
+    html[data-theme="tron"] body,
+    html[data-theme="tron"] *,
+    html[data-theme="tron-ares"] body,
+    html[data-theme="tron-ares"] * {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    html[data-theme="tron-ares"] body {
+      background-image: 
+        linear-gradient(rgba(255, 0, 64, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 64, 0.04) 1px, transparent 1px),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 50%, var(--bg) 100%);
+      background-size: 20px 20px, 20px 20px, 100% 100%;
+    }
+    html[data-theme="matrix"] body,
+    html[data-theme="matrix"] * {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    html[data-theme="matrix"] body {
+      background-image: linear-gradient(180deg, var(--bg) 0%, var(--bg-alt) 100%);
+      position: relative;
+    }
+    html[data-theme="matrix"] body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 2px,
+        rgba(0, 0, 0, 0.25) 2px,
+        rgba(0, 0, 0, 0.25) 4px
+      );
+      background-size: 100% 4px;
+    }
+    html[data-theme="ps5"] body,
+    html[data-theme="ps5"] * {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="ps5"] body {
+      background: linear-gradient(165deg, #0c0c0c 0%, #121212 40%, #0a0a0a 100%);
+      background-attachment: fixed;
+    }
+    html[data-theme="macintosh"] body,
+    html[data-theme="macintosh"] * {
+      font-family: 'ChicagoFLF', Chicago, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="macintosh"] body {
+      background: #ffffff;
+      background-image: none;
+    }
+    html[data-theme="msdos"] body,
+    html[data-theme="msdos"] * {
+      font-family: 'JetBrains Mono', 'Consolas', 'Courier New', monospace;
+    }
+    html[data-theme="msdos"] body {
+      background: #c0c0c0;
+      background-image: none;
+    }
+    .app { min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem; }
+
+    .sidebar { width: 100%; max-width: 900px; display: flex; flex-direction: column; min-height: calc(100vh - 4rem); }
+
+    .clock {
+      text-align: center;
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--content);
+      margin-bottom: 1rem;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Silkscreen', monospace;
+      text-shadow: 2px 2px 0 var(--bevel-dark);
+    }
+
+    .day-bars {
+      margin-bottom: 1.5rem;
+    }
+    .day-bar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .day-bar-wrap .edit-blocks-btn {
+      display: none;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.6rem;
+      font-family: inherit;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content-muted);
+      cursor: pointer;
+    }
+    .edit-mode .day-bar-wrap .edit-blocks-btn { display: inline-block; }
+    .edit-blocks-btn:hover { color: var(--content); background: var(--card-border); }
+    .day-bar {
+      text-align: center;
+      flex: 1;
+      min-width: 200px;
+    }
+    .day-bar-label {
+      font-size: 0.7rem;
+      color: var(--content-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      font-family: 'Silkscreen', monospace;
+      text-transform: uppercase;
+    }
+    .day-bar-track {
+      height: 28px;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--bevel-dark);
+      border: 3px solid var(--card-border);
+      box-shadow: inset 2px 2px 0 var(--bevel-light), inset -2px -2px 0 var(--bevel-dark);
+    }
+    .day-bar-segment {
+      flex: 1;
+      min-width: 0;
+      background: rgba(0, 0, 0, 0.5);
+      transition: background 0.3s;
+    }
+
+    .sidebar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .theme-switcher {
+      display: flex;
+      align-items: center;
+    }
+    .theme-select {
+      padding: 0.35rem 0.6rem;
+      padding-right: 1.75rem;
+      font-size: 0.7rem;
+      font-family: inherit;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.4rem center;
+      border-radius: 0;
+      min-width: 8rem;
+    }
+    .theme-select:hover {
+      border-color: var(--button-bg);
+    }
+    .theme-select:focus {
+      outline: none;
+      border-color: var(--button-bg);
+      box-shadow: 0 0 0 2px var(--card-bg);
+    }
+
+    .fixed-buttons {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .edit-mode-btn,
+    .screensaver-btn {
+      width: 2rem;
+      height: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      color: var(--content-muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-family: 'Silkscreen', monospace;
+      opacity: 0.7;
+      box-shadow: 2px 2px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
+      transition: opacity 0.15s, background 0.15s;
+    }
+    .edit-mode-btn:hover,
+    .screensaver-btn:hover { opacity: 1; background: var(--card-border); }
+    .edit-mode-btn.active { opacity: 1; background: var(--button-bg); border-color: var(--button-bg); color: white; box-shadow: 2px 2px 0 #994400; }
+
+    h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--content); font-family: 'Silkscreen', monospace; letter-spacing: 0.05em; }
+
+    section { margin-bottom: 2rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--content-muted);
+      font-family: 'Silkscreen', monospace;
+    }
+    .add-item-btn {
+      display: none;
+      background: var(--button-bg); color: white; border: none;
+      padding: 0.3rem 0.6rem; font-size: 0.65rem;
+      cursor: pointer;
+      font-family: 'Silkscreen', monospace;
+      border: 2px solid #cc5500;
+      box-shadow: 2px 2px 0 #994400;
+    }
+    .add-item-btn:hover { background: var(--button-hover); }
+    .edit-mode .add-item-btn { display: inline-block; }
+
+    .add-category-row {
+      margin-bottom: 1.5rem;
+      display: none;
+    }
+    .edit-mode .add-category-row,
+    .empty-categories .add-category-row { display: block; }
+    .add-category-row .add-category-btn {
+      display: inline-block;
+      background: var(--button-bg);
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: 'Silkscreen', monospace;
+      border: 2px solid #cc5500;
+      box-shadow: 2px 2px 0 #994400;
+    }
+    .add-category-row .add-category-btn:hover { background: var(--button-hover); }
+    .empty-state-msg {
+      color: var(--content-muted);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .links {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 0.5rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding-bottom: 0.25rem;
+      scroll-snap-type: x mandatory;
+    }
+    .links::-webkit-scrollbar { display: none; }
+    .link-card {
+      flex-shrink: 0;
+      flex: 0 0 calc((100% - 2rem) / 5);
+      min-width: calc((100% - 2rem) / 5);
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: space-between;
+      min-height: 0;
+      aspect-ratio: 3/2;
+      padding: 0.65rem;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      color: var(--content);
+      font-size: 0.8rem;
+      font-weight: 400;
+      font-family: 'Silkscreen', monospace;
+      text-align: left;
+      box-shadow: inset 2px 2px 0 var(--bevel-light), inset -2px -2px 0 var(--bevel-dark), 3px 3px 0 var(--bevel-dark);
+      transition: background 0.15s, box-shadow 0.15s;
+    }
+    .link-card:hover { background: #3a3470; box-shadow: inset 2px 2px 0 var(--bevel-light), inset -2px -2px 0 var(--bevel-dark), 2px 2px 0 var(--bevel-dark); }
+
+    .edit-mode .link-card { cursor: grab; }
+    .edit-mode .link-card:active { cursor: grabbing; }
+    .link-card.sortable-ghost { opacity: 0.4; }
+
+    .link-card-content { flex: 1; min-width: 0; }
+
+    .link-actions {
+      display: flex;
+      gap: 0.2rem;
+      margin-top: 0.35rem;
+      width: 100%;
+    }
+    .edit-item-btn, .delete-item-btn {
+      display: none;
+      width: 1.5rem; height: 1.5rem;
+      align-items: center; justify-content: center;
+      border: 2px solid; cursor: pointer;
+      font-size: 0.65rem; font-family: 'Silkscreen', monospace;
+      box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    }
+    .edit-item-btn { border-color: #2266bb; }
+    .delete-item-btn { border-color: #992222; }
+    .edit-mode .edit-item-btn, .edit-mode .delete-item-btn { display: inline-flex; }
+    .edit-item-btn {
+      background: #3b82f6; color: white;
+    }
+    .edit-item-btn:hover { background: #2563eb; }
+    .delete-item-btn {
+      background: #dc2626; color: white;
+    }
+    .delete-item-btn:hover { background: #b91c1c; }
+
+    .link-icon {
+      display: inline-flex; align-items: center; justify-content: center;
+      flex: 1; min-width: 0;
+      height: 1.5rem;
+      font-size: 0.65rem; text-decoration: none; transition: background 0.15s;
+      font-family: 'Silkscreen', monospace;
+      background: var(--button-bg); color: white;
+      border: 2px solid #cc5500;
+      box-shadow: 2px 2px 0 #994400;
+    }
+    .link-icon:hover { background: var(--button-hover); color: white; }
+
+    .link-card--dev { border-left: 5px solid #00cc66; }
+    .link-card--dev:hover { border-left-color: #66bb6a; }
+    .link-card--nhs { border-left: 5px solid #0088ff; }
+    .link-card--nhs:hover { border-left-color: #33aaff; }
+    .link-card--private { border-left: 5px solid #ffaa00; }
+    .link-card--private:hover { border-left-color: #ffcc33; }
+
+    .link-card-content .link-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      line-height: 1.25; min-height: 2.5em;
+      overflow: hidden; text-overflow: ellipsis;
+    }
+    .link-card-content .link-subtitle {
+      display: block; margin-top: 0.2rem; color: var(--content-muted);
+      font-weight: 400; font-size: 0.75rem; line-height: 1.3; height: 1.3em;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .link-card-content .link-subtitle:empty { visibility: hidden; }
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center; justify-content: center;
+      z-index: 1000;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--bg-alt);
+      border: 3px solid var(--card-border);
+      box-shadow: inset 2px 2px 0 var(--bevel-light), 6px 6px 0 var(--bevel-dark);
+      padding: 1.25rem;
+      min-width: 320px;
+    }
+    .modal h3 { margin: 0 0 1rem 0; font-size: 1rem; font-family: inherit; }
+    .modal label { display: block; margin-bottom: 0.25rem; font-size: 0.8rem; color: var(--content-muted); font-family: inherit; }
+    .modal input, .modal select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      font-size: 0.9rem;
+      font-family: inherit;
+      box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3);
+    }
+    .modal-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: flex-end;
+      margin-top: 1rem;
+    }
+    .modal-actions button {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-family: inherit;
+      border: 2px solid;
+    }
+    .modal-actions .btn-cancel {
+      background: var(--card-bg);
+      color: var(--content);
+      border-color: var(--card-border);
+      box-shadow: 2px 2px 0 var(--bevel-dark);
+    }
+    .modal-actions .btn-save {
+      background: var(--button-bg);
+      color: white;
+      border-color: #cc5500;
+      box-shadow: 2px 2px 0 #994400;
+    }
+    .modal-actions .btn-save:hover { background: var(--button-hover); }
+
+    .time-blocks-list { margin: 0.75rem 0; max-height: 200px; overflow-y: auto; }
+    .time-block-row {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0; border-bottom: 1px solid var(--card-border);
+      font-size: 0.8rem;
+    }
+    .time-block-row:last-child { border-bottom: none; }
+    .time-block-row span { flex: 1; }
+    .time-block-row .tb-edit, .time-block-row .tb-delete {
+      padding: 0.15rem 0.35rem; font-size: 0.6rem; cursor: pointer;
+      border: 2px solid; font-family: inherit;
+    }
+    .time-block-row .tb-edit { border-color: #2266bb; background: #3b82f6; color: white; }
+    .time-block-row .tb-delete { border-color: #992222; background: #dc2626; color: white; }
+
+    .scratch-pad {
+      flex: 1 1 0;
+      min-height: 6rem;
+      display: flex;
+      flex-direction: column;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: inset 1px 1px 0 rgba(0,0,0,0.3);
+    }
+    .scratch-pad-header {
+      padding: 0.35rem 0.6rem;
+      background: var(--card-border);
+      color: var(--bg);
+      font-size: 0.65rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .scratch-pad-tabs {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .scratch-pad-tab {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--card-bg);
+      color: var(--content-muted);
+      border: 2px solid transparent;
+      cursor: pointer;
+    }
+    .scratch-pad-tab:hover { color: var(--content); background: var(--bevel-light); }
+    .scratch-pad-tab.active { background: var(--bg); color: var(--content); }
+    .scratch-pad-header-actions { display: flex; align-items: center; gap: 0.25rem; margin-left: auto; }
+    .scratch-pad-maximize-btn {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--bg);
+      color: var(--card-border);
+      border: 2px solid var(--bg);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-left: 0.25rem;
+    }
+    .scratch-pad-maximize-btn:hover { background: var(--content); color: var(--bg); }
+    .scratch-pad-run-js-btn,
+    .scratch-pad-stop-btn {
+      padding: 0.2rem 0.5rem;
+      font-size: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      border: 2px solid transparent;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .scratch-pad-run-js-btn {
+      background: var(--bg);
+      color: var(--card-border);
+      border-color: var(--bg);
+    }
+    .scratch-pad-run-js-btn:hover { background: var(--content); color: var(--bg); }
+    .scratch-pad-stop-btn {
+      background: var(--bg);
+      color: #c44;
+      border-color: var(--bg);
+    }
+    .scratch-pad-stop-btn:hover { background: #c44; color: white; }
+    .scratch-pad-title { opacity: 0.9; }
+    .scratch-pad-body {
+      flex: 1;
+      width: 100%;
+      min-height: 4rem;
+      padding: 0.6rem;
+      margin: 0;
+      border: none;
+      background: rgba(0,0,0,0.4);
+      color: var(--content);
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      resize: vertical;
+      box-sizing: border-box;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card-border) var(--bevel-dark);
+    }
+    .scratch-pad-body::-webkit-scrollbar { width: 10px; }
+    .scratch-pad-body::-webkit-scrollbar-track { background: var(--bevel-dark); }
+    .scratch-pad-body::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 2px; }
+    .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: var(--bevel-light); }
+    .scratch-pad-body::placeholder { color: var(--content-muted); opacity: 0.7; }
+    .scratch-pad-body:focus { outline: none; background: rgba(0,0,0,0.5); }
+    body.scratch-pad-maximized .clock,
+    body.scratch-pad-maximized .day-bars,
+    body.scratch-pad-maximized .sidebar-header,
+    body.scratch-pad-maximized #categoriesContainer {
+      display: none;
+    }
+    body.scratch-pad-maximized .scratch-pad {
+      flex: 1 1 auto;
+      min-height: calc(100vh - 4rem);
+      display: flex;
+      flex-direction: column;
+    }
+    body.scratch-pad-maximized .scratch-pad-body {
+      flex: 1;
+      min-height: 200px;
+      resize: none;
+    }
+    body.scratch-pad-maximized .scratch-pad-output {
+      max-height: 40vh;
+    }
+
+    html[data-theme="tron"] .clock {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.5);
+    }
+    html[data-theme="tron"] .link-card {
+      border-color: rgba(0, 255, 255, 0.4);
+      box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.05), 0 0 10px rgba(0, 255, 255, 0.1);
+    }
+    html[data-theme="tron"] .link-card:hover {
+      box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.2);
+    }
+    html[data-theme="tron"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    html[data-theme="tron"] .link-card--nhs { border-left-color: #00d4ff; box-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
+    html[data-theme="tron"] .link-card--private { border-left-color: #ff00aa; box-shadow: 0 0 8px rgba(255, 0, 170, 0.3); }
+    html[data-theme="tron"] .day-bar-track {
+      border-color: #00ffff;
+      box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.2);
+    }
+    html[data-theme="tron"] .day-bar-segment.filled {
+      background: #00d4ff !important;
+      box-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
+    }
+    html[data-theme="tron"] .add-item-btn,
+    html[data-theme="tron"] .link-icon,
+    html[data-theme="tron"] .modal-actions .btn-save {
+      border-color: #00d4ff;
+      box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
+      color: #0a0e17;
+    }
+    html[data-theme="tron"] .add-item-btn:hover,
+    html[data-theme="tron"] .link-icon:hover,
+    html[data-theme="tron"] .modal-actions .btn-save:hover {
+      color: #0a0e17;
+      box-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
+    }
+    html[data-theme="tron"] .edit-mode-btn.active {
+      box-shadow: 0 0 10px rgba(0, 212, 255, 0.6);
+      color: #0a0e17;
+    }
+    html[data-theme="tron"] .theme-select {
+      background-color: #0a0e17;
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.2);
+    }
+    html[data-theme="tron"] .theme-select option { background: #0a0e17; color: #00ffff; }
+    html[data-theme="tron"] .scratch-pad {
+      border-color: #00ffff;
+      box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.08), 0 0 8px rgba(0, 255, 255, 0.15);
+    }
+    html[data-theme="tron"] .scratch-pad-header { background: #00ffff; color: #0a0e17; }
+    html[data-theme="tron"] .scratch-pad-body {
+      background: rgba(0, 0, 0, 0.6);
+      color: #00ffff;
+      caret-color: #00ffff;
+    }
+    html[data-theme="tron"] .scratch-pad-body { scrollbar-color: #00ffff #050810; }
+    html[data-theme="tron"] .scratch-pad-body::-webkit-scrollbar-track { background: #050810; }
+    html[data-theme="tron"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #00ffff; }
+    html[data-theme="tron"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
+    html[data-theme="tron"] .scratch-pad-body::placeholder { color: rgba(0, 255, 255, 0.5); }
+    html[data-theme="tron"] .scratch-pad-title::before { content: 'root@work: '; opacity: 0.7; }
+    html[data-theme="tron"] .scratch-pad-tab { background: rgba(0,255,255,0.2); color: #0a0e17; }
+    html[data-theme="tron"] .scratch-pad-tab:hover { background: rgba(0,255,255,0.35); color: #0a0e17; }
+    html[data-theme="tron"] .scratch-pad-tab.active { background: #0a0e17; color: #00ffff; }
+    html[data-theme="tron"] .scratch-pad-maximize-btn { background: #0a0e17; color: #00ffff; border-color: #00ffff; }
+    html[data-theme="tron"] .scratch-pad-maximize-btn:hover { background: #00ffff; color: #0a0e17; }
+    html[data-theme="tron"] .scratch-pad-stop-btn { color: #ff4466; background: #0a0e17; border-color: #ff4466; }
+    html[data-theme="tron"] .scratch-pad-stop-btn:hover:not(:disabled) { background: #ff4466; color: #0a0e17; }
+
+    /* Tron Ares theme overrides */
+    html[data-theme="tron-ares"] .clock {
+      color: #ff0040;
+      text-shadow: 0 0 10px #ff0040, 0 0 20px rgba(255, 0, 64, 0.5);
+    }
+    html[data-theme="tron-ares"] .link-card {
+      border-color: rgba(255, 0, 64, 0.4);
+      box-shadow: inset 0 0 20px rgba(255, 0, 64, 0.05), 0 0 10px rgba(255, 0, 64, 0.1);
+    }
+    html[data-theme="tron-ares"] .link-card:hover {
+      box-shadow: inset 0 0 20px rgba(255, 0, 64, 0.1), 0 0 15px rgba(255, 0, 64, 0.2);
+    }
+    html[data-theme="tron-ares"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    html[data-theme="tron-ares"] .link-card--nhs { border-left-color: #ff3366; box-shadow: 0 0 8px rgba(255, 51, 102, 0.3); }
+    html[data-theme="tron-ares"] .link-card--private { border-left-color: #ff0066; box-shadow: 0 0 8px rgba(255, 0, 102, 0.3); }
+    html[data-theme="tron-ares"] .day-bar-track {
+      border-color: #ff0040;
+      box-shadow: inset 0 0 10px rgba(255, 0, 64, 0.1), 0 0 5px rgba(255, 0, 64, 0.2);
+    }
+    html[data-theme="tron-ares"] .day-bar-segment.filled {
+      background: #ff0040 !important;
+      box-shadow: 0 0 6px rgba(255, 0, 64, 0.6);
+    }
+    html[data-theme="tron-ares"] .add-item-btn,
+    html[data-theme="tron-ares"] .link-icon,
+    html[data-theme="tron-ares"] .modal-actions .btn-save {
+      border-color: #ff0040;
+      box-shadow: 0 0 8px rgba(255, 0, 64, 0.4);
+      color: #170a0a;
+    }
+    html[data-theme="tron-ares"] .add-item-btn:hover,
+    html[data-theme="tron-ares"] .link-icon:hover,
+    html[data-theme="tron-ares"] .modal-actions .btn-save:hover {
+      color: #170a0a;
+      box-shadow: 0 0 12px rgba(255, 0, 64, 0.6);
+    }
+    html[data-theme="tron-ares"] .edit-mode-btn.active {
+      box-shadow: 0 0 10px rgba(255, 0, 64, 0.6);
+      color: #170a0a;
+    }
+    html[data-theme="tron-ares"] .theme-select {
+      background-color: #170a0a;
+      box-shadow: 0 0 8px rgba(255, 0, 64, 0.2);
+    }
+    html[data-theme="tron-ares"] .theme-select option { background: #170a0a; color: #ff0040; }
+    html[data-theme="tron-ares"] .scratch-pad {
+      border-color: #ff0040;
+      box-shadow: inset 0 0 15px rgba(255, 0, 64, 0.08), 0 0 8px rgba(255, 0, 64, 0.15);
+    }
+    html[data-theme="tron-ares"] .scratch-pad-header { background: #ff0040; color: #170a0a; }
+    html[data-theme="tron-ares"] .scratch-pad-body {
+      background: rgba(0, 0, 0, 0.6);
+      color: #ff0040;
+      caret-color: #ff0040;
+    }
+    html[data-theme="tron-ares"] .scratch-pad-body { scrollbar-color: #ff0040 #100505; }
+    html[data-theme="tron-ares"] .scratch-pad-body::-webkit-scrollbar-track { background: #100505; }
+    html[data-theme="tron-ares"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #ff0040; }
+    html[data-theme="tron-ares"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #ff3366; }
+    html[data-theme="tron-ares"] .scratch-pad-body::placeholder { color: rgba(255, 0, 64, 0.5); }
+    html[data-theme="tron-ares"] .scratch-pad-title::before { content: 'root@ares: '; opacity: 0.7; }
+    html[data-theme="tron-ares"] .scratch-pad-tab { background: rgba(255,0,64,0.2); color: #170a0a; }
+    html[data-theme="tron-ares"] .scratch-pad-tab:hover { background: rgba(255,0,64,0.35); color: #170a0a; }
+    html[data-theme="tron-ares"] .scratch-pad-tab.active { background: #170a0a; color: #ff0040; }
+
+    /* Matrix theme overrides */
+    html[data-theme="matrix"] .clock {
+      color: #00ff41;
+      text-shadow: 0 0 8px #00ff41;
+    }
+    html[data-theme="matrix"] .link-card {
+      border-color: rgba(0, 255, 65, 0.4);
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.1);
+    }
+    html[data-theme="matrix"] .link-card:hover {
+      background: rgba(0, 255, 65, 0.12);
+      box-shadow: 0 0 12px rgba(0, 255, 65, 0.2);
+    }
+    html[data-theme="matrix"] .day-bar-track { border-color: #00ff41; }
+    html[data-theme="matrix"] .day-bar-segment.filled {
+      background: #00ff41 !important;
+      box-shadow: 0 0 4px #00ff41;
+    }
+    html[data-theme="matrix"] .add-item-btn,
+    html[data-theme="matrix"] .link-icon,
+    html[data-theme="matrix"] .modal-actions .btn-save {
+      border-color: #00ff41;
+      box-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
+      color: #0d0d0d;
+    }
+    html[data-theme="matrix"] .edit-mode-btn.active {
+      box-shadow: 0 0 8px rgba(0, 255, 65, 0.5);
+      color: #0d0d0d;
+    }
+    html[data-theme="matrix"] .theme-select {
+      background-color: #0d0d0d;
+      box-shadow: 0 0 6px rgba(0, 255, 65, 0.3);
+    }
+    html[data-theme="matrix"] .theme-select option { background: #0d0d0d; color: #00ff41; }
+    html[data-theme="matrix"] .scratch-pad { border-color: #00ff41; }
+    html[data-theme="matrix"] .scratch-pad-header { background: #00ff41; color: #0d0d0d; }
+    html[data-theme="matrix"] .scratch-pad-body { color: #00ff41; caret-color: #00ff41; scrollbar-color: #00ff41 #050505; }
+    html[data-theme="matrix"] .scratch-pad-body::-webkit-scrollbar-track { background: #050505; }
+    html[data-theme="matrix"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #00ff41; }
+    html[data-theme="matrix"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #33ff66; }
+    html[data-theme="matrix"] .scratch-pad-body::placeholder { color: rgba(0, 255, 65, 0.5); }
+    html[data-theme="matrix"] .scratch-pad-title::before { content: '> '; opacity: 0.7; }
+    html[data-theme="matrix"] .scratch-pad-tab { background: rgba(0,255,65,0.2); color: #0d0d0d; }
+    html[data-theme="matrix"] .scratch-pad-tab:hover { background: rgba(0,255,65,0.35); color: #0d0d0d; }
+    html[data-theme="matrix"] .scratch-pad-tab.active { background: #0d0d0d; color: #00ff41; }
+
+    /* Game Boy theme overrides */
+    html[data-theme="gb"] .link-card--dev { border-left-color: #306230; }
+    html[data-theme="gb"] .link-card--nhs { border-left-color: #0f380f; }
+    html[data-theme="gb"] .link-card--private { border-left-color: #506230; }
+    html[data-theme="gb"] .link-card:hover {
+      background: #9bbc0f;
+    }
+    html[data-theme="gb"] .day-bar-segment.filled {
+      background: #306230 !important;
+    }
+    html[data-theme="gb"] .add-item-btn,
+    html[data-theme="gb"] .link-icon,
+    html[data-theme="gb"] .modal-actions .btn-save {
+      border-color: #0f380f;
+      box-shadow: 2px 2px 0 #306230;
+      color: #9bbc0f;
+    }
+    html[data-theme="gb"] .edit-mode-btn.active {
+      box-shadow: 2px 2px 0 #306230;
+      color: #9bbc0f;
+    }
+    html[data-theme="gb"] .theme-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none' stroke='%230f380f' stroke-width='2'%3E%3Cpath d='M2 4l4 4 4-4'/%3E%3C/svg%3E");
+    }
+    html[data-theme="gb"] .theme-select:hover,
+    html[data-theme="gb"] .theme-select:focus { border-color: #0f380f; }
+    html[data-theme="gb"] .scratch-pad-tab { background: #8bac0f; color: #0f380f; }
+    html[data-theme="gb"] .scratch-pad-tab:hover { background: #9bbc0f; color: #0f380f; }
+    html[data-theme="gb"] .scratch-pad-tab.active { background: #0f380f; color: #9bbc0f; }
+    html[data-theme="gb"] .scratch-pad,
+    html[data-theme="gb"] .scratch-pad * { font-family: 'Pixelify Sans', monospace; }
+
+    /* Sega Master System theme overrides */
+    html[data-theme="sms"] .link-card:hover {
+      background: #282860;
+    }
+    html[data-theme="sms"] .day-bar-segment.filled {
+      background: #00aaff !important;
+    }
+    html[data-theme="sms"] .add-item-btn,
+    html[data-theme="sms"] .link-icon,
+    html[data-theme="sms"] .modal-actions .btn-save {
+      border-color: #0088cc;
+      box-shadow: 2px 2px 0 #004466;
+      color: #181830;
+    }
+    html[data-theme="sms"] .edit-mode-btn.active {
+      box-shadow: 2px 2px 0 #004466;
+      color: #181830;
+    }
+    html[data-theme="sms"] .theme-select:hover,
+    html[data-theme="sms"] .theme-select:focus { border-color: #00aaff; }
+    html[data-theme="sms"] .scratch-pad-tab { background: #202048; color: #8098b8; }
+    html[data-theme="sms"] .scratch-pad-tab:hover { background: #282850; color: #b8d4f0; }
+    html[data-theme="sms"] .scratch-pad-tab.active { background: #181830; color: #b8d4f0; }
+    html[data-theme="sms"] .scratch-pad,
+    html[data-theme="sms"] .scratch-pad * { font-family: 'VT323', monospace; }
+
+    /* Megadrive/16-bit theme scratch-pad font */
+    html[data-theme="megadrive"] .scratch-pad,
+    html[data-theme="megadrive"] .scratch-pad * { font-family: 'VT323', monospace; }
+
+    /* PlayStation 5 theme overrides */
+    html[data-theme="ps5"] .clock {
+      color: #ffffff;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-shadow: 0 0 40px rgba(0, 111, 205, 0.15);
+    }
+    html[data-theme="ps5"] .link-card {
+      border-radius: 12px;
+      border-width: 1px;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    html[data-theme="ps5"] .link-card:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      transform: translateY(-1px);
+    }
+    html[data-theme="ps5"] .link-card--dev { border-left: 3px solid #00c853; }
+    html[data-theme="ps5"] .link-card--nhs { border-left: 3px solid #006fcd; }
+    html[data-theme="ps5"] .link-card--private { border-left: 3px solid #ffab00; }
+    html[data-theme="ps5"] .day-bar-track {
+      border-radius: 8px;
+      border-width: 1px;
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+    html[data-theme="ps5"] .day-bar-segment {
+      border-radius: 4px;
+    }
+    html[data-theme="ps5"] .day-bar-segment.filled {
+      background: linear-gradient(90deg, #006fcd, #0077e6) !important;
+      box-shadow: 0 0 12px rgba(0, 111, 205, 0.4);
+    }
+    html[data-theme="ps5"] .add-item-btn,
+    html[data-theme="ps5"] .link-icon,
+    html[data-theme="ps5"] .modal-actions .btn-save {
+      border-radius: 8px;
+      border: none;
+      box-shadow: 0 2px 8px rgba(0, 111, 205, 0.3);
+    }
+    html[data-theme="ps5"] .add-item-btn:hover,
+    html[data-theme="ps5"] .link-icon:hover,
+    html[data-theme="ps5"] .modal-actions .btn-save:hover {
+      box-shadow: 0 4px 16px rgba(0, 111, 205, 0.4);
+    }
+    html[data-theme="ps5"] .edit-mode-btn {
+      border-radius: 50%;
+      border-width: 2px;
+    }
+    html[data-theme="ps5"] .edit-mode-btn.active {
+      background: #006fcd;
+      border-color: #006fcd;
+      box-shadow: 0 0 20px rgba(0, 111, 205, 0.5);
+    }
+    html[data-theme="ps5"] .theme-select {
+      background-color: #121212;
+      border-radius: 8px;
+      border-width: 1px;
+    }
+    html[data-theme="ps5"] .theme-select option { background: #121212; color: #ffffff; }
+    html[data-theme="ps5"] .theme-select:hover,
+    html[data-theme="ps5"] .theme-select:focus {
+      border-color: #006fcd;
+      box-shadow: 0 0 12px rgba(0, 111, 205, 0.3);
+    }
+    html[data-theme="ps5"] .modal {
+      border-radius: 16px;
+      border-width: 1px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+    }
+    html[data-theme="ps5"] .scratch-pad {
+      border-radius: 12px;
+      border-width: 1px;
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+    }
+    html[data-theme="ps5"] .scratch-pad-header {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    html[data-theme="ps5"] .scratch-pad-body {
+      background: rgba(0, 0, 0, 0.2);
+      scrollbar-color: rgba(255,255,255,0.3) rgba(255,255,255,0.06);
+    }
+    html[data-theme="ps5"] .scratch-pad-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.06); }
+    html[data-theme="ps5"] .scratch-pad-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
+    html[data-theme="ps5"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.45); }
+    html[data-theme="ps5"] .scratch-pad-body::placeholder { color: rgba(255, 255, 255, 0.35); }
+    html[data-theme="ps5"] .scratch-pad-tab { background: rgba(255,255,255,0.08); color: #8e8e93; }
+    html[data-theme="ps5"] .scratch-pad-tab:hover { background: rgba(255,255,255,0.12); color: #ffffff; }
+    html[data-theme="ps5"] .scratch-pad-tab.active { background: rgba(255,255,255,0.15); color: #ffffff; }
+
+    /* Original Macintosh (1984) component overrides */
+    html[data-theme="macintosh"] .clock {
+      color: #000000;
+      text-shadow: none;
+      letter-spacing: 0.08em;
+    }
+    html[data-theme="macintosh"] .link-card {
+      border-radius: 8px;
+      box-shadow: none;
+      border: 2px solid #000000;
+      background: #ffffff;
+      color: #000000;
+    }
+    html[data-theme="macintosh"] .link-card:hover {
+      background: #000000;
+      color: #ffffff;
+      box-shadow: none;
+    }
+    html[data-theme="macintosh"] .link-card:hover .link-subtitle { color: #ffffff; }
+    html[data-theme="macintosh"] .link-card--dev,
+    html[data-theme="macintosh"] .link-card--nhs,
+    html[data-theme="macintosh"] .link-card--private { border-left: 4px solid #000000; }
+    html[data-theme="macintosh"] .day-bar-track {
+      border: 2px solid #000000;
+      background: #ffffff;
+      border-radius: 6px;
+      box-shadow: none;
+    }
+    html[data-theme="macintosh"] .day-bar-segment.filled {
+      background: #000000 !important;
+      border-radius: 2px;
+    }
+    html[data-theme="macintosh"] .add-item-btn,
+    html[data-theme="macintosh"] .link-icon,
+    html[data-theme="macintosh"] .modal-actions .btn-save {
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+      border-radius: 6px;
+      box-shadow: none;
+    }
+    html[data-theme="macintosh"] .add-item-btn:hover,
+    html[data-theme="macintosh"] .link-icon:hover,
+    html[data-theme="macintosh"] .modal-actions .btn-save:hover {
+      background: #000000;
+    }
+    html[data-theme="macintosh"] .edit-mode-btn {
+      border-radius: 6px;
+      box-shadow: 1px 1px 0 #000000;
+    }
+    html[data-theme="macintosh"] .edit-mode-btn.active {
+      background: #000000;
+      border-color: #000000;
+      color: #ffffff;
+      box-shadow: 1px 1px 0 #000000;
+    }
+    html[data-theme="macintosh"] .theme-select {
+      background: #ffffff;
+      border: 2px solid #000000;
+      color: #000000;
+      border-radius: 6px;
+    }
+    html[data-theme="macintosh"] .theme-select option { background: #ffffff; color: #000000; }
+    html[data-theme="macintosh"] .theme-select:hover,
+    html[data-theme="macintosh"] .theme-select:focus { border-color: #000000; }
+    html[data-theme="macintosh"] .modal {
+      border-radius: 10px;
+      border: 2px solid #000000;
+      background: #ffffff;
+      box-shadow: 2px 2px 0 #000000;
+    }
+    html[data-theme="macintosh"] .scratch-pad {
+      border-radius: 8px;
+      border: 2px solid #000000;
+      background: #ffffff;
+    }
+    html[data-theme="macintosh"] .scratch-pad-header {
+      background: #ffffff;
+      color: #000000;
+      border-bottom: 1px solid #000000;
+    }
+    html[data-theme="macintosh"] .scratch-pad-body {
+      background: #ffffff;
+      color: #000000;
+      caret-color: #000000;
+    }
+    html[data-theme="macintosh"] .scratch-pad-body::placeholder { color: #000000; }
+    html[data-theme="macintosh"] .scratch-pad-title::before { content: 'NotePad: '; opacity: 1; }
+    html[data-theme="macintosh"] .scratch-pad-tab {
+      background: #ffffff;
+      color: #000000;
+      border-radius: 4px;
+      border: 1px solid #000000;
+    }
+    html[data-theme="macintosh"] .scratch-pad-tab:hover { background: #000000; color: #ffffff; }
+    html[data-theme="macintosh"] .scratch-pad-tab.active { background: #000000; color: #ffffff; font-weight: 700; }
+    html[data-theme="macintosh"] .scratch-pad-maximize-btn,
+    html[data-theme="macintosh"] .scratch-pad-stop-btn {
+      background: #000000;
+      color: #ffffff;
+      border-color: #000000;
+      border-radius: 4px;
+    }
+    html[data-theme="macintosh"] .scratch-pad-body { scrollbar-color: #000000 #ffffff; }
+    html[data-theme="macintosh"] .section-title { color: #000000; }
+    html[data-theme="macintosh"] .day-bar-segment {
+      background: #ffffff;
+      border-radius: 2px;
+    }
+
+    /* MS-DOS theme overrides – window chrome + black/white content, subtle color */
+    html[data-theme="msdos"] .clock {
+      color: #000000;
+      text-shadow: 1px 1px 0 #ffffff;
+    }
+    html[data-theme="msdos"] .link-card {
+      background: #ffffff;
+      border: 2px solid #808080;
+      box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #404040 inset, 2px 2px 0 #404040;
+    }
+    html[data-theme="msdos"] .link-card:hover {
+      background: #f0f0f0;
+      box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #404040 inset, 1px 1px 0 #404040;
+    }
+    html[data-theme="msdos"] .link-card--dev { border-left: 4px solid #00a000; }
+    html[data-theme="msdos"] .link-card--nhs { border-left: 4px solid #0000aa; }
+    html[data-theme="msdos"] .link-card--private { border-left: 4px solid #aa5500; }
+    html[data-theme="msdos"] .day-bar-track {
+      background: #c0c0c0;
+      border: 2px solid #808080;
+      box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #404040 inset;
+    }
+    html[data-theme="msdos"] .day-bar-segment.filled {
+      background: #0000aa;
+    }
+    html[data-theme="msdos"] .add-item-btn,
+    html[data-theme="msdos"] .link-icon,
+    html[data-theme="msdos"] .modal-actions .btn-save {
+      background: #c0c0c0;
+      color: #000000;
+      border: 2px solid #808080;
+      box-shadow: 1px 1px 0 #ffffff, -1px -1px 0 #404040;
+    }
+    html[data-theme="msdos"] .add-item-btn:hover,
+    html[data-theme="msdos"] .link-icon:hover,
+    html[data-theme="msdos"] .modal-actions .btn-save:hover {
+      background: #d4d0c8;
+    }
+    html[data-theme="msdos"] .edit-mode-btn.active {
+      background: #0000aa;
+      border-color: #0000aa;
+      color: #ffffff;
+    }
+    html[data-theme="msdos"] .theme-select {
+      background: #ffffff;
+      border: 2px solid #808080;
+      color: #000000;
+    }
+    html[data-theme="msdos"] .theme-select option { background: #ffffff; color: #000000; }
+    html[data-theme="msdos"] .theme-select:hover,
+    html[data-theme="msdos"] .theme-select:focus { border-color: #0000aa; }
+    /* Scratch pad = MS-DOS window: gray title bar, black interior, white text, green prompt accent */
+    html[data-theme="msdos"] .scratch-pad {
+      border: 2px solid #808080;
+      box-shadow: 1px 1px 0 #ffffff, -1px -1px 0 #404040, 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    html[data-theme="msdos"] .scratch-pad-header {
+      background: linear-gradient(180deg, #000080 0%, #1084d0 100%);
+      color: #ffffff;
+    }
+    html[data-theme="msdos"] .scratch-pad-body {
+      background: #000000;
+      color: #c0c0c0;
+      caret-color: #c0c0c0;
+    }
+    html[data-theme="msdos"] .scratch-pad-body { scrollbar-color: #404040 #000000; }
+    html[data-theme="msdos"] .scratch-pad-body::-webkit-scrollbar-track { background: #000000; }
+    html[data-theme="msdos"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #404040; }
+    html[data-theme="msdos"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #808080; }
+    html[data-theme="msdos"] .scratch-pad-body::placeholder { color: rgba(192, 192, 192, 0.5); }
+    html[data-theme="msdos"] .scratch-pad-title::before { content: 'C:\\> '; color: #00aa00; opacity: 1; }
+    html[data-theme="msdos"] .scratch-pad-tab {
+      background: rgba(255,255,255,0.2);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    html[data-theme="msdos"] .scratch-pad-tab:hover { background: rgba(255,255,255,0.3); color: #ffffff; }
+    html[data-theme="msdos"] .scratch-pad-tab.active {
+      background: rgba(255,255,255,0.4);
+      color: #ffffff;
+      border-color: #ffffff;
+    }
+    html[data-theme="msdos"] .scratch-pad-run-js-btn,
+    html[data-theme="msdos"] .scratch-pad-maximize-btn {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    html[data-theme="msdos"] .scratch-pad-run-js-btn:hover,
+    html[data-theme="msdos"] .scratch-pad-maximize-btn:hover {
+      background: rgba(255,255,255,0.2);
+      color: #ffffff;
+    }
+    html[data-theme="msdos"] .scratch-pad-stop-btn {
+      color: #ff8080;
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    html[data-theme="msdos"] .scratch-pad-stop-btn:hover:not(:disabled) {
+      background: rgba(255, 0, 0, 0.3);
+      color: #ffffff;
+    }
+    html[data-theme="msdos"] .section-title { color: #404040; }
+    html[data-theme="msdos"] .day-bar-label { color: #404040; }
+    html[data-theme="msdos"] .modal {
+      background: #c0c0c0;
+      border: 2px solid #808080;
+      box-shadow: 2px 2px 0 #404040, 1px 1px 0 #ffffff inset;
+    }
+    html[data-theme="msdos"] .modal h3,
+    html[data-theme="msdos"] .modal label { color: #000000; }
+    html[data-theme="msdos"] .modal input,
+    html[data-theme="msdos"] .modal select {
+      background: #ffffff;
+      border: 2px solid #808080;
+      color: #000000;
+    }
+    html[data-theme="msdos"] .modal-actions .btn-cancel {
+      background: #c0c0c0;
+      color: #000000;
+      border: 2px solid #808080;
+      box-shadow: 1px 1px 0 #ffffff, -1px -1px 0 #404040;
+    }
+
+    /* Mac-style zoom animation (Visit link) */
+    :root {
+      --visit-zoom-duration: var(--scratch-maximize-duration);
+      --visit-zoom-easing: var(--scratch-maximize-easing);
+    }
+    .visit-zoom-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+    }
+    .visit-zoom-box {
+      position: fixed;
+      background: transparent;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 0 0 1px var(--bevel-light);
+      will-change: left, top, width, height;
+    }
+    .visit-zoom-box.zoom-done {
+      pointer-events: auto;
+    }
+
+    /* Screensaver mode */
+    .screensaver-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    .screensaver-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    .screensaver-mystify {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.25;
+      background: transparent;
+    }
+    .screensaver-mystify[data-retro] {
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    .screensaver-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .screensaver-clock {
+      font-size: 4.5rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--content);
+      font-variant-numeric: tabular-nums;
+      font-family: 'Silkscreen', monospace;
+      text-shadow: 2px 2px 0 var(--bevel-dark);
+      text-align: center;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    html[data-theme="tron"] .screensaver-clock {
+      color: #00ffff;
+      text-shadow: 0 0 15px #00ffff, 0 0 30px rgba(0, 255, 255, 0.5);
+    }
+    html[data-theme="tron-ares"] .screensaver-clock {
+      color: #ff0040;
+      text-shadow: 0 0 15px #ff0040, 0 0 30px rgba(255, 0, 64, 0.5);
+    }
+    html[data-theme="matrix"] .screensaver-clock {
+      color: #00ff41;
+      text-shadow: 0 0 10px #00ff41;
+    }
+    html[data-theme="ps5"] .screensaver-clock {
+      color: #ffffff;
+      text-shadow: 0 0 40px rgba(0, 111, 205, 0.2);
+    }
+    html[data-theme="macintosh"] .screensaver-clock {
+      color: #000000;
+      text-shadow: none;
+    }
+    html[data-theme="msdos"] .screensaver-clock {
+      color: #000000;
+      text-shadow: 1px 1px 0 #ffffff;
+    }
+    .screensaver-day-bars {
+      min-width: 280px;
+      max-width: 90vw;
+    }
+    .screensaver-day-bars .day-bar-label {
+      font-size: 0.7rem;
+      color: var(--content-muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 0.5rem;
+      font-family: 'Silkscreen', monospace;
+      text-transform: uppercase;
+      text-align: center;
+    }
+    .screensaver-day-bars .day-bar-track {
+      height: 28px;
+      display: flex;
+      gap: 4px;
+      padding: 4px;
+      background: var(--bevel-dark);
+      border: 3px solid var(--card-border);
+      box-shadow: inset 2px 2px 0 var(--bevel-light), inset -2px -2px 0 var(--bevel-dark);
+    }
+    .screensaver-day-bars .day-bar-segment {
+      flex: 1;
+      min-width: 0;
+      background: rgba(0, 0, 0, 0.5);
+      transition: background 0.3s;
+    }
+    html[data-theme="tron"] .screensaver-day-bars .day-bar-track {
+      border-color: #00ffff;
+      box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.2);
+    }
+    html[data-theme="tron"] .screensaver-day-bars .day-bar-segment.filled {
+      background: #00d4ff !important;
+      box-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
+    }
+    html[data-theme="tron-ares"] .screensaver-day-bars .day-bar-track {
+      border-color: #ff0040;
+      box-shadow: inset 0 0 10px rgba(255, 0, 64, 0.1), 0 0 5px rgba(255, 0, 64, 0.2);
+    }
+    html[data-theme="tron-ares"] .screensaver-day-bars .day-bar-segment.filled {
+      background: #ff0040 !important;
+      box-shadow: 0 0 6px rgba(255, 0, 64, 0.6);
+    }
+    html[data-theme="matrix"] .screensaver-day-bars .day-bar-track { border-color: #00ff41; }
+    html[data-theme="matrix"] .screensaver-day-bars .day-bar-segment.filled {
+      background: #00ff41 !important;
+      box-shadow: 0 0 4px #00ff41;
+    }
+    html[data-theme="ps5"] .screensaver-day-bars .day-bar-track {
+      border-radius: 8px;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+    html[data-theme="ps5"] .screensaver-day-bars .day-bar-segment.filled {
+      background: linear-gradient(90deg, #006fcd, #0077e6) !important;
+      border-radius: 4px;
+    }
+
+    /* Fade out main content when screensaver activates */
+    .sidebar-header,
+    #categoriesContainer,
+    .scratch-pad,
+    .fixed-buttons {
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    body.screensaver-active .sidebar-header,
+    body.screensaver-active #categoriesContainer,
+    body.screensaver-active .scratch-pad,
+    body.screensaver-active .fixed-buttons {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    body.screensaver-active .clock,
+    body.screensaver-active .day-bars {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <aside class="sidebar" id="sidebar">
+      <div class="clock" id="clock"></div>
+      <div class="day-bars" id="dayBars"></div>
+      <div class="sidebar-header">
+        <h1 id="appTitle">Developer Start Page</h1>
+        <div class="theme-switcher">
+          <select class="theme-select" id="themeSelect" aria-label="Select theme">
+            <option value="megadrive">16-bit</option>
+            <option value="tron">Tron</option>
+            <option value="tron-ares">Ares</option>
+            <option value="matrix">Matrix</option>
+            <option value="sms">SMS</option>
+            <option value="gb">GB</option>
+            <option value="ps5">PS5</option>
+            <option value="macintosh">Macintosh</option>
+            <option value="msdos">MS-DOS</option>
+          </select>
+        </div>
+      </div>
+      <div id="categoriesContainer"></div>
+      <div class="scratch-pad" id="scratchPad">
+        <div class="scratch-pad-header">
+          <span class="scratch-pad-tabs">
+            <button class="scratch-pad-tab active" type="button" id="scratchPadTextTab" data-tab="text">Text</button>
+            <button class="scratch-pad-tab" type="button" id="scratchPadBasicTab" data-tab="basic">Basic</button>
+            <button class="scratch-pad-tab" type="button" id="scratchPadJsTab" data-tab="javascript">JavaScript</button>
+          </span>
+          <span class="scratch-pad-header-actions">
+            <button class="scratch-pad-run-js-btn" type="button" id="scratchPadRunJsBtn" title="Run JavaScript" style="display:none">RUN</button>
+            <button class="scratch-pad-stop-btn" type="button" id="scratchPadStopBtn" title="Stop execution" style="display:none">STOP</button>
+            <button class="scratch-pad-maximize-btn" type="button" id="scratchPadMaximizeBtn" title="Full screen">⛶</button>
+          </span>
+        </div>
+        <textarea class="scratch-pad-body" id="scratchPadText" placeholder="Text notes..." rows="4"></textarea>
+      </div>
+    </aside>
+    <div class="fixed-buttons">
+      <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
+      <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
+    </div>
+  </div>
+
+  <div class="screensaver-overlay" id="screensaverOverlay" aria-hidden="true">
+    <canvas class="screensaver-mystify" id="screensaverMystify"></canvas>
+    <div class="screensaver-content">
+      <div class="screensaver-clock" id="screensaverClock"></div>
+      <div class="screensaver-day-bars" id="screensaverDayBars"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="timeBlocksModal">
+    <div class="modal">
+      <h3>Time Blocks</h3>
+      <div class="time-blocks-list" id="timeBlocksList"></div>
+      <div class="modal-actions" style="margin-top: 0.5rem;">
+        <button class="btn-save" type="button" id="addTimeBlockBtn">+ Add Block</button>
+        <button class="btn-cancel" type="button" id="closeTimeBlocksBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="timeBlockFormModal">
+    <div class="modal">
+      <form id="timeBlockForm" novalidate>
+        <h3 id="timeBlockFormTitle">Add Time Block</h3>
+        <input type="hidden" id="tbFormId">
+        <label>Label</label>
+        <input type="text" id="tbFormLabel" placeholder="e.g. Lunch" required>
+        <label>Start (hour, 0–24)</label>
+        <input type="number" id="tbFormStart" placeholder="11" step="0.25" min="0" max="24" required>
+        <label>End (hour, 0–24)</label>
+        <input type="number" id="tbFormEnd" placeholder="12" step="0.25" min="0" max="24" required>
+        <label>Color</label>
+        <input type="text" id="tbFormColor" placeholder="#ff6b35" value="#00ff88">
+        <div class="modal-actions">
+          <button class="btn-cancel" type="button" id="tbFormCancelBtn">Cancel</button>
+          <button class="btn-save" type="submit" id="tbFormSaveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="categoryModal">
+    <div class="modal">
+      <form id="categoryForm" novalidate>
+        <h3 id="categoryModalTitle">Add Category</h3>
+        <label>Title</label>
+        <input type="text" id="categoryModalTitleInput" placeholder="e.g. Dev Environment" required>
+        <div class="modal-actions">
+          <button class="btn-cancel" type="button" id="categoryModalCancelBtn">Cancel</button>
+          <button class="btn-save" type="submit" id="categoryModalSaveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="itemModal">
+    <div class="modal">
+      <form id="itemForm" novalidate>
+        <h3 id="modalTitle">Add Item</h3>
+        <input type="hidden" id="modalItemId">
+        <input type="hidden" id="modalCategoryId">
+        <label>Title</label>
+        <input type="text" id="modalItemTitle" placeholder="Item title" required>
+        <label>Subtitle</label>
+        <input type="text" id="modalItemSubtitle" placeholder="Optional subtitle">
+        <label>URL</label>
+        <input type="url" id="modalItemUrl" placeholder="https://..." required>
+        <label>Color</label>
+        <select id="modalItemColor">
+          <option value="">None</option>
+          <option value="dev">Dev (green)</option>
+          <option value="nhs">NHS (blue)</option>
+          <option value="private">Private (amber)</option>
+        </select>
+        <div class="modal-actions">
+          <button class="btn-cancel" type="button" id="modalCancelBtn">Cancel</button>
+          <button class="btn-save" type="submit" id="modalSaveBtn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  (function() {
+    const app = document.getElementById('app');
+    const html = document.documentElement;
+
+    function escapeHtml(s) {
+      const div = document.createElement('div');
+      div.textContent = s == null ? '' : s;
+      return div.innerHTML;
+    }
+
+    var THEME_TITLES = {
+      megadrive: 'GAME SELECT',
+      tron: 'root@work:~$',
+      'tron-ares': 'root@work:~$',
+      matrix: '> SYSTEM ONLINE',
+      sms: 'INSERT CART',
+      gb: 'NINTENDO',
+      ps5: 'PlayStation',
+      macintosh: 'Macintosh'
+    };
+    function updateTitle(theme) {
+      var el = document.getElementById('appTitle');
+      if (el) el.textContent = THEME_TITLES[theme] || 'Developer Start Page';
+    }
+
+    var themeSelect = document.getElementById('themeSelect');
+    (function initTheme() {
+      var saved = localStorage.getItem('devStartPageTheme') || 'megadrive';
+      if (saved === 'vectrex') { saved = 'matrix'; localStorage.setItem('devStartPageTheme', saved); }
+      if (saved === 'mother' || saved === 'nostromo') { saved = 'matrix'; localStorage.setItem('devStartPageTheme', 'matrix'); }
+      html.setAttribute('data-theme', saved);
+      if (themeSelect) themeSelect.value = saved;
+      updateTitle(saved);
+    })();
+
+    if (themeSelect) {
+      themeSelect.addEventListener('change', function() {
+        var theme = this.value;
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem('devStartPageTheme', theme);
+        updateTitle(theme);
+      });
+    }
+    const clockEl = document.getElementById('clock');
+    let data = <?= json_encode($initialData) ?>;
+    let sortables = [];
+
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toTimeString().slice(0, 5);
+      clockEl.textContent = timeStr;
+      if (window._screensaverActive && window._screensaverClockEl) {
+        window._screensaverClockEl.textContent = timeStr;
+      }
+    }
+    const DEFAULT_TIME_BLOCKS = [
+      { label: 'Work Day', start: 0, end: 9, color: '#00ff88' },
+      { label: 'Tea Time', start: 9, end: 11, color: '#ffaa00' },
+      { label: 'Lunch', start: 11, end: 12, color: '#ff6b35' },
+      { label: 'Tea Time', start: 12, end: 14, color: '#ffaa00' },
+      { label: 'Dog walk', start: 14, end: 17, color: '#00cc6a' },
+      { label: 'Dinner', start: 17, end: 18.5, color: '#ff6b35' },
+      { label: 'Bed time', start: 18.5, end: 22.75, color: '#6b7fd7' },
+      { label: 'Complete', start: 22.75, end: 24, color: '#00ff88' }
+    ];
+    function getTimeBlocks() {
+      const blocks = (data && data.timeBlocks && data.timeBlocks.length) ? data.timeBlocks : DEFAULT_TIME_BLOCKS;
+      return [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    }
+    function minsSinceMidnight(h, m) { return h * 60 + m; }
+    function getDayBarHtml(includeEditBtn) {
+      const blocks = getTimeBlocks();
+      const now = new Date();
+      const mins = minsSinceMidnight(now.getHours(), now.getMinutes());
+      const current = blocks.find(s => mins >= s.start * 60 && mins < s.end * 60) || blocks[blocks.length - 1];
+      const startM = current.start * 60, endM = current.end * 60, totalM = endM - startM;
+      const pct = mins < startM ? 0 : mins >= endM ? 100 : ((mins - startM) / totalM) * 100;
+      const segments = 20;
+      const filled = Math.round((pct / 100) * segments);
+      const segmentsHtml = Array.from({length: segments}, (_, i) => {
+        const isFilled = i < filled;
+        return `<div class="day-bar-segment${isFilled ? ' filled' : ''}" style="${isFilled ? 'background:' + (current.color || '#00ff88') : ''}"></div>`;
+      }).join('');
+      const coreHtml = `<div class="day-bar-label">Loading Next ${escapeHtml(current.label)}</div><div class="day-bar-track">${segmentsHtml}</div>`;
+      if (includeEditBtn) {
+        return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit time blocks">Edit blocks</button><div class="day-bar">${coreHtml}</div></div>`;
+      }
+      return `<div class="day-bar">${coreHtml}</div>`;
+    }
+    function updateDayBars() {
+      const dayBarsEl = document.getElementById('dayBars');
+      dayBarsEl.innerHTML = getDayBarHtml(true);
+      const editBtn = document.getElementById('editBlocksBtn');
+      if (editBtn) editBtn.addEventListener('click', openTimeBlocksModal);
+      if (window._screensaverActive && window._screensaverDayBarsEl) {
+        window._screensaverDayBarsEl.innerHTML = getDayBarHtml(false);
+      }
+    }
+    updateClock();
+    updateDayBars();
+    setInterval(updateClock, 1000);
+    setInterval(updateDayBars, 60000);
+
+    (function initScreensaver() {
+      const IDLE_MS = 60000;
+      const overlay = document.getElementById('screensaverOverlay');
+      const mystifyCanvas = document.getElementById('screensaverMystify');
+      const screensaverClock = document.getElementById('screensaverClock');
+      const screensaverDayBars = document.getElementById('screensaverDayBars');
+      let idleTimer = null;
+      let mystifyRAF = null;
+      let mystifyLastDraw = 0;
+      let mystifyPoints = [];
+      let mystifyHistory = [];
+
+      const MYSTIFY_THEME = {
+        ps5: { fps: 60, scale: 1 },
+        tron: { fps: 60, scale: 1 },
+        'tron-ares': { fps: 60, scale: 1 },
+        megadrive: { fps: 15, scale: 0.75 },
+        sms: { fps: 15, scale: 0.75 },
+        gb: { fps: 10, scale: 0.5 },
+        matrix: { fps: 10, scale: 0.5 },
+        macintosh: { fps: 15, scale: 0.66 },
+        msdos: { fps: 15, scale: 0.66 }
+      };
+
+      function getMystifyThemeConfig() {
+        const t = document.documentElement.getAttribute('data-theme') || '';
+        return MYSTIFY_THEME[t] || { fps: 30, scale: 1 };
+      }
+
+      function resetIdleTimer() {
+        if (idleTimer) clearTimeout(idleTimer);
+        idleTimer = setTimeout(enterScreensaver, IDLE_MS);
+      }
+
+      function getMystifyColor() {
+        return getComputedStyle(document.documentElement).getPropertyValue('--content').trim() || '#e0e0ff';
+      }
+
+      function drawMystify(now) {
+        if (!mystifyCanvas || !overlay.classList.contains('active')) return;
+        now = now || performance.now();
+        const cfg = getMystifyThemeConfig();
+        const frameInterval = 1000 / cfg.fps;
+        if (now - mystifyLastDraw < frameInterval) {
+          mystifyRAF = requestAnimationFrame(drawMystify);
+          return;
+        }
+        mystifyLastDraw = now;
+        const ctx = mystifyCanvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        const scale = cfg.scale;
+        const w = mystifyCanvas.width / (dpr * scale);
+        const h = mystifyCanvas.height / (dpr * scale);
+        const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#1a1630';
+        const bgRgb = bgColor.startsWith('#') ? hexToRgb(bgColor) : parseRgb(bgColor);
+        ctx.fillStyle = bgRgb ? 'rgb(' + bgRgb.r + ',' + bgRgb.g + ',' + bgRgb.b + ')' : '#1a1630';
+        ctx.fillRect(0, 0, w, h);
+        const color = getMystifyColor();
+        const rgb = color.startsWith('#') ? hexToRgb(color) : parseRgb(color);
+        const baseRgb = rgb ? (rgb.r + ',' + rgb.g + ',' + rgb.b) : '224,224,255';
+        ctx.lineWidth = scale < 1 ? Math.max(1, 2 * scale) : 2;
+        function drawPoly(points, alpha) {
+          if (!points || points.length < 2) return;
+          ctx.strokeStyle = 'rgba(' + baseRgb + ',' + alpha + ')';
+          ctx.beginPath();
+          ctx.moveTo(points[0].x, points[0].y);
+          for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+          ctx.closePath();
+          ctx.stroke();
+        }
+        if (mystifyHistory.length >= 2) drawPoly(mystifyHistory[0], 0.12);
+        if (mystifyHistory.length >= 1) drawPoly(mystifyHistory[mystifyHistory.length - 1], 0.25);
+        drawPoly(mystifyPoints, 0.4);
+        const snapshot = mystifyPoints.map(function(p) { return { x: p.x, y: p.y }; });
+        mystifyHistory.push(snapshot);
+        if (mystifyHistory.length > 2) mystifyHistory.shift();
+        const speedMul = 60 / cfg.fps;
+        for (let i = 0; i < mystifyPoints.length; i++) {
+          const p = mystifyPoints[i];
+          p.x += p.dx * speedMul;
+          p.y += p.dy * speedMul;
+          if (p.x <= 0 || p.x >= w) p.dx = -p.dx;
+          if (p.y <= 0 || p.y >= h) p.dy = -p.dy;
+        }
+        mystifyRAF = requestAnimationFrame(drawMystify);
+      }
+      function hexToRgb(hex) {
+        const m = hex.slice(1).match(/.{2}/g);
+        return m ? { r: parseInt(m[0], 16), g: parseInt(m[1], 16), b: parseInt(m[2], 16) } : null;
+      }
+      function parseRgb(s) {
+        const m = s.match(/\d+/g);
+        return m && m.length >= 3 ? { r: +m[0], g: +m[1], b: +m[2] } : null;
+      }
+
+      function resizeMystify() {
+        if (!mystifyCanvas || !overlay) return;
+        const dpr = window.devicePixelRatio || 1;
+        const cfg = getMystifyThemeConfig();
+        const scale = cfg.scale;
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        mystifyCanvas.width = w * dpr * scale;
+        mystifyCanvas.height = h * dpr * scale;
+        mystifyCanvas.style.width = w + 'px';
+        mystifyCanvas.style.height = h + 'px';
+        if (scale < 1) mystifyCanvas.setAttribute('data-retro', '');
+        else mystifyCanvas.removeAttribute('data-retro');
+        const ctx = mystifyCanvas.getContext('2d');
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr * scale, dpr * scale);
+        if (mystifyPoints.length === 0) {
+          const n = 8;
+          for (let i = 0; i < n; i++) {
+            mystifyPoints.push({
+              x: Math.random() * w,
+              y: Math.random() * h,
+              dx: (Math.random() - 0.5) * 4,
+              dy: (Math.random() - 0.5) * 4
+            });
+          }
+        } else {
+          for (const p of mystifyPoints) {
+            p.x = Math.min(Math.max(p.x, 0), w);
+            p.y = Math.min(Math.max(p.y, 0), h);
+          }
+        }
+        mystifyHistory = [];
+      }
+
+      function enterScreensaver() {
+        if (window._screensaverActive) return;
+        window._screensaverActive = true;
+        window._screensaverClockEl = screensaverClock;
+        window._screensaverDayBarsEl = screensaverDayBars;
+        document.body.classList.add('screensaver-active');
+        overlay.classList.add('active');
+        overlay.setAttribute('aria-hidden', 'false');
+        mystifyHistory = [];
+        mystifyLastDraw = 0;
+        resizeMystify();
+        updateClock();
+        screensaverDayBars.innerHTML = getDayBarHtml(false);
+        drawMystify();
+      }
+
+      function exitScreensaver() {
+        if (!window._screensaverActive) return;
+        window._screensaverActive = false;
+        window._screensaverClockEl = null;
+        window._screensaverDayBarsEl = null;
+        document.body.classList.remove('screensaver-active');
+        overlay.classList.remove('active');
+        overlay.setAttribute('aria-hidden', 'true');
+        if (mystifyRAF) {
+          cancelAnimationFrame(mystifyRAF);
+          mystifyRAF = null;
+        }
+      }
+
+      const screensaverBtn = document.getElementById('screensaverBtn');
+      if (screensaverBtn) {
+        screensaverBtn.addEventListener('click', function() {
+          enterScreensaver();
+        });
+      }
+      resizeMystify();
+      window.addEventListener('resize', resizeMystify);
+      (function observeTheme() {
+        var mo = new MutationObserver(function() {
+          if (overlay && overlay.classList.contains('active')) resizeMystify();
+        });
+        mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+      })();
+      resetIdleTimer();
+      ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll'].forEach(function(ev) {
+        document.addEventListener(ev, function() {
+          if (window._screensaverActive) exitScreensaver();
+          resetIdleTimer();
+        });
+      });
+    })();
+
+    const editModeBtn = document.getElementById('editModeBtn');
+    const categoriesContainer = document.getElementById('categoriesContainer');
+    const itemModal = document.getElementById('itemModal');
+    const modalTitleEl = document.getElementById('modalTitle');
+    const modalItemId = document.getElementById('modalItemId');
+    const modalCategoryId = document.getElementById('modalCategoryId');
+    const modalItemTitle = document.getElementById('modalItemTitle');
+    const modalItemSubtitle = document.getElementById('modalItemSubtitle');
+    const modalItemUrl = document.getElementById('modalItemUrl');
+    const modalItemColor = document.getElementById('modalItemColor');
+    const modalCancelBtn = document.getElementById('modalCancelBtn');
+    const modalSaveBtn = document.getElementById('modalSaveBtn');
+
+    function api(action, body) {
+      const opts = { method: body ? 'POST' : 'GET' };
+      let url = 'api.php?action=' + action;
+      if (body) {
+        opts.headers = { 'Content-Type': 'application/json' };
+        opts.body = JSON.stringify(body);
+      }
+      return fetch(url, opts).then(function(r) {
+        return r.text().then(function(text) {
+          var json = {};
+          try {
+            json = text ? JSON.parse(text) : {};
+          } catch (e) {}
+          if (!r.ok) throw new Error(json.error || 'Request failed (' + r.status + ')');
+          return json;
+        });
+      });
+    }
+
+    function renderCard(item, categoryId) {
+      const colorClass = item.color ? ' link-card--' + item.color : '';
+      return `
+        <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${item.url}">
+          <div class="link-card-content">
+            <span class="link-title">${escapeHtml(item.title)}</span>
+            <span class="link-subtitle">${escapeHtml(item.subtitle || '')}</span>
+          </div>
+          <div class="link-actions">
+            <button class="edit-item-btn" type="button" title="Edit">✎</button>
+            <button class="delete-item-btn" type="button" title="Delete">✕</button>
+            <a class="link-icon" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" title="Visit">Visit</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function render() {
+      categoriesContainer.innerHTML = '';
+      sortables = [];
+
+      const hasCategories = (data.categories || []).length > 0;
+      app.classList.toggle('empty-categories', !hasCategories);
+
+      const addCatRow = document.createElement('div');
+      addCatRow.className = 'add-category-row';
+      addCatRow.innerHTML = (hasCategories ? '' : '<p class="empty-state-msg">No categories yet. Add a category to get started.</p>') +
+        '<button class="add-category-btn" type="button" id="addCategoryBtn">+ Add category</button>';
+      categoriesContainer.appendChild(addCatRow);
+      document.getElementById('addCategoryBtn').addEventListener('click', openAddCategoryModal);
+
+      (data.categories || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).forEach(cat => {
+        const items = (cat.items || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+        const section = document.createElement('section');
+        section.dataset.categoryId = cat.id;
+        section.innerHTML = `
+          <div class="section-header">
+            <div class="section-title">${escapeHtml(cat.title)}</div>
+            <button class="add-item-btn" type="button" data-category-id="${cat.id}">+ Add</button>
+          </div>
+          <div class="links">${items.map(i => renderCard(i, cat.id)).join('')}</div>
+        `;
+        categoriesContainer.appendChild(section);
+
+        const linksEl = section.querySelector('.links');
+        section.querySelector('.add-item-btn').addEventListener('click', () => openAddModal(cat.id));
+        linksEl.querySelectorAll('.edit-item-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            const card = btn.closest('.link-card');
+            openEditModal(card.dataset.id, card.dataset.categoryId);
+          });
+        });
+        linksEl.querySelectorAll('.delete-item-btn').forEach(btn => {
+          btn.addEventListener('click', e => {
+            e.stopPropagation();
+            if (confirm('Delete this item?')) deleteItem(btn.closest('.link-card').dataset.id);
+          });
+        });
+        linksEl.querySelectorAll('.link-icon').forEach(a => {
+          a.addEventListener('click', function(e) {
+            if (app.classList.contains('edit-mode')) return;
+            e.preventDefault();
+            const href = this.getAttribute('href');
+            if (!href) return;
+            const btn = this;
+            const rect = btn.getBoundingClientRect();
+            const overlay = document.createElement('div');
+            overlay.className = 'visit-zoom-overlay';
+            const box = document.createElement('div');
+            box.className = 'visit-zoom-box';
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-duration')) * 1000 || 350;
+            const easing = getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-easing').trim() || 'ease-in-out';
+            box.style.left = rect.left + 'px';
+            box.style.top = rect.top + 'px';
+            box.style.width = rect.width + 'px';
+            box.style.height = rect.height + 'px';
+            box.style.transition = 'left ' + (duration / 1000) + 's ' + easing + ', top ' + (duration / 1000) + 's ' + easing + ', width ' + (duration / 1000) + 's ' + easing + ', height ' + (duration / 1000) + 's ' + easing;
+            overlay.appendChild(box);
+            document.body.appendChild(overlay);
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                box.style.left = '0';
+                box.style.top = '0';
+                box.style.width = w + 'px';
+                box.style.height = h + 'px';
+              });
+            });
+            setTimeout(() => {
+              overlay.classList.add('zoom-done');
+              window.open(href, '_blank', 'noopener');
+              setTimeout(() => overlay.remove(), 50);
+            }, duration);
+          });
+        });
+        sortables.push(new Sortable(linksEl, {
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          onEnd: () => saveOrder(cat.id, linksEl)
+        }));
+      });
+    }
+
+    function saveOrder(categoryId, linksEl) {
+      const itemIds = [...linksEl.querySelectorAll('.link-card')].map(c => c.dataset.id);
+      api('reorder', { categoryId, itemIds }).then(() => load());
+    }
+
+    const categoryModal = document.getElementById('categoryModal');
+    const categoryModalTitleInput = document.getElementById('categoryModalTitleInput');
+
+    function openAddCategoryModal() {
+      document.getElementById('categoryModalTitle').textContent = 'Add Category';
+      categoryModalTitleInput.value = '';
+      categoryModal.classList.add('open');
+    }
+
+    function closeCategoryModal() {
+      categoryModal.classList.remove('open');
+    }
+
+    function saveCategory() {
+      const title = categoryModalTitleInput.value.trim();
+      if (!title) {
+        alert('Title is required');
+        return;
+      }
+      api('addCategory', { title })
+        .then((res) => {
+          if (res && res.success && res.category) {
+            data.categories = data.categories || [];
+            data.categories.push(res.category);
+            closeCategoryModal();
+            render();
+          } else {
+            alert(res && res.error ? res.error : 'Save failed.');
+          }
+        })
+        .catch((e) => alert('Save failed: ' + (e.message || 'Please try again.')));
+    }
+
+    function openAddModal(categoryId) {
+      modalTitleEl.textContent = 'Add Item';
+      modalItemId.value = '';
+      modalCategoryId.value = categoryId;
+      modalItemTitle.value = '';
+      modalItemSubtitle.value = '';
+      modalItemUrl.value = '';
+      modalItemColor.value = '';
+      itemModal.classList.add('open');
+    }
+
+    function openEditModal(itemId, categoryId) {
+      const item = data.categories.flatMap(c => c.items || []).find(i => i.id === itemId);
+      if (!item) return;
+      modalTitleEl.textContent = 'Edit Item';
+      modalItemId.value = itemId;
+      modalCategoryId.value = categoryId;
+      modalItemTitle.value = item.title;
+      modalItemSubtitle.value = item.subtitle || '';
+      modalItemUrl.value = item.url;
+      modalItemColor.value = item.color || '';
+      itemModal.classList.add('open');
+    }
+
+    function closeModal() {
+      itemModal.classList.remove('open');
+    }
+
+    function saveItem() {
+      const id = modalItemId.value;
+      const title = modalItemTitle.value.trim();
+      const subtitle = modalItemSubtitle.value.trim();
+      const url = modalItemUrl.value.trim();
+      const color = modalItemColor.value;
+      const categoryId = modalCategoryId.value;
+
+      if (!title || !url) {
+        alert('Title and URL are required');
+        return;
+      }
+
+      function updateLocalEdit() {
+        for (const cat of data.categories) {
+          const item = (cat.items || []).find(i => i.id === id);
+          if (item) {
+            item.title = title;
+            item.subtitle = subtitle;
+            item.url = url;
+            item.color = color;
+            return;
+          }
+        }
+      }
+
+      function updateLocalAdd(newItem) {
+        const cat = data.categories.find(c => c.id === categoryId);
+        if (cat) {
+          cat.items = cat.items || [];
+          cat.items.push(newItem);
+        }
+      }
+
+      if (id) {
+        api('edit', { id, title, subtitle, url, color })
+          .then((res) => {
+            if (res && res.success !== false) {
+              updateLocalEdit();
+              closeModal();
+              render();
+            } else {
+              alert('Save failed. Please try again.');
+            }
+          })
+          .catch(() => {
+            alert('Save failed. Check if the server is responding.');
+          });
+      } else {
+        api('add', { categoryId, title, subtitle, url, color })
+          .then((res) => {
+            if (res && res.success && res.item) {
+              updateLocalAdd(res.item);
+              closeModal();
+              render();
+            } else {
+              alert('Save failed. Please try again.');
+            }
+          })
+          .catch(() => {
+            alert('Save failed. Check if the server is responding.');
+          });
+      }
+    }
+
+    function deleteItem(id) {
+      api('delete', { id }).then(() => load());
+    }
+
+    function load() {
+      api('get').then(d => {
+        data = d;
+        render();
+        updateDayBars();
+      }).catch(() => {
+        render();
+      });
+    }
+
+    const timeBlocksModal = document.getElementById('timeBlocksModal');
+    const timeBlockFormModal = document.getElementById('timeBlockFormModal');
+    const timeBlocksList = document.getElementById('timeBlocksList');
+
+    function openTimeBlocksModal() {
+      const blocks = getTimeBlocks();
+      const hasCustom = !!(data && data.timeBlocks && data.timeBlocks.length);
+      timeBlocksList.innerHTML = (hasCustom ? '' : '<div class="time-block-row" style="color:var(--content-muted);margin-bottom:0.5rem">Using defaults. Add blocks to customize.</div>') + blocks.map(b => {
+        const isCustom = !!b.id;
+        return `
+        <div class="time-block-row" data-id="${escapeHtml(b.id || '')}">
+          <span>${escapeHtml(b.label)} (${b.start}–${b.end})</span>
+          ${isCustom ? '<button class="tb-edit" type="button" title="Edit">Edit</button><button class="tb-delete" type="button" title="Delete">Delete</button>' : ''}
+        </div>`;
+      }).join('');
+      timeBlocksList.querySelectorAll('.tb-edit').forEach(btn => {
+        btn.addEventListener('click', () => openTimeBlockFormEdit(btn.closest('.time-block-row').dataset.id));
+      });
+      timeBlocksList.querySelectorAll('.tb-delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (confirm('Delete this time block?')) deleteTimeBlock(btn.closest('.time-block-row').dataset.id);
+        });
+      });
+      timeBlocksModal.classList.add('open');
+    }
+
+    function closeTimeBlocksModal() {
+      timeBlocksModal.classList.remove('open');
+    }
+
+    function openTimeBlockForm(editId) {
+      document.getElementById('timeBlockFormTitle').textContent = editId ? 'Edit Time Block' : 'Add Time Block';
+      document.getElementById('tbFormId').value = editId || '';
+      const block = editId ? getTimeBlocks().find(b => b.id === editId) : null;
+      document.getElementById('tbFormLabel').value = block ? block.label : '';
+      document.getElementById('tbFormStart').value = block ? block.start : '';
+      document.getElementById('tbFormEnd').value = block ? block.end : '';
+      document.getElementById('tbFormColor').value = block ? (block.color || '#00ff88') : '#00ff88';
+      timeBlockFormModal.classList.add('open');
+    }
+
+    function openTimeBlockFormEdit(id) {
+      closeTimeBlocksModal();
+      openTimeBlockForm(id);
+    }
+
+    function closeTimeBlockFormModal() {
+      timeBlockFormModal.classList.remove('open');
+    }
+
+    function saveTimeBlock() {
+      const id = document.getElementById('tbFormId').value;
+      const label = document.getElementById('tbFormLabel').value.trim();
+      const start = parseFloat(document.getElementById('tbFormStart').value) || 0;
+      const end = parseFloat(document.getElementById('tbFormEnd').value) || 1;
+      const color = document.getElementById('tbFormColor').value.trim() || '#00ff88';
+      if (!label) {
+        alert('Label is required');
+        return;
+      }
+      if (start >= end) {
+        alert('End must be after start');
+        return;
+      }
+      if (id) {
+        api('editTimeBlock', { id, label, start, end, color })
+          .then(() => {
+            for (const b of (data.timeBlocks || [])) {
+              if (b.id === id) {
+                b.label = label;
+                b.start = start;
+                b.end = end;
+                b.color = color;
+                break;
+              }
+            }
+            closeTimeBlockFormModal();
+            updateDayBars();
+            openTimeBlocksModal();
+          })
+          .catch(e => alert('Save failed: ' + (e.message || 'Please try again')));
+      } else {
+        api('addTimeBlock', { label, start, end, color })
+          .then(res => {
+            if (res && res.success && res.block) {
+              data.timeBlocks = data.timeBlocks || [];
+              data.timeBlocks.push(res.block);
+              closeTimeBlockFormModal();
+              updateDayBars();
+              openTimeBlocksModal();
+            }
+          })
+          .catch(e => alert('Save failed: ' + (e.message || 'Please try again')));
+      }
+    }
+
+    function deleteTimeBlock(id) {
+      api('deleteTimeBlock', { id })
+        .then(() => {
+          data.timeBlocks = (data.timeBlocks || []).filter(b => b.id !== id);
+          updateDayBars();
+          openTimeBlocksModal();
+        })
+        .catch(e => alert('Delete failed: ' + (e.message || 'Please try again')));
+    }
+
+    document.getElementById('addTimeBlockBtn').addEventListener('click', () => {
+      closeTimeBlocksModal();
+      openTimeBlockForm();
+    });
+    document.getElementById('closeTimeBlocksBtn').addEventListener('click', closeTimeBlocksModal);
+    document.getElementById('tbFormCancelBtn').addEventListener('click', closeTimeBlockFormModal);
+    document.getElementById('timeBlockForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveTimeBlock();
+    });
+    timeBlocksModal.addEventListener('click', e => { if (e.target === timeBlocksModal) closeTimeBlocksModal(); });
+    timeBlockFormModal.addEventListener('click', e => { if (e.target === timeBlockFormModal) closeTimeBlockFormModal(); });
+
+    editModeBtn.addEventListener('click', () => {
+      app.classList.toggle('edit-mode');
+      editModeBtn.classList.toggle('active', app.classList.contains('edit-mode'));
+      editModeBtn.title = app.classList.contains('edit-mode') ? 'Done' : 'Edit';
+    });
+
+    (function initScratchPad() {
+      const el = document.getElementById('scratchPadText');
+      const textTab = document.getElementById('scratchPadTextTab');
+      const basicTab = document.getElementById('scratchPadBasicTab');
+      const jsTab = document.getElementById('scratchPadJsTab');
+      const stopBtn = document.getElementById('scratchPadStopBtn');
+      const runJsBtn = document.getElementById('scratchPadRunJsBtn');
+      let activeTab = 'text';
+      let textContent = '';
+      let basicContent = '';
+      let jsContent = '';
+      let isStreaming = false;
+      let streamTimeoutId = null;
+      let stateBeforeRun = '';
+      let stateBeforeOutput = '';
+      let hasOutputFromRun = false;
+
+      try {
+        const legacy = localStorage.getItem('devStartPageScratch') || '';
+        textContent = localStorage.getItem('devStartPageScratchText') || '';
+        basicContent = localStorage.getItem('devStartPageScratchBasic') || '';
+        jsContent = localStorage.getItem('devStartPageScratchJs') || '';
+        activeTab = localStorage.getItem('devStartPageScratchTab') || 'text';
+        if (legacy && !textContent && !basicContent && !jsContent) {
+          textContent = legacy;
+          basicContent = legacy;
+          jsContent = legacy;
+        }
+      } catch (e) {}
+      function saveContent() {
+        if (activeTab === 'text') textContent = el.value;
+        else if (activeTab === 'basic') basicContent = el.value;
+        else if (activeTab === 'javascript') jsContent = el.value;
+        try {
+          localStorage.setItem('devStartPageScratchText', textContent);
+          localStorage.setItem('devStartPageScratchBasic', basicContent);
+          localStorage.setItem('devStartPageScratchJs', jsContent);
+        } catch (e) {}
+      }
+      let initialLoad = true;
+      function switchTab(tab) {
+        if (!initialLoad) saveContent();
+        initialLoad = false;
+        activeTab = tab;
+        try { localStorage.setItem('devStartPageScratchTab', activeTab); } catch (e) {}
+        if (tab === 'text') el.value = textContent;
+        else if (tab === 'basic') el.value = basicContent;
+        else el.value = jsContent;
+        el.placeholder = tab === 'text' ? 'Notes, reminders, quick thoughts...' : tab === 'basic' ? '10 PRINT "Hello"\n20 GOTO 10\nRUN' : 'console.log("Hello");\n\n// Click RUN or Ctrl+Enter to execute';
+        textTab.classList.toggle('active', tab === 'text');
+        basicTab.classList.toggle('active', tab === 'basic');
+        jsTab.classList.toggle('active', tab === 'javascript');
+        updateActionButtons();
+      }
+      function updateActionButtons() {
+        const inBasic = activeTab === 'basic';
+        const inJs = activeTab === 'javascript';
+        const showStopBtn = inBasic && (isStreaming || hasOutputFromRun);
+        stopBtn.style.display = showStopBtn ? '' : 'none';
+        stopBtn.textContent = isStreaming ? 'STOP' : 'RESET';
+        stopBtn.title = isStreaming ? 'Stop execution' : 'Reset to before RUN';
+        runJsBtn.style.display = inJs ? '' : 'none';
+      }
+      el.addEventListener('input', saveContent);
+      if (textTab) textTab.addEventListener('click', () => switchTab('text'));
+      if (basicTab) basicTab.addEventListener('click', () => switchTab('basic'));
+      if (jsTab) jsTab.addEventListener('click', () => switchTab('javascript'));
+      switchTab(activeTab);
+
+      function runJavaScript(source) {
+        const outBuf = [];
+        const origLog = console.log;
+        const origWarn = console.warn;
+        const origError = console.error;
+        console.log = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
+        console.warn = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
+        console.error = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
+        try {
+          const fn = new Function(source);
+          const result = fn();
+          if (result !== undefined) outBuf.push(String(result));
+        } catch (e) {
+          outBuf.push('Error: ' + (e.message || e));
+        } finally {
+          console.log = origLog;
+          console.warn = origWarn;
+          console.error = origError;
+        }
+        return outBuf.join('\n') + (outBuf.length ? '\n' : '');
+      }
+
+      function runBasic(source) {
+        const lines = [];
+        const vars = {};
+        const MAX_ITER = 10000;
+        const MAX_OUTPUT = 50000;
+        let iter = 0;
+        let outputLen = 0;
+        const outBuf = [];
+
+        function out(s) {
+          const t = String(s);
+          outputLen += t.length;
+          if (outputLen <= MAX_OUTPUT) outBuf.push(t);
+        }
+
+        (source || '').split(/\r?\n/).forEach(function(line) {
+          line = line.trim();
+          if (!line) return;
+          const m = line.match(/^(\d+)\s+(.*)$/);
+          if (m) {
+            lines.push({ num: parseInt(m[1], 10), rest: m[2].trim() });
+          }
+        });
+        lines.sort(function(a, b) { return a.num - b.num; });
+        if (lines.length === 0) {
+          return '\n?NO PROGRAM\n';
+        }
+
+        function evalExpr(s) {
+          s = (s || '').trim();
+          if (!s) return 0;
+          if (/^\d+(\.\d*)?$/.test(s)) return parseFloat(s);
+          if (/^"[^"]*"$/.test(s)) return s.slice(1, -1);
+          if (/^[A-Za-z_][A-Za-z0-9_]*$/.test(s)) return vars[s] != null ? vars[s] : 0;
+          const m = s.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/);
+          if (m) {
+            vars[m[1]] = evalExpr(m[2]);
+            return vars[m[1]];
+          }
+          const parts = s.split(/\s*([+\-*\/]|\*\*)\s*/).filter(Boolean);
+          if (parts.length >= 3) {
+            let acc = evalExpr(parts[0]);
+            for (let i = 1; i < parts.length; i += 2) {
+              const o = parts[i];
+              const r = evalExpr(parts[i + 1]);
+              if (o === '+') acc += r;
+              else if (o === '-') acc -= r;
+              else if (o === '*') acc *= r;
+              else if (o === '/') acc /= r;
+              else if (o === '**') acc = Math.pow(acc, r);
+            }
+            return acc;
+          }
+          return 0;
+        }
+
+        function findLine(num) {
+          for (let i = 0; i < lines.length; i++) {
+            if (lines[i].num >= num) return i;
+          }
+          return -1;
+        }
+
+        let pc = 0;
+        while (pc >= 0 && pc < lines.length && iter < MAX_ITER) {
+          iter++;
+          const ln = lines[pc];
+          let rest = ln.rest;
+          const restUpper = rest.toUpperCase();
+          let match;
+
+          if (restUpper === 'END' || rest === '') {
+            break;
+          }
+          if ((match = rest.match(/^PRINT\s+(.*)$/i))) {
+            let arg = match[1].trim();
+            if (arg.startsWith('"') && arg.indexOf('"', 1) >= 0) {
+              const end = arg.indexOf('"', 1);
+              out(arg.slice(1, end) + '\n');
+            } else {
+              out(String(evalExpr(arg)) + '\n');
+            }
+          } else if ((match = rest.match(/^GO\s+TO\s+(\d+)$/i)) || (match = rest.match(/^GOTO\s+(\d+)$/i))) {
+            const idx = findLine(parseInt(match[1], 10));
+            if (idx >= 0) { pc = idx; continue; }
+          } else if ((match = rest.match(/^LET\s+(.+)$/i))) {
+            evalExpr(match[1].trim());
+          } else if ((match = rest.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.+)$/))) {
+            vars[match[1]] = evalExpr(match[2].trim());
+          } else {
+            out('?SYNTAX ERROR\n');
+          }
+          pc++;
+        }
+        if (iter >= MAX_ITER) out('\n*** STOPPED AFTER ' + MAX_ITER + ' STEPS ***\n');
+        if (outputLen >= MAX_OUTPUT) out('\n*** OUTPUT TRUNCATED ***\n');
+        return outBuf.join('');
+      }
+
+      el.addEventListener('keydown', function(e) {
+        if (activeTab === 'javascript' && (e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          runJsBtn && runJsBtn.click();
+          return;
+        }
+        if (e.key !== 'Enter' || activeTab !== 'basic' || isStreaming) return;
+        const text = el.value;
+        const pos = el.selectionStart;
+        const lineStart = text.lastIndexOf('\n', pos - 1) + 1;
+        const currentLine = text.slice(lineStart, pos).trim();
+        if (currentLine.toUpperCase() !== 'RUN') return;
+        e.preventDefault();
+        const before = text.slice(0, pos);
+        const after = text.slice(pos);
+        stateBeforeRun = text.slice(0, lineStart).replace(/\n+$/, '');
+        stateBeforeOutput = before + '\n';
+        hasOutputFromRun = false;
+        const output = runBasic(text);
+        const lines = output.split('\n');
+        const linesPerSec = 10;
+        const intervalMs = 1000 / linesPerSec;
+        el.value = stateBeforeOutput;
+        el.readOnly = true;
+        isStreaming = true;
+        updateActionButtons();
+        let lineIdx = 0;
+        function tick() {
+          if (!isStreaming) return;
+          if (lineIdx < lines.length) {
+            const line = lines[lineIdx];
+            const suffix = (lineIdx < lines.length - 1 || !output.endsWith('\n')) ? '\n' : '';
+            el.value += line + suffix;
+            el.scrollTop = el.scrollHeight;
+            lineIdx++;
+          }
+          if (lineIdx >= lines.length) {
+            el.value += after;
+            el.readOnly = false;
+            basicContent = el.value;
+            saveContent();
+            isStreaming = false;
+            hasOutputFromRun = true;
+            updateActionButtons();
+            el.selectionStart = el.selectionEnd = el.value.length;
+            return;
+          }
+          streamTimeoutId = setTimeout(tick, intervalMs);
+        }
+        streamTimeoutId = setTimeout(tick, intervalMs);
+      });
+      if (stopBtn) {
+        stopBtn.addEventListener('click', function() {
+          if (isStreaming) {
+            if (streamTimeoutId) clearTimeout(streamTimeoutId);
+            streamTimeoutId = null;
+            isStreaming = false;
+            el.readOnly = false;
+            hasOutputFromRun = true;
+            basicContent = el.value;
+            saveContent();
+          } else if (hasOutputFromRun) {
+            el.value = stateBeforeOutput;
+            el.selectionStart = el.selectionEnd = stateBeforeOutput.length;
+            basicContent = el.value;
+            hasOutputFromRun = false;
+            saveContent();
+          }
+          updateActionButtons();
+        });
+      }
+      if (runJsBtn) {
+        runJsBtn.addEventListener('click', function() {
+          if (activeTab !== 'javascript') return;
+          const raw = el.value;
+          const code = raw.includes('// --- output ---') ? raw.split('// --- output ---')[0].trimEnd() : raw;
+          jsContent = code;
+          saveContent();
+          const output = runJavaScript(code);
+          el.value = code + (output ? '\n\n// --- output ---\n' + output : '');
+          el.scrollTop = el.scrollHeight;
+        });
+      }
+
+      const maxBtn = document.getElementById('scratchPadMaximizeBtn');
+      if (maxBtn) {
+        maxBtn.addEventListener('click', function() {
+          const isMax = document.body.classList.toggle('scratch-pad-maximized');
+          maxBtn.textContent = isMax ? '\u2921' : '\u26B6';
+          maxBtn.title = isMax ? 'Restore' : 'Full screen';
+        });
+      }
+    })();
+
+    modalCancelBtn.addEventListener('click', closeModal);
+    document.getElementById('itemForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveItem();
+    });
+    itemModal.addEventListener('click', e => { if (e.target === itemModal) closeModal(); });
+
+    document.getElementById('categoryModalCancelBtn').addEventListener('click', closeCategoryModal);
+    document.getElementById('categoryForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      saveCategory();
+    });
+    categoryModal.addEventListener('click', e => { if (e.target === categoryModal) closeCategoryModal(); });
+
+    render();
+    load();
+  })();
+  </script>
+</body>
+</html>
