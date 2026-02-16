@@ -19,6 +19,9 @@ function loadData() {
     $data = json_decode($json, true);
     if (!$data) return array('categories' => array(), 'timeBlocks' => array(), 'midiPlaylist' => array());
     if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
+    foreach ($data['timeBlocks'] as &$b) {
+        if (isset($b['start']) && !isset($b['time'])) { $b['time'] = $b['start']; unset($b['start']); unset($b['end']); }
+    }
     if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
     return $data;
 }
@@ -31,6 +34,9 @@ function saveData($data) {
     global $dataFile;
     if (empty($data['categories'])) $data['categories'] = array();
     if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
+    foreach ($data['timeBlocks'] as &$b) {
+        if (isset($b['start']) && !isset($b['time'])) { $b['time'] = $b['start']; unset($b['start']); unset($b['end']); }
+    }
     if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
     usort($data['timeBlocks'], function($a, $b) {
         $oa = isset($a['order']) ? $a['order'] : 0;
@@ -232,8 +238,7 @@ switch ($action) {
         $block = array(
             'id' => generateTimeBlockId(),
             'label' => trim(isset($input['label']) ? $input['label'] : 'Block'),
-            'start' => floatval(isset($input['start']) ? $input['start'] : 0),
-            'end' => floatval(isset($input['end']) ? $input['end'] : 1),
+            'time' => floatval(isset($input['time']) ? $input['time'] : 0),
             'color' => isset($input['color']) ? $input['color'] : '#00ff88',
             'order' => $maxOrder + 1
         );
@@ -248,8 +253,11 @@ switch ($action) {
         foreach ($data['timeBlocks'] as &$b) {
             if (isset($b['id']) && $b['id'] === $blockId) {
                 if (isset($input['label'])) $b['label'] = trim($input['label']);
-                if (isset($input['start'])) $b['start'] = floatval($input['start']);
-                if (isset($input['end'])) $b['end'] = floatval($input['end']);
+                if (isset($input['time'])) {
+                    $b['time'] = floatval($input['time']);
+                    unset($b['start']);
+                    unset($b['end']);
+                }
                 if (isset($input['color'])) $b['color'] = $input['color'];
                 $found = true;
                 break;

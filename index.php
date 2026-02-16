@@ -1772,10 +1772,8 @@ if (file_exists($dataFile)) {
         <input type="hidden" id="tbFormId">
         <label>Label</label>
         <input type="text" id="tbFormLabel" placeholder="e.g. Lunch" required>
-        <label>Start (hour, 0–24)</label>
-        <input type="number" id="tbFormStart" placeholder="11" step="0.25" min="0" max="24" required>
-        <label>End (hour, 0–24)</label>
-        <input type="number" id="tbFormEnd" placeholder="12" step="0.25" min="0" max="24" required>
+        <label>Time (HH:MM, 00:00–24:00)</label>
+        <input type="text" id="tbFormTime" placeholder="11:00" pattern="[0-9]{1,2}:[0-5][0-9]" required>
         <label>Color</label>
         <input type="text" id="tbFormColor" placeholder="#ff6b35" value="#00ff88">
         <div class="modal-actions">
@@ -1857,6 +1855,10 @@ if (file_exists($dataFile)) {
       div.textContent = s == null ? '' : s;
       return div.innerHTML;
     }
+    function toTitleCase(s) {
+      if (s == null || typeof s !== 'string') return '';
+      return s.replace(/\b\w/g, c => c.toUpperCase());
+    }
 
     var THEME_TITLES = {
       megadrive: 'GAME SELECT',
@@ -1904,34 +1906,80 @@ if (file_exists($dataFile)) {
       }
     }
     const DEFAULT_TIME_BLOCKS = [
-      { label: 'Work Day', start: 0, end: 9, color: '#00ff88' },
-      { label: 'Tea Time', start: 9, end: 11, color: '#ffaa00' },
-      { label: 'Lunch', start: 11, end: 12, color: '#ff6b35' },
-      { label: 'Tea Time', start: 12, end: 14, color: '#ffaa00' },
-      { label: 'Dog walk', start: 14, end: 17, color: '#00cc6a' },
-      { label: 'Dinner', start: 17, end: 18.5, color: '#ff6b35' },
-      { label: 'Bed time', start: 18.5, end: 22.75, color: '#6b7fd7' },
-      { label: 'Complete', start: 22.75, end: 24, color: '#00ff88' }
+      { label: 'Work Day', time: 0, color: '#00ff88' },
+      { label: 'Tea Time', time: 9, color: '#ffaa00' },
+      { label: 'Lunch', time: 11, color: '#ff6b35' },
+      { label: 'Tea Time', time: 12, color: '#ffaa00' },
+      { label: 'Dog walk', time: 14, color: '#00cc6a' },
+      { label: 'Dinner', time: 17, color: '#ff6b35' },
+      { label: 'Bed time', time: 18.5, color: '#6b7fd7' },
+      { label: 'Complete', time: 22.75, color: '#00ff88' }
     ];
     function getTimeBlocks() {
-      const blocks = (data && data.timeBlocks && data.timeBlocks.length) ? data.timeBlocks : DEFAULT_TIME_BLOCKS;
-      return [...blocks].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      let blocks = (data && data.timeBlocks && data.timeBlocks.length) ? data.timeBlocks : DEFAULT_TIME_BLOCKS;
+      blocks = blocks.map(b => {
+        if ('start' in b && !('time' in b)) return { ...b, time: b.start };
+        return b;
+      });
+      return [...blocks].sort((a, b) => ((a.time ?? a.start ?? 0) - (b.time ?? b.start ?? 0)) || ((a.order ?? 0) - (b.order ?? 0)));
     }
     function minsSinceMidnight(h, m) { return h * 60 + m; }
+    function decimalToTimeStr(d) {
+      if (d == null || isNaN(d)) return '00:00';
+      if (d >= 24) return '24:00';
+      const h = Math.floor(d);
+      const m = Math.round((d % 1) * 60);
+      return String(h).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+    }
+    function timeStrToDecimal(str) {
+      if (!str || typeof str !== 'string') return NaN;
+      const parts = str.trim().split(/[:\s]+/);
+      const h = parseInt(parts[0], 10);
+      const m = parseInt(parts[1], 10) || 0;
+      if (isNaN(h)) return NaN;
+      return h + m / 60;
+    }
     function getDayBarHtml(includeEditBtn) {
       const blocks = getTimeBlocks();
+      if (blocks.length === 0) {
+        const emptyHtml = '<div class="day-bar-label">No events</div><div class="day-bar-track"></div>';
+        const core = emptyHtml;
+        if (includeEditBtn) return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit time blocks">Edit blocks</button><div class="day-bar">${core}</div></div>`;
+        return `<div class="day-bar">${core}</div>`;
+      }
       const now = new Date();
       const mins = minsSinceMidnight(now.getHours(), now.getMinutes());
-      const current = blocks.find(s => mins >= s.start * 60 && mins < s.end * 60) || blocks[blocks.length - 1];
-      const startM = current.start * 60, endM = current.end * 60, totalM = endM - startM;
-      const pct = mins < startM ? 0 : mins >= endM ? 100 : ((mins - startM) / totalM) * 100;
+      const timesM = blocks.map(b => (b.time ?? b.start ?? 0) * 60);
+      const currentIdx = blocks.findIndex((b, i) => {
+        const t = (b.time ?? b.start ?? 0) * 60;
+        return mins >= t && (i === blocks.length - 1 || mins < timesM[i + 1]);
+      });
+      const current = currentIdx >= 0 ? blocks[currentIdx] : blocks[blocks.length - 1];
+      const nextIdx = blocks.findIndex(b => (b.time ?? b.start ?? 0) * 60 > mins);
+      const next = nextIdx >= 0 ? blocks[nextIdx] : null;
+      let label, startM, endM, pct, barColor;
+      if (!next) {
+        label = 'Loading complete';
+        startM = timesM[timesM.length - 1] ?? 0;
+        endM = 24 * 60;
+        pct = mins >= startM ? 100 : 0;
+        barColor = current.color || '#00ff88';
+      } else {
+        const prevTime = nextIdx > 0 ? timesM[nextIdx - 1] : 0;
+        startM = prevTime;
+        endM = timesM[nextIdx];
+        const totalM = endM - startM;
+        pct = mins <= startM ? 0 : mins >= endM ? 100 : Math.min(100, ((mins - startM) / totalM) * 100);
+        label = 'Loading ' + escapeHtml(toTitleCase(next.label || next.name || next.title || ''));
+        barColor = next.color || '#00ff88';
+      }
       const segments = 20;
       const filled = Math.round((pct / 100) * segments);
       const segmentsHtml = Array.from({length: segments}, (_, i) => {
         const isFilled = i < filled;
-        return `<div class="day-bar-segment${isFilled ? ' filled' : ''}" style="${isFilled ? 'background:' + (current.color || '#00ff88') : ''}"></div>`;
+        return `<div class="day-bar-segment${isFilled ? ' filled' : ''}" style="${isFilled ? 'background:' + (barColor || '#00ff88') : ''}"></div>`;
       }).join('');
-      const coreHtml = `<div class="day-bar-label">Loading Next ${escapeHtml(current.label)}</div><div class="day-bar-track">${segmentsHtml}</div>`;
+      const coreHtml = `<div class="day-bar-label">${label}</div><div class="day-bar-track">${segmentsHtml}</div>`;
       if (includeEditBtn) {
         return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit time blocks">Edit blocks</button><div class="day-bar">${coreHtml}</div></div>`;
       }
@@ -2427,9 +2475,10 @@ if (file_exists($dataFile)) {
       const hasCustom = !!(data && data.timeBlocks && data.timeBlocks.length);
       timeBlocksList.innerHTML = (hasCustom ? '' : '<div class="time-block-row" style="color:var(--content-muted);margin-bottom:0.5rem">Using defaults. Add blocks to customize.</div>') + blocks.map(b => {
         const isCustom = !!b.id;
+        const t = b.time ?? b.start ?? 0;
         return `
         <div class="time-block-row" data-id="${escapeHtml(b.id || '')}">
-          <span>${escapeHtml(b.label)} (${b.start}–${b.end})</span>
+          <span>${escapeHtml(b.label)} (${decimalToTimeStr(t)})</span>
           ${isCustom ? '<button class="tb-edit" type="button" title="Edit">Edit</button><button class="tb-delete" type="button" title="Delete">Delete</button>' : ''}
         </div>`;
       }).join('');
@@ -2453,8 +2502,7 @@ if (file_exists($dataFile)) {
       document.getElementById('tbFormId').value = editId || '';
       const block = editId ? getTimeBlocks().find(b => b.id === editId) : null;
       document.getElementById('tbFormLabel').value = block ? block.label : '';
-      document.getElementById('tbFormStart').value = block ? block.start : '';
-      document.getElementById('tbFormEnd').value = block ? block.end : '';
+      document.getElementById('tbFormTime').value = block ? decimalToTimeStr(block.time ?? block.start ?? 0) : '';
       document.getElementById('tbFormColor').value = block ? (block.color || '#00ff88') : '#00ff88';
       timeBlockFormModal.classList.add('open');
     }
@@ -2471,25 +2519,25 @@ if (file_exists($dataFile)) {
     function saveTimeBlock() {
       const id = document.getElementById('tbFormId').value;
       const label = document.getElementById('tbFormLabel').value.trim();
-      const start = parseFloat(document.getElementById('tbFormStart').value) || 0;
-      const end = parseFloat(document.getElementById('tbFormEnd').value) || 1;
+      const time = timeStrToDecimal(document.getElementById('tbFormTime').value);
       const color = document.getElementById('tbFormColor').value.trim() || '#00ff88';
       if (!label) {
         alert('Label is required');
         return;
       }
-      if (start >= end) {
-        alert('End must be after start');
+      if (isNaN(time) || time < 0 || time > 24) {
+        alert('Time must be in HH:MM format, between 00:00 and 24:00');
         return;
       }
       if (id) {
-        api('editTimeBlock', { id, label, start, end, color })
+        api('editTimeBlock', { id, label, time, color })
           .then(() => {
             for (const b of (data.timeBlocks || [])) {
               if (b.id === id) {
                 b.label = label;
-                b.start = start;
-                b.end = end;
+                b.time = time;
+                delete b.start;
+                delete b.end;
                 b.color = color;
                 break;
               }
@@ -2500,7 +2548,7 @@ if (file_exists($dataFile)) {
           })
           .catch(e => alert('Save failed: ' + (e.message || 'Please try again')));
       } else {
-        api('addTimeBlock', { label, start, end, color })
+        api('addTimeBlock', { label, time, color })
           .then(res => {
             if (res && res.success && res.block) {
               data.timeBlocks = data.timeBlocks || [];
@@ -2942,6 +2990,37 @@ if (file_exists($dataFile)) {
         midiRaf = requestAnimationFrame(tick);
       }
 
+      var SOUNDBLASTER_BASE = 'https://surikov.github.io/webaudiofontdata/sound/';
+      function preferSoundBlasterInstrument(loader, program) {
+        if (loader.instrumentKeys) {
+          try {
+            var keys = loader.instrumentKeys(program);
+            if (keys && keys.length) {
+              for (var k = 0; k < keys.length; k++) {
+                var inf = loader.instrumentInfo(keys[k]);
+                if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
+              }
+            }
+          } catch (e) {}
+        }
+        var id = String((program || 0) * 10).padStart(4, '0');
+        return { url: SOUNDBLASTER_BASE + id + '_SoundBlasterOld_sf2.js', variable: '_tone_' + id + '_SoundBlasterOld_sf2' };
+      }
+      function preferSoundBlasterDrum(loader, drumNote) {
+        if (loader.drumKeys) {
+          try {
+            var keys = loader.drumKeys(drumNote);
+            if (keys && keys.length) {
+              for (var k = 0; k < keys.length; k++) {
+                var inf = loader.drumInfo(keys[k]);
+                if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
+              }
+            }
+          } catch (e) {}
+        }
+        var nn = loader.findDrum(drumNote);
+        return loader.drumInfo(nn);
+      }
       function loadAndPlayMidi(url) {
         if (!window.MIDIFile || !window.WebAudioFontPlayer) return;
         fetch(url).then(r => r.arrayBuffer()).then(function(arrayBuffer) {
@@ -2952,17 +3031,16 @@ if (file_exists($dataFile)) {
           var equalizer = midiPlayer.createChannel(midiContext);
           midiInput = equalizer.input;
           equalizer.output.connect(midiContext.destination);
+          var loader = midiPlayer.loader;
           for (var i = 0; i < song.tracks.length; i++) {
-            var nn = midiPlayer.loader.findInstrument(song.tracks[i].program);
-            var info = midiPlayer.loader.instrumentInfo(nn);
+            var info = preferSoundBlasterInstrument(loader, song.tracks[i].program);
             song.tracks[i].info = info;
-            midiPlayer.loader.startLoad(midiContext, info.url, info.variable);
+            loader.startLoad(midiContext, info.url, info.variable);
           }
           for (var i = 0; i < song.beats.length; i++) {
-            var nn = midiPlayer.loader.findDrum(song.beats[i].n);
-            var info = midiPlayer.loader.drumInfo(nn);
+            var info = preferSoundBlasterDrum(loader, song.beats[i].n);
             song.beats[i].info = info;
-            midiPlayer.loader.startLoad(midiContext, info.url, info.variable);
+            loader.startLoad(midiContext, info.url, info.variable);
           }
           midiPlayer.loader.waitLoad(function() {
             midiContext.resume();
