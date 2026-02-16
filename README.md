@@ -4,12 +4,12 @@ A retro-styled developer start page with quick links, a visual day planner, and 
 
 ## Features
 
-- **Link categories**  Organize links into categories (Dev Environment, Live, etc.). Drag to reorder. Add, edit, delete in edit mode.
-- **Visual day planner**  "Loading Next" progress bar shows where you are in the day based on configurable time blocks (Work Day, Tea Time, Lunch, Dog walk, etc.).
-- **Theme switcher**  Nine themes: 16-bit Megadrive, Tron, Tron Ares (red), Matrix, Sega Master System, Game Boy, PlayStation 5, Macintosh (1984), MS-DOS.
-- **Scratch pad**  Three tabs: **Text** for notes and quick thoughts; **Basic** for a built-in BASIC interpreter; **JavaScript** to run arbitrary JS (captures `console.log`). Maximize button (?) for full-screen editing.
-- **Edit mode**  Toggle via the pencil button (bottom-right) to manage categories, items, and time blocks.
-- **Screen saver**  Mystify-style bouncing-line animation. Activates after 60 seconds of idle time, or via the ? button (bottom-right). Shows clock and day planner. Theme-aware (different FPS/scale per theme). Move mouse or press a key to exit.
+- **Link categories**   Organize links into categories (Dev Environment, Live, etc.). Drag to reorder. Add, edit, delete in edit mode.
+- **Visual day planner**   "Loading Next" progress bar shows where you are in the day based on configurable time blocks (Work Day, Tea Time, Lunch, Dog walk, etc.).
+- **Theme switcher**   Nine themes: 16-bit Megadrive, Tron, Tron Ares (red), Matrix, Sega Master System, Game Boy, PlayStation 5, Macintosh (1984), MS-DOS.
+- **Scratch pad**   Three tabs: **Text** for notes and quick thoughts; **Basic** for a built-in BASIC interpreter; **JavaScript** to run arbitrary JS (captures `console.log`). Maximize button (?) for full-screen editing.
+- **Edit mode**   Toggle via the pencil button (bottom-right) to manage categories, items, and time blocks.
+- **Screen saver**   Mystify-style bouncing-line animation. Activates after 60 seconds of idle time, or via the ? button (bottom-right). Shows clock and day planner. Theme-aware (different FPS/scale per theme). Move mouse or press a key to exit.
 
 ## Requirements
 
@@ -19,7 +19,7 @@ A retro-styled developer start page with quick links, a visual day planner, and 
 ## Setup
 
 1. Clone or copy the project into your web root.
-2. Optionally copy `data.json.example` to `data.json` for a starter layoutor leave it out and add categories/links in the app (data.json will be created on first save).
+2. Optionally copy `data.json.example` to `data.json` for a starter layout or leave it out and add categories/links in the app (data.json will be created on first save).
 3. Ensure `data.json` is writable by the web server (it will be created automatically when you add your first category).
 4. Point your browser at the app (e.g. `http://localhost/ecgod-dev-start-page/`).
 
@@ -39,9 +39,9 @@ Then open `http://localhost:8080` in your browser.
 
 ## Data
 
-- **data.json**  Stores categories, link items, and time blocks. Edits in the UI are persisted via `api.php`. Not committed to Git (see `.gitignore`).
-- **data.json.example**  Sample structure. Copy to `data.json` to bootstrap, or start fresh and add categories in the app.
-- **api.php**  REST-style API for add/edit/delete/reorder of items, categories, and time blocks.
+- **data.json**   Stores categories, link items, and time blocks. Edits in the UI are persisted via `api.php`. Not committed to Git (see `.gitignore`).
+- **data.json.example**   Sample structure. Copy to `data.json` to bootstrap, or start fresh and add categories in the app.
+- **api.php**   REST-style API for add/edit/delete/reorder of items, categories, and time blocks.
 
 ## Scratch Pad
 
@@ -109,7 +109,7 @@ RUN
 
 - Max 10,000 execution steps (prevents infinite loops from hanging the tab)
 - Output truncated at 50,000 characters
-- No `IF`, `FOR`, `INPUT`, or other advanced statements ? ?it's intentionally minimal
+- No `IF`, `FOR`, `INPUT`, or other advanced statements ? ? it's intentionally minimal
 
 It's a nostalgic throwback: line numbers, `PRINT`, `GOTO`, and `LET` in a modern start page.
 
