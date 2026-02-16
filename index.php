@@ -2944,6 +2944,47 @@ if (file_exists($dataFile)) {
 
       let midiCurrentTrackIndex = 0;
 
+      var SOUNDBLASTER_BASE = 'https://surikov.github.io/webaudiofontdata/sound/';
+      function preferSoundBlasterInstrument(loader, program) {
+        if (loader.instrumentKeys) {
+          try {
+            var keys = loader.instrumentKeys(program);
+            if (keys && keys.length) {
+              for (var k = 0; k < keys.length; k++) {
+                try {
+                  var inf = loader.instrumentInfo(keys[k]);
+                  if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
+                } catch (e2) {}
+              }
+            }
+          } catch (e) {}
+        }
+        var id = String((program || 0) * 10).padStart(4, '0');
+        return { url: SOUNDBLASTER_BASE + id + '_SoundBlasterOld_sf2.js', variable: '_tone_' + id + '_SoundBlasterOld_sf2' };
+      }
+      function preferSoundBlasterDrum(loader, drumNote) {
+        if (loader.drumKeys) {
+          try {
+            var keys = loader.drumKeys(drumNote);
+            if (keys && keys.length) {
+              for (var k = 0; k < keys.length; k++) {
+                try {
+                  var inf = loader.drumInfo(keys[k]);
+                  if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
+                } catch (e2) {}
+              }
+            }
+          } catch (e) {}
+        }
+        try {
+          var nn = loader.findDrum(drumNote);
+          return loader.drumInfo(nn);
+        } catch (e) {
+          var did = String(Math.min(127, Math.max(0, drumNote || 0))).padStart(4, '0');
+          return { url: SOUNDBLASTER_BASE + did + '_SoundBlasterOld_sf2.js', variable: '_tone_' + did + '_SoundBlasterOld_sf2' };
+        }
+      }
+
       function sendNotes(song, songStart, start, end) {
         if (!midiPlayer || !midiInput || !midiSong) return;
         for (let t = 0; t < song.tracks.length; t++) {
@@ -2979,7 +3020,7 @@ if (file_exists($dataFile)) {
           midiCurrentTime += midiStepDuration;
           if (midiCurrentTime > midiSong.duration) {
             midiPlaying = false;
-            if (midiPlayer) midiPlayer.cancelQueue(midiContext);
+            if (midiPlayer && midiContext) midiPlayer.cancelQueue(midiContext);
             pauseBtn.style.display = 'none';
             playBtn.style.display = '';
             if (midiOnEnded) midiOnEnded();
@@ -2990,37 +3031,6 @@ if (file_exists($dataFile)) {
         midiRaf = requestAnimationFrame(tick);
       }
 
-      var SOUNDBLASTER_BASE = 'https://surikov.github.io/webaudiofontdata/sound/';
-      function preferSoundBlasterInstrument(loader, program) {
-        if (loader.instrumentKeys) {
-          try {
-            var keys = loader.instrumentKeys(program);
-            if (keys && keys.length) {
-              for (var k = 0; k < keys.length; k++) {
-                var inf = loader.instrumentInfo(keys[k]);
-                if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
-              }
-            }
-          } catch (e) {}
-        }
-        var id = String((program || 0) * 10).padStart(4, '0');
-        return { url: SOUNDBLASTER_BASE + id + '_SoundBlasterOld_sf2.js', variable: '_tone_' + id + '_SoundBlasterOld_sf2' };
-      }
-      function preferSoundBlasterDrum(loader, drumNote) {
-        if (loader.drumKeys) {
-          try {
-            var keys = loader.drumKeys(drumNote);
-            if (keys && keys.length) {
-              for (var k = 0; k < keys.length; k++) {
-                var inf = loader.drumInfo(keys[k]);
-                if (inf && inf.variable && inf.variable.indexOf('SoundBlasterOld') >= 0) return inf;
-              }
-            }
-          } catch (e) {}
-        }
-        var nn = loader.findDrum(drumNote);
-        return loader.drumInfo(nn);
-      }
       function loadAndPlayMidi(url) {
         if (!window.MIDIFile || !window.WebAudioFontPlayer) return;
         fetch(url).then(r => r.arrayBuffer()).then(function(arrayBuffer) {
