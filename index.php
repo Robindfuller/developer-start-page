@@ -5,6 +5,10 @@ if (file_exists($dataFile)) {
     $json = file_get_contents($dataFile);
     $decoded = json_decode($json, true);
     if ($decoded) {
+        if (isset($decoded['timeBlocks']) && !isset($decoded['events'])) {
+            $decoded['events'] = $decoded['timeBlocks'];
+            unset($decoded['timeBlocks']);
+        }
         $initialData = $decoded;
     }
 }
@@ -365,6 +369,9 @@ if (file_exists($dataFile)) {
       min-width: 0;
       background: rgba(0, 0, 0, 0.5);
       transition: background 0.3s;
+    }
+    .day-bar-segment.filled {
+      background: var(--button-bg);
     }
 
     .sidebar-header {
@@ -1875,12 +1882,6 @@ if (file_exists($dataFile)) {
       pointer-events: none;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
-    body.screensaver-active .modal-overlay {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transition: opacity 0.6s ease, visibility 0.6s ease;
-    }
   </style>
 </head>
 <body>
@@ -1951,10 +1952,10 @@ if (file_exists($dataFile)) {
 
   <div class="modal-overlay" id="timeBlocksModal">
     <div class="modal">
-      <h3>Time Blocks</h3>
+      <h3>Daily Events</h3>
       <div class="time-blocks-list" id="timeBlocksList"></div>
       <div class="modal-actions" style="margin-top: 0.5rem;">
-        <button class="btn-save" type="button" id="addTimeBlockBtn">+ Add Block</button>
+        <button class="btn-save" type="button" id="addTimeBlockBtn">+ Add Event</button>
         <button class="btn-cancel" type="button" id="closeTimeBlocksBtn">Close</button>
       </div>
     </div>
@@ -1963,14 +1964,12 @@ if (file_exists($dataFile)) {
   <div class="modal-overlay" id="timeBlockFormModal">
     <div class="modal">
       <form id="timeBlockForm" novalidate>
-        <h3 id="timeBlockFormTitle">Add Time Block</h3>
+        <h3 id="timeBlockFormTitle">Add Event</h3>
         <input type="hidden" id="tbFormId">
         <label>Label</label>
         <input type="text" id="tbFormLabel" placeholder="e.g. Lunch" required>
         <label>Time (HH:MM, 00:00–24:00)</label>
         <input type="text" id="tbFormTime" placeholder="11:00" pattern="[0-9]{1,2}:[0-5][0-9]" required>
-        <label>Color</label>
-        <input type="text" id="tbFormColor" placeholder="#ff6b35" value="#00ff88">
         <div class="modal-actions">
           <button class="btn-cancel" type="button" id="tbFormCancelBtn">Cancel</button>
           <button class="btn-save" type="submit" id="tbFormSaveBtn">Save</button>
@@ -2142,17 +2141,17 @@ if (file_exists($dataFile)) {
       }
     }
     const DEFAULT_TIME_BLOCKS = [
-      { label: 'Work Day', time: 0, color: '#00ff88' },
-      { label: 'Tea Time', time: 9, color: '#ffaa00' },
-      { label: 'Lunch', time: 11, color: '#ff6b35' },
-      { label: 'Tea Time', time: 12, color: '#ffaa00' },
-      { label: 'Dog walk', time: 14, color: '#00cc6a' },
-      { label: 'Dinner', time: 17, color: '#ff6b35' },
-      { label: 'Bed time', time: 18.5, color: '#6b7fd7' },
-      { label: 'Complete', time: 22.75, color: '#00ff88' }
+      { label: 'Work Day', time: 0 },
+      { label: 'Tea Time', time: 9 },
+      { label: 'Lunch', time: 11 },
+      { label: 'Tea Time', time: 12 },
+      { label: 'Dog walk', time: 14 },
+      { label: 'Dinner', time: 17 },
+      { label: 'Bed time', time: 18.5 },
+      { label: 'Complete', time: 22.75 }
     ];
     function getTimeBlocks() {
-      let blocks = (data && data.timeBlocks && data.timeBlocks.length) ? data.timeBlocks : DEFAULT_TIME_BLOCKS;
+      let blocks = (data && data.events && data.events.length) ? data.events : DEFAULT_TIME_BLOCKS;
       blocks = blocks.map(b => {
         if ('start' in b && !('time' in b)) return { ...b, time: b.start };
         return b;
@@ -2180,7 +2179,7 @@ if (file_exists($dataFile)) {
       if (blocks.length === 0) {
         const emptyHtml = '<div class="day-bar-label">No events</div><div class="day-bar-track"></div>';
         const core = emptyHtml;
-        if (includeEditBtn) return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit time blocks">Edit blocks</button><div class="day-bar">${core}</div></div>`;
+        if (includeEditBtn) return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit daily events">Edit events</button><div class="day-bar">${core}</div></div>`;
         return `<div class="day-bar">${core}</div>`;
       }
       const now = new Date();
@@ -2193,27 +2192,25 @@ if (file_exists($dataFile)) {
       const current = currentIdx >= 0 ? blocks[currentIdx] : blocks[blocks.length - 1];
       const nextIdx = blocks.findIndex(b => (b.time ?? b.start ?? 0) * 60 > mins);
       const next = nextIdx >= 0 ? blocks[nextIdx] : null;
-      let label, startM, endM, pct, barColor;
+      let label, startM, endM, pct;
       if (!next) {
-        label = 'Loading complete';
         startM = timesM[timesM.length - 1] ?? 0;
         endM = 24 * 60;
         pct = mins >= startM ? 100 : 0;
-        barColor = current.color || '#00ff88';
+        label = 'Loading complete ' + Math.round(pct) + '%';
       } else {
         const prevTime = nextIdx > 0 ? timesM[nextIdx - 1] : 0;
         startM = prevTime;
         endM = timesM[nextIdx];
         const totalM = endM - startM;
         pct = mins <= startM ? 0 : mins >= endM ? 100 : Math.min(100, ((mins - startM) / totalM) * 100);
-        label = 'Loading ' + escapeHtml(toTitleCase(next.label || next.name || next.title || ''));
-        barColor = next.color || '#00ff88';
+        label = 'Loading ' + escapeHtml(toTitleCase(next.label || next.name || next.title || '')) + ' ' + Math.round(pct) + '%';
       }
       const segments = 20;
       const filled = Math.round((pct / 100) * segments);
       const segmentsHtml = Array.from({length: segments}, (_, i) => {
         const isFilled = i < filled;
-        return `<div class="day-bar-segment${isFilled ? ' filled' : ''}" style="${isFilled ? 'background:' + (barColor || '#00ff88') : ''}"></div>`;
+        return `<div class="day-bar-segment${isFilled ? ' filled' : ''}"></div>`;
       }).join('');
       const coreHtml = `<div class="day-bar-label">${label}</div><div class="day-bar-track">${segmentsHtml}</div>`;
       if (includeEditBtn) {
@@ -2247,6 +2244,7 @@ if (file_exists($dataFile)) {
       let mystifyPoints = [];
       let mystifyHistory = [];
       let manualActivationGraceUntil = 0;
+      let modalsOpenBeforeScreensaver = [];
 
       const MYSTIFY_THEME = {
         ps5: { fps: 60, scale: 1 },
@@ -2372,6 +2370,11 @@ if (file_exists($dataFile)) {
         manualActivationGraceUntil = manualActivation ? Date.now() + 2000 : 0;
         window._screensaverClockEl = screensaverClock;
         window._screensaverDayBarsEl = screensaverDayBars;
+        modalsOpenBeforeScreensaver = [];
+        document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+          modalsOpenBeforeScreensaver.push(m.id || m);
+          m.classList.remove('open');
+        });
         document.body.classList.add('screensaver-active');
         overlay.classList.add('active');
         overlay.setAttribute('aria-hidden', 'false');
@@ -2392,6 +2395,11 @@ if (file_exists($dataFile)) {
         document.body.classList.remove('screensaver-active');
         overlay.classList.remove('active');
         overlay.setAttribute('aria-hidden', 'true');
+        modalsOpenBeforeScreensaver.forEach(function(id) {
+          var el = typeof id === 'string' ? document.getElementById(id) : id;
+          if (el) el.classList.add('open');
+        });
+        modalsOpenBeforeScreensaver = [];
         if (mystifyRAF) {
           cancelAnimationFrame(mystifyRAF);
           mystifyRAF = null;
@@ -2719,8 +2727,8 @@ if (file_exists($dataFile)) {
 
     function openTimeBlocksModal() {
       const blocks = getTimeBlocks();
-      const hasCustom = !!(data && data.timeBlocks && data.timeBlocks.length);
-      timeBlocksList.innerHTML = (hasCustom ? '' : '<div class="time-block-row" style="color:var(--content-muted);margin-bottom:0.5rem">Using defaults. Add blocks to customize.</div>') + blocks.map(b => {
+      const hasCustom = !!(data && data.events && data.events.length);
+      timeBlocksList.innerHTML = (hasCustom ? '' : '<div class="time-block-row" style="color:var(--content-muted);margin-bottom:0.5rem">Using defaults. Add events to customize.</div>') + blocks.map(b => {
         const isCustom = !!b.id;
         const t = b.time ?? b.start ?? 0;
         return `
@@ -2734,7 +2742,7 @@ if (file_exists($dataFile)) {
       });
       timeBlocksList.querySelectorAll('.tb-delete').forEach(btn => {
         btn.addEventListener('click', () => {
-          if (confirm('Delete this time block?')) deleteTimeBlock(btn.closest('.time-block-row').dataset.id);
+          if (confirm('Delete this event?')) deleteTimeBlock(btn.closest('.time-block-row').dataset.id);
         });
       });
       timeBlocksModal.classList.add('open');
@@ -2745,12 +2753,11 @@ if (file_exists($dataFile)) {
     }
 
     function openTimeBlockForm(editId) {
-      document.getElementById('timeBlockFormTitle').textContent = editId ? 'Edit Time Block' : 'Add Time Block';
+      document.getElementById('timeBlockFormTitle').textContent = editId ? 'Edit Event' : 'Add Event';
       document.getElementById('tbFormId').value = editId || '';
       const block = editId ? getTimeBlocks().find(b => b.id === editId) : null;
       document.getElementById('tbFormLabel').value = block ? block.label : '';
       document.getElementById('tbFormTime').value = block ? decimalToTimeStr(block.time ?? block.start ?? 0) : '';
-      document.getElementById('tbFormColor').value = block ? (block.color || '#00ff88') : '#00ff88';
       timeBlockFormModal.classList.add('open');
     }
 
@@ -2767,7 +2774,6 @@ if (file_exists($dataFile)) {
       const id = document.getElementById('tbFormId').value;
       const label = document.getElementById('tbFormLabel').value.trim();
       const time = timeStrToDecimal(document.getElementById('tbFormTime').value);
-      const color = document.getElementById('tbFormColor').value.trim() || '#00ff88';
       if (!label) {
         alert('Label is required');
         return;
@@ -2777,15 +2783,15 @@ if (file_exists($dataFile)) {
         return;
       }
       if (id) {
-        api('editTimeBlock', { id, label, time, color })
+        api('editTimeBlock', { id, label, time })
           .then(() => {
-            for (const b of (data.timeBlocks || [])) {
+            for (const b of (data.events || [])) {
               if (b.id === id) {
                 b.label = label;
                 b.time = time;
                 delete b.start;
                 delete b.end;
-                b.color = color;
+                delete b.color;
                 break;
               }
             }
@@ -2795,11 +2801,11 @@ if (file_exists($dataFile)) {
           })
           .catch(e => alert('Save failed: ' + (e.message || 'Please try again')));
       } else {
-        api('addTimeBlock', { label, time, color })
+        api('addTimeBlock', { label, time })
           .then(res => {
             if (res && res.success && res.block) {
-              data.timeBlocks = data.timeBlocks || [];
-              data.timeBlocks.push(res.block);
+              data.events = data.events || [];
+              data.events.push(res.block);
               closeTimeBlockFormModal();
               updateDayBars();
               openTimeBlocksModal();
@@ -2812,7 +2818,7 @@ if (file_exists($dataFile)) {
     function deleteTimeBlock(id) {
       api('deleteTimeBlock', { id })
         .then(() => {
-          data.timeBlocks = (data.timeBlocks || []).filter(b => b.id !== id);
+          data.events = (data.events || []).filter(b => b.id !== id);
           updateDayBars();
           openTimeBlocksModal();
         })

@@ -13,13 +13,17 @@ $dataFile = __DIR__ . '/data.json';
 function loadData() {
     global $dataFile;
     if (!file_exists($dataFile)) {
-        return array('categories' => array(), 'timeBlocks' => array(), 'midiPlaylist' => array());
+        return array('categories' => array(), 'events' => array(), 'midiPlaylist' => array());
     }
     $json = file_get_contents($dataFile);
     $data = json_decode($json, true);
-    if (!$data) return array('categories' => array(), 'timeBlocks' => array(), 'midiPlaylist' => array());
-    if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
-    foreach ($data['timeBlocks'] as &$b) {
+    if (!$data) return array('categories' => array(), 'events' => array(), 'midiPlaylist' => array());
+    if (isset($data['timeBlocks']) && !isset($data['events'])) {
+        $data['events'] = $data['timeBlocks'];
+        unset($data['timeBlocks']);
+    }
+    if (empty($data['events'])) $data['events'] = array();
+    foreach ($data['events'] as &$b) {
         if (isset($b['start']) && !isset($b['time'])) { $b['time'] = $b['start']; unset($b['start']); unset($b['end']); }
     }
     if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
@@ -33,12 +37,12 @@ function generateTimeBlockId() {
 function saveData($data) {
     global $dataFile;
     if (empty($data['categories'])) $data['categories'] = array();
-    if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
-    foreach ($data['timeBlocks'] as &$b) {
+    if (empty($data['events'])) $data['events'] = array();
+    foreach ($data['events'] as &$b) {
         if (isset($b['start']) && !isset($b['time'])) { $b['time'] = $b['start']; unset($b['start']); unset($b['end']); }
     }
     if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
-    usort($data['timeBlocks'], function($a, $b) {
+    usort($data['events'], function($a, $b) {
         $oa = isset($a['order']) ? $a['order'] : 0;
         $ob = isset($b['order']) ? $b['order'] : 0;
         return $oa - $ob;
@@ -230,19 +234,18 @@ switch ($action) {
         break;
 
     case 'addTimeBlock':
-        $blocks = isset($data['timeBlocks']) ? $data['timeBlocks'] : array();
+        $blocks = isset($data['events']) ? $data['events'] : array();
         $maxOrder = -1;
         foreach ($blocks as $b) {
             $maxOrder = max($maxOrder, isset($b['order']) ? $b['order'] : 0);
         }
         $block = array(
             'id' => generateTimeBlockId(),
-            'label' => trim(isset($input['label']) ? $input['label'] : 'Block'),
+            'label' => trim(isset($input['label']) ? $input['label'] : 'Event'),
             'time' => floatval(isset($input['time']) ? $input['time'] : 0),
-            'color' => isset($input['color']) ? $input['color'] : '#00ff88',
             'order' => $maxOrder + 1
         );
-        $data['timeBlocks'][] = $block;
+        $data['events'][] = $block;
         saveData($data);
         echo json_encode(['success' => true, 'block' => $block]);
         break;
@@ -250,7 +253,7 @@ switch ($action) {
     case 'editTimeBlock':
         $blockId = isset($input['id']) ? $input['id'] : '';
         $found = false;
-        foreach ($data['timeBlocks'] as &$b) {
+        foreach ($data['events'] as &$b) {
             if (isset($b['id']) && $b['id'] === $blockId) {
                 if (isset($input['label'])) $b['label'] = trim($input['label']);
                 if (isset($input['time'])) {
@@ -258,7 +261,7 @@ switch ($action) {
                     unset($b['start']);
                     unset($b['end']);
                 }
-                if (isset($input['color'])) $b['color'] = $input['color'];
+                if (isset($b['color'])) unset($b['color']);
                 $found = true;
                 break;
             }
@@ -269,7 +272,7 @@ switch ($action) {
 
     case 'deleteTimeBlock':
         $blockId = isset($input['id']) ? $input['id'] : '';
-        $data['timeBlocks'] = array_values(array_filter($data['timeBlocks'], function($b) use ($blockId) {
+        $data['events'] = array_values(array_filter($data['events'], function($b) use ($blockId) {
             return (isset($b['id']) ? $b['id'] : '') !== $blockId;
         }));
         saveData($data);
