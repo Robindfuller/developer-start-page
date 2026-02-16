@@ -6,6 +6,7 @@ A retro-styled developer start page with quick links, a visual day planner, and 
 
 - **Link categories**   Organize links into categories (Dev Environment, Live, etc.). Drag to reorder. Add, edit, delete in edit mode.
 - **Visual day planner**   "Loading Next" progress bar shows where you are in the day based on configurable time blocks (Work Day, Tea Time, Lunch, Dog walk, etc.).
+- **MIDI player**   Compact player widget next to the theme switcher. Add MIDI files via URL or upload, manage a playlist, play/pause/prev/next. Automatically advances to the next track when one finishes.
 - **Theme switcher**   Nine themes: 16-bit Megadrive, Tron, Tron Ares (red), Matrix, Sega Master System, Game Boy, PlayStation 5, Macintosh (1984), MS-DOS.
 - **Scratch pad**   Three tabs: **Text** for notes and quick thoughts; **Basic** for a built-in BASIC interpreter; **JavaScript** to run arbitrary JS (captures `console.log`). Maximize button (?) for full-screen editing.
 - **Edit mode**   Toggle via the pencil button (bottom-right) to manage categories, items, and time blocks.
@@ -37,11 +38,38 @@ php -S localhost:8080
 
 Then open `http://localhost:8080` in your browser.
 
+## MIDI Player
+
+The MIDI player lets you listen to `.mid` / `.midi` files while using the start page. A compact player widget sits next to the theme switcher.
+
+### Accessing the player
+
+Click the music note (♪) button to open the playlist manager. Use the on-screen controls to play, pause, skip to previous/next, or close the panel.
+
+### Adding tracks
+
+| Method | Description |
+|--------|-------------|
+| **Add via URL** | Paste a URL to a MIDI file (e.g. from CDNs or your own server). |
+| **Upload** | Upload `.mid` / `.midi` files; they are saved in the `midi/` folder. |
+
+### Playlist controls
+
+- **Play / Pause / Prev / Next** – Standard transport controls. Playback automatically advances to the next track when one finishes.
+- **Remove** – Delete tracks from the playlist.
+- **Reorder** – Drag tracks to change the playback order.
+
+### Setup for uploads
+
+- The `midi/` folder is created automatically when you upload your first file.
+- Ensure the web server can write to the project directory (or create `midi/` manually with `mkdir midi` and make it writable).
+- `midi/` is gitignored; your uploaded files stay local.
+
 ## Data
 
-- **data.json**   Stores categories, link items, and time blocks. Edits in the UI are persisted via `api.php`. Not committed to Git (see `.gitignore`).
+- **data.json**   Stores categories, link items, time blocks, and the MIDI playlist. Edits in the UI are persisted via `api.php`. Not committed to Git (see `.gitignore`).
 - **data.json.example**   Sample structure. Copy to `data.json` to bootstrap, or start fresh and add categories in the app.
-- **api.php**   REST-style API for add/edit/delete/reorder of items, categories, and time blocks.
+- **api.php**   REST-style API for add/edit/delete/reorder of items, categories, time blocks, and MIDI playlist.
 
 ## Scratch Pad
 

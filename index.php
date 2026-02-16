@@ -18,6 +18,8 @@ if (file_exists($dataFile)) {
   <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/chicagoflf" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webaudiofont@3.0.4/npm/dist/WebAudioFontPlayer.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/webaudiofont@3.0.4/examples/MIDIFile.js"></script>
   <style>
     :root {
       --bg: #1a1630;
@@ -40,10 +42,19 @@ if (file_exists($dataFile)) {
       --content-muted: #00b8d4;
       --button-bg: #00ffff;
       --button-hover: #00e5ff;
+      --button-fg: #0a0e17;
       --card-bg: rgba(0, 200, 255, 0.05);
       --card-border: #00ffff;
       --bevel-light: rgba(0, 255, 255, 0.3);
       --bevel-dark: #050810;
+      --edit-btn-bg: #00d4ff;
+      --edit-btn-fg: #0a0e17;
+      --edit-btn-border: #00ffff;
+      --edit-btn-hover: #00e5ff;
+      --delete-btn-bg: #00d4ff;
+      --delete-btn-fg: #0a0e17;
+      --delete-btn-border: #00ffff;
+      --delete-btn-hover: #00e5ff;
     }
 
     /* Tron Ares theme (red) */
@@ -54,10 +65,19 @@ if (file_exists($dataFile)) {
       --content-muted: #d40038;
       --button-bg: #ff0040;
       --button-hover: #ff3366;
+      --button-fg: #170a0a;
       --card-bg: rgba(255, 0, 64, 0.05);
       --card-border: #ff0040;
       --bevel-light: rgba(255, 0, 64, 0.3);
       --bevel-dark: #100505;
+      --edit-btn-bg: #ff0040;
+      --edit-btn-fg: #170a0a;
+      --edit-btn-border: #ff3366;
+      --edit-btn-hover: #ff3366;
+      --delete-btn-bg: #ff0040;
+      --delete-btn-fg: #170a0a;
+      --delete-btn-border: #ff3366;
+      --delete-btn-hover: #ff3366;
     }
 
     /* Matrix theme */
@@ -68,10 +88,19 @@ if (file_exists($dataFile)) {
       --content-muted: #00cc34;
       --button-bg: #00ff41;
       --button-hover: #33ff66;
+      --button-fg: #0d0d0d;
       --card-bg: rgba(0, 255, 65, 0.05);
       --card-border: #00ff41;
       --bevel-light: rgba(0, 255, 65, 0.2);
       --bevel-dark: #050505;
+      --edit-btn-bg: #00ff41;
+      --edit-btn-fg: #0d0d0d;
+      --edit-btn-border: #33ff66;
+      --edit-btn-hover: #33ff66;
+      --delete-btn-bg: #00ff41;
+      --delete-btn-fg: #0d0d0d;
+      --delete-btn-border: #33ff66;
+      --delete-btn-hover: #33ff66;
     }
 
     /* Sega Master System theme (8-bit) */
@@ -82,10 +111,19 @@ if (file_exists($dataFile)) {
       --content-muted: #8098b8;
       --button-bg: #00aaff;
       --button-hover: #33bbff;
+      --button-fg: #181830;
       --card-bg: #202048;
       --card-border: #4040a0;
       --bevel-light: #6060c0;
       --bevel-dark: #101030;
+      --edit-btn-bg: #00aaff;
+      --edit-btn-fg: #181830;
+      --edit-btn-border: #33bbff;
+      --edit-btn-hover: #33bbff;
+      --delete-btn-bg: #0088cc;
+      --delete-btn-fg: #181830;
+      --delete-btn-border: #00aaff;
+      --delete-btn-hover: #00aaff;
     }
 
     /* PlayStation 5 theme (ultra modern) */
@@ -96,10 +134,19 @@ if (file_exists($dataFile)) {
       --content-muted: #8e8e93;
       --button-bg: #006fcd;
       --button-hover: #0077e6;
+      --button-fg: #ffffff;
       --card-bg: rgba(255, 255, 255, 0.04);
       --card-border: rgba(255, 255, 255, 0.12);
       --bevel-light: rgba(255, 255, 255, 0.08);
       --bevel-dark: #050505;
+      --edit-btn-bg: #006fcd;
+      --edit-btn-fg: #ffffff;
+      --edit-btn-border: #0077e6;
+      --edit-btn-hover: #0077e6;
+      --delete-btn-bg: #004578;
+      --delete-btn-fg: #ffffff;
+      --delete-btn-border: #006fcd;
+      --delete-btn-hover: #006fcd;
     }
 
     /* Original Game Boy theme */
@@ -110,10 +157,19 @@ if (file_exists($dataFile)) {
       --content-muted: #306230;
       --button-bg: #0f380f;
       --button-hover: #306230;
+      --button-fg: #9bbc0f;
       --card-bg: #8bac0f;
       --card-border: #306230;
       --bevel-light: #9bbc0f;
       --bevel-dark: #0f380f;
+      --edit-btn-bg: #0f380f;
+      --edit-btn-fg: #9bbc0f;
+      --edit-btn-border: #306230;
+      --edit-btn-hover: #306230;
+      --delete-btn-bg: #0f380f;
+      --delete-btn-fg: #9bbc0f;
+      --delete-btn-border: #306230;
+      --delete-btn-hover: #306230;
     }
 
     /* Original Macintosh (1984) theme – 1-bit black and white */
@@ -124,10 +180,19 @@ if (file_exists($dataFile)) {
       --content-muted: #000000;
       --button-bg: #000000;
       --button-hover: #000000;
+      --button-fg: #ffffff;
       --card-bg: #ffffff;
       --card-border: #000000;
       --bevel-light: #ffffff;
       --bevel-dark: #000000;
+      --edit-btn-bg: #000000;
+      --edit-btn-fg: #ffffff;
+      --edit-btn-border: #000000;
+      --edit-btn-hover: #000000;
+      --delete-btn-bg: #000000;
+      --delete-btn-fg: #ffffff;
+      --delete-btn-border: #000000;
+      --delete-btn-hover: #000000;
     }
 
     /* MS-DOS theme – mid-90s window (gray chrome, black/white content, subtle color) */
@@ -138,10 +203,19 @@ if (file_exists($dataFile)) {
       --content-muted: #404040;
       --button-bg: #c0c0c0;
       --button-hover: #d4d0c8;
+      --button-fg: #000000;
       --card-bg: #ffffff;
       --card-border: #808080;
       --bevel-light: #ffffff;
       --bevel-dark: #808080;
+      --edit-btn-bg: #0000aa;
+      --edit-btn-fg: #ffffff;
+      --edit-btn-border: #000080;
+      --edit-btn-hover: #0000aa;
+      --delete-btn-bg: #c0c0c0;
+      --delete-btn-fg: #000000;
+      --delete-btn-border: #808080;
+      --delete-btn-hover: #d4d0c8;
     }
 
     * { box-sizing: border-box; }
@@ -301,9 +375,63 @@ if (file_exists($dataFile)) {
       gap: 0.5rem;
     }
 
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
     .theme-switcher {
       display: flex;
       align-items: center;
+    }
+    .midi-player-widget {
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      padding: 0.25rem 0.4rem;
+      font-size: 0.7rem;
+      font-family: inherit;
+    }
+    .midi-player-widget .midi-btn,
+    .midi-player-widget .midi-track-name {
+      font-family: inherit;
+    }
+    .midi-player-widget .midi-btn {
+      width: 1.5rem;
+      height: 1.5rem;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      cursor: pointer;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+    .midi-player-widget .midi-btn:hover {
+      background: var(--card-border);
+      color: var(--bg);
+    }
+    .midi-player-widget .midi-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .midi-player-widget .midi-track-name {
+      max-width: 8rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: var(--content-muted);
+      font-size: 0.65rem;
+    }
+    .midi-player-widget .midi-playlist-btn {
+      padding: 0 0.25rem;
+      font-size: 0.7rem;
     }
     .theme-select {
       padding: 0.35rem 0.6rem;
@@ -330,6 +458,11 @@ if (file_exists($dataFile)) {
       border-color: var(--button-bg);
       box-shadow: 0 0 0 2px var(--card-bg);
     }
+    .theme-switcher-fixed .theme-select {
+      min-width: 6.5rem;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.65rem;
+    }
 
     .fixed-buttons {
       position: fixed;
@@ -351,7 +484,7 @@ if (file_exists($dataFile)) {
       color: var(--content-muted);
       cursor: pointer;
       font-size: 0.9rem;
-      font-family: 'Silkscreen', monospace;
+      font-family: inherit;
       opacity: 0.7;
       box-shadow: 2px 2px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
       transition: opacity 0.15s, background 0.15s;
@@ -377,12 +510,12 @@ if (file_exists($dataFile)) {
     }
     .add-item-btn {
       display: none;
-      background: var(--button-bg); color: white; border: none;
+      background: var(--button-bg); color: var(--button-fg, white);
       padding: 0.3rem 0.6rem; font-size: 0.65rem;
       cursor: pointer;
-      font-family: 'Silkscreen', monospace;
-      border: 2px solid #cc5500;
-      box-shadow: 2px 2px 0 #994400;
+      font-family: inherit;
+      border: 2px solid var(--button-border, var(--button-bg));
+      box-shadow: 2px 2px 0 var(--bevel-dark);
     }
     .add-item-btn:hover { background: var(--button-hover); }
     .edit-mode .add-item-btn { display: inline-block; }
@@ -396,14 +529,13 @@ if (file_exists($dataFile)) {
     .add-category-row .add-category-btn {
       display: inline-block;
       background: var(--button-bg);
-      color: white;
-      border: none;
+      color: var(--button-fg, white);
       padding: 0.4rem 0.8rem;
       font-size: 0.75rem;
       cursor: pointer;
-      font-family: 'Silkscreen', monospace;
-      border: 2px solid #cc5500;
-      box-shadow: 2px 2px 0 #994400;
+      font-family: inherit;
+      border: 2px solid var(--button-border, var(--button-bg));
+      box-shadow: 2px 2px 0 var(--bevel-dark);
     }
     .add-category-row .add-category-btn:hover { background: var(--button-hover); }
     .empty-state-msg {
@@ -465,20 +597,22 @@ if (file_exists($dataFile)) {
       width: 1.5rem; height: 1.5rem;
       align-items: center; justify-content: center;
       border: 2px solid; cursor: pointer;
-      font-size: 0.65rem; font-family: 'Silkscreen', monospace;
-      box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+      font-size: 0.65rem; font-family: inherit;
+      box-shadow: 1px 1px 0 var(--bevel-dark);
     }
-    .edit-item-btn { border-color: #2266bb; }
-    .delete-item-btn { border-color: #992222; }
-    .edit-mode .edit-item-btn, .edit-mode .delete-item-btn { display: inline-flex; }
     .edit-item-btn {
-      background: #3b82f6; color: white;
+      border-color: var(--edit-btn-border, #2266bb);
+      background: var(--edit-btn-bg, #3b82f6);
+      color: var(--edit-btn-fg, white);
     }
-    .edit-item-btn:hover { background: #2563eb; }
+    .edit-item-btn:hover { background: var(--edit-btn-hover, #2563eb); }
     .delete-item-btn {
-      background: #dc2626; color: white;
+      border-color: var(--delete-btn-border, #992222);
+      background: var(--delete-btn-bg, #dc2626);
+      color: var(--delete-btn-fg, white);
     }
-    .delete-item-btn:hover { background: #b91c1c; }
+    .delete-item-btn:hover { background: var(--delete-btn-hover, #b91c1c); }
+    .edit-mode .edit-item-btn, .edit-mode .delete-item-btn { display: inline-flex; }
 
     .link-icon {
       display: inline-flex; align-items: center; justify-content: center;
@@ -558,13 +692,34 @@ if (file_exists($dataFile)) {
       border-color: var(--card-border);
       box-shadow: 2px 2px 0 var(--bevel-dark);
     }
+    .modal .btn-save,
     .modal-actions .btn-save {
       background: var(--button-bg);
       color: white;
-      border-color: #cc5500;
-      box-shadow: 2px 2px 0 #994400;
+      border: 2px solid;
+      border-color: var(--button-bg);
+      box-shadow: 2px 2px 0 var(--bevel-dark);
     }
+    .modal .btn-save:hover,
     .modal-actions .btn-save:hover { background: var(--button-hover); }
+
+    .midi-add-row input,
+    .midi-add-row button,
+    .midi-add-row label,
+    #midiPlaylistModal .modal h3,
+    #midiPlaylistModal .time-block-row {
+      font-family: inherit;
+    }
+    .midi-add-row {
+      align-items: flex-start;
+    }
+    .midi-add-row .btn-save {
+      padding: 0.35rem 0.5rem;
+      font-size: 0.7rem;
+      line-height: 1;
+      min-height: 0;
+      box-shadow: 2px 2px 0 var(--bevel-dark);
+    }
 
     .time-blocks-list { margin: 0.75rem 0; max-height: 200px; overflow-y: auto; }
     .time-block-row {
@@ -578,8 +733,18 @@ if (file_exists($dataFile)) {
       padding: 0.15rem 0.35rem; font-size: 0.6rem; cursor: pointer;
       border: 2px solid; font-family: inherit;
     }
-    .time-block-row .tb-edit { border-color: #2266bb; background: #3b82f6; color: white; }
-    .time-block-row .tb-delete { border-color: #992222; background: #dc2626; color: white; }
+    .time-block-row .tb-edit {
+      border-color: var(--edit-btn-border, #2266bb);
+      background: var(--edit-btn-bg, #3b82f6);
+      color: var(--edit-btn-fg, white);
+    }
+    .time-block-row .tb-edit:hover { background: var(--edit-btn-hover, #2563eb); }
+    .time-block-row .tb-delete {
+      border-color: var(--delete-btn-border, #992222);
+      background: var(--delete-btn-bg, #dc2626);
+      color: var(--delete-btn-fg, white);
+    }
+    .time-block-row .tb-delete:hover { background: var(--delete-btn-hover, #b91c1c); }
 
     .scratch-pad {
       flex: 1 1 0;
@@ -721,14 +886,18 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 6px rgba(0, 212, 255, 0.6);
     }
     html[data-theme="tron"] .add-item-btn,
+    html[data-theme="tron"] .add-category-row .add-category-btn,
     html[data-theme="tron"] .link-icon,
+    html[data-theme="tron"] .modal .btn-save,
     html[data-theme="tron"] .modal-actions .btn-save {
       border-color: #00d4ff;
       box-shadow: 0 0 8px rgba(0, 212, 255, 0.4);
       color: #0a0e17;
     }
     html[data-theme="tron"] .add-item-btn:hover,
+    html[data-theme="tron"] .add-category-row .add-category-btn:hover,
     html[data-theme="tron"] .link-icon:hover,
+    html[data-theme="tron"] .modal .btn-save:hover,
     html[data-theme="tron"] .modal-actions .btn-save:hover {
       color: #0a0e17;
       box-shadow: 0 0 12px rgba(0, 212, 255, 0.6);
@@ -790,14 +959,18 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 6px rgba(255, 0, 64, 0.6);
     }
     html[data-theme="tron-ares"] .add-item-btn,
+    html[data-theme="tron-ares"] .add-category-row .add-category-btn,
     html[data-theme="tron-ares"] .link-icon,
+    html[data-theme="tron-ares"] .modal .btn-save,
     html[data-theme="tron-ares"] .modal-actions .btn-save {
       border-color: #ff0040;
       box-shadow: 0 0 8px rgba(255, 0, 64, 0.4);
       color: #170a0a;
     }
     html[data-theme="tron-ares"] .add-item-btn:hover,
+    html[data-theme="tron-ares"] .add-category-row .add-category-btn:hover,
     html[data-theme="tron-ares"] .link-icon:hover,
+    html[data-theme="tron-ares"] .modal .btn-save:hover,
     html[data-theme="tron-ares"] .modal-actions .btn-save:hover {
       color: #170a0a;
       box-shadow: 0 0 12px rgba(255, 0, 64, 0.6);
@@ -850,7 +1023,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 4px #00ff41;
     }
     html[data-theme="matrix"] .add-item-btn,
+    html[data-theme="matrix"] .add-category-row .add-category-btn,
     html[data-theme="matrix"] .link-icon,
+    html[data-theme="matrix"] .modal .btn-save,
     html[data-theme="matrix"] .modal-actions .btn-save {
       border-color: #00ff41;
       box-shadow: 0 0 6px rgba(0, 255, 65, 0.4);
@@ -888,7 +1063,9 @@ if (file_exists($dataFile)) {
       background: #306230 !important;
     }
     html[data-theme="gb"] .add-item-btn,
+    html[data-theme="gb"] .add-category-row .add-category-btn,
     html[data-theme="gb"] .link-icon,
+    html[data-theme="gb"] .modal .btn-save,
     html[data-theme="gb"] .modal-actions .btn-save {
       border-color: #0f380f;
       box-shadow: 2px 2px 0 #306230;
@@ -908,6 +1085,22 @@ if (file_exists($dataFile)) {
     html[data-theme="gb"] .scratch-pad-tab.active { background: #0f380f; color: #9bbc0f; }
     html[data-theme="gb"] .scratch-pad,
     html[data-theme="gb"] .scratch-pad * { font-family: 'Pixelify Sans', monospace; }
+    html[data-theme="gb"] .midi-player-widget .midi-btn {
+      background: #0f380f;
+      color: #9bbc0f;
+      border-color: #306230;
+    }
+    html[data-theme="gb"] .midi-player-widget .midi-btn:hover {
+      background: #306230;
+      color: #9bbc0f;
+    }
+    html[data-theme="gb"] .midi-player-widget .midi-track-name {
+      color: #0f380f;
+    }
+    html[data-theme="gb"] .midi-player-widget,
+    html[data-theme="gb"] .midi-player-widget *,
+    html[data-theme="gb"] #midiPlaylistModal .modal,
+    html[data-theme="gb"] #midiPlaylistModal .modal * { font-family: 'Pixelify Sans', monospace; }
 
     /* Sega Master System theme overrides */
     html[data-theme="sms"] .link-card:hover {
@@ -917,7 +1110,9 @@ if (file_exists($dataFile)) {
       background: #00aaff !important;
     }
     html[data-theme="sms"] .add-item-btn,
+    html[data-theme="sms"] .add-category-row .add-category-btn,
     html[data-theme="sms"] .link-icon,
+    html[data-theme="sms"] .modal .btn-save,
     html[data-theme="sms"] .modal-actions .btn-save {
       border-color: #0088cc;
       box-shadow: 2px 2px 0 #004466;
@@ -934,10 +1129,18 @@ if (file_exists($dataFile)) {
     html[data-theme="sms"] .scratch-pad-tab.active { background: #181830; color: #b8d4f0; }
     html[data-theme="sms"] .scratch-pad,
     html[data-theme="sms"] .scratch-pad * { font-family: 'VT323', monospace; }
+    html[data-theme="sms"] .midi-player-widget,
+    html[data-theme="sms"] .midi-player-widget *,
+    html[data-theme="sms"] #midiPlaylistModal .modal,
+    html[data-theme="sms"] #midiPlaylistModal .modal * { font-family: 'VT323', monospace; }
 
     /* Megadrive/16-bit theme scratch-pad font */
     html[data-theme="megadrive"] .scratch-pad,
     html[data-theme="megadrive"] .scratch-pad * { font-family: 'VT323', monospace; }
+    html[data-theme="megadrive"] .midi-player-widget,
+    html[data-theme="megadrive"] .midi-player-widget *,
+    html[data-theme="megadrive"] #midiPlaylistModal .modal,
+    html[data-theme="megadrive"] #midiPlaylistModal .modal * { font-family: 'VT323', monospace; }
 
     /* PlayStation 5 theme overrides */
     html[data-theme="ps5"] .clock {
@@ -976,6 +1179,7 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="ps5"] .add-item-btn,
     html[data-theme="ps5"] .link-icon,
+    html[data-theme="ps5"] .modal .btn-save,
     html[data-theme="ps5"] .modal-actions .btn-save {
       border-radius: 8px;
       border: none;
@@ -983,6 +1187,7 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="ps5"] .add-item-btn:hover,
     html[data-theme="ps5"] .link-icon:hover,
+    html[data-theme="ps5"] .modal .btn-save:hover,
     html[data-theme="ps5"] .modal-actions .btn-save:hover {
       box-shadow: 0 4px 16px rgba(0, 111, 205, 0.4);
     }
@@ -1067,7 +1272,9 @@ if (file_exists($dataFile)) {
       border-radius: 2px;
     }
     html[data-theme="macintosh"] .add-item-btn,
+    html[data-theme="macintosh"] .add-category-row .add-category-btn,
     html[data-theme="macintosh"] .link-icon,
+    html[data-theme="macintosh"] .modal .btn-save,
     html[data-theme="macintosh"] .modal-actions .btn-save {
       background: #000000;
       color: #ffffff;
@@ -1076,13 +1283,35 @@ if (file_exists($dataFile)) {
       box-shadow: none;
     }
     html[data-theme="macintosh"] .add-item-btn:hover,
+    html[data-theme="macintosh"] .add-category-row .add-category-btn:hover,
     html[data-theme="macintosh"] .link-icon:hover,
+    html[data-theme="macintosh"] .modal .btn-save:hover,
     html[data-theme="macintosh"] .modal-actions .btn-save:hover {
       background: #000000;
     }
     html[data-theme="macintosh"] .edit-mode-btn {
       border-radius: 6px;
       box-shadow: 1px 1px 0 #000000;
+    }
+    html[data-theme="macintosh"] .midi-player-widget {
+      background: #ffffff;
+      border-color: #000000;
+    }
+    html[data-theme="macintosh"] .midi-player-widget .midi-btn {
+      background: #ffffff;
+      color: #000000;
+      border-color: #000000;
+      border-radius: 6px;
+    }
+    html[data-theme="macintosh"] .midi-player-widget .midi-btn:hover {
+      background: #000000;
+      color: #ffffff;
+    }
+    html[data-theme="macintosh"] .midi-player-widget .midi-btn:disabled {
+      opacity: 0.5;
+    }
+    html[data-theme="macintosh"] .midi-player-widget .midi-track-name {
+      color: #000000;
     }
     html[data-theme="macintosh"] .edit-mode-btn.active {
       background: #000000;
@@ -1171,6 +1400,7 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="msdos"] .add-item-btn,
     html[data-theme="msdos"] .link-icon,
+    html[data-theme="msdos"] .modal .btn-save,
     html[data-theme="msdos"] .modal-actions .btn-save {
       background: #c0c0c0;
       color: #000000;
@@ -1179,6 +1409,7 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="msdos"] .add-item-btn:hover,
     html[data-theme="msdos"] .link-icon:hover,
+    html[data-theme="msdos"] .modal .btn-save:hover,
     html[data-theme="msdos"] .modal-actions .btn-save:hover {
       background: #d4d0c8;
     }
@@ -1392,6 +1623,20 @@ if (file_exists($dataFile)) {
       background: rgba(0, 0, 0, 0.5);
       transition: background 0.3s;
     }
+    .screensaver-midi-track {
+      font-size: 0.85rem;
+      color: var(--content-muted);
+      font-family: 'Silkscreen', monospace;
+      letter-spacing: 0.05em;
+      text-align: center;
+      min-height: 1.2em;
+    }
+    html[data-theme="tron"] .screensaver-midi-track { color: rgba(0, 255, 255, 0.7); }
+    html[data-theme="tron-ares"] .screensaver-midi-track { color: rgba(255, 0, 64, 0.7); }
+    html[data-theme="matrix"] .screensaver-midi-track { color: rgba(0, 255, 65, 0.7); }
+    html[data-theme="ps5"] .screensaver-midi-track { color: rgba(255, 255, 255, 0.6); }
+    html[data-theme="macintosh"] .screensaver-midi-track { color: #000000; }
+    html[data-theme="msdos"] .screensaver-midi-track { color: #404040; }
     html[data-theme="tron"] .screensaver-day-bars .day-bar-track {
       border-color: #00ffff;
       box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.2);
@@ -1453,18 +1698,15 @@ if (file_exists($dataFile)) {
       <div class="day-bars" id="dayBars"></div>
       <div class="sidebar-header">
         <h1 id="appTitle">Developer Start Page</h1>
-        <div class="theme-switcher">
-          <select class="theme-select" id="themeSelect" aria-label="Select theme">
-            <option value="megadrive">16-bit</option>
-            <option value="tron">Tron</option>
-            <option value="tron-ares">Ares</option>
-            <option value="matrix">Matrix</option>
-            <option value="sms">SMS</option>
-            <option value="gb">GB</option>
-            <option value="ps5">PS5</option>
-            <option value="macintosh">Macintosh</option>
-            <option value="msdos">MS-DOS</option>
-          </select>
+        <div class="header-controls">
+          <div class="midi-player-widget" id="midiPlayerWidget">
+            <button class="midi-btn" id="midiPrevBtn" type="button" title="Previous" aria-label="Previous">⏮</button>
+            <button class="midi-btn" id="midiPlayBtn" type="button" title="Play" aria-label="Play">▶</button>
+            <button class="midi-btn" id="midiPauseBtn" type="button" title="Pause" aria-label="Pause" style="display:none">⏸</button>
+            <button class="midi-btn" id="midiNextBtn" type="button" title="Next" aria-label="Next">⏭</button>
+            <span class="midi-track-name" id="midiTrackName">—</span>
+            <button class="midi-btn midi-playlist-btn" id="midiPlaylistBtn" type="button" title="Manage playlist">♪</button>
+          </div>
         </div>
       </div>
       <div id="categoriesContainer"></div>
@@ -1487,6 +1729,19 @@ if (file_exists($dataFile)) {
     <div class="fixed-buttons">
       <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
       <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
+      <div class="theme-switcher theme-switcher-fixed">
+        <select class="theme-select" id="themeSelect" aria-label="Select theme">
+          <option value="megadrive">16-bit</option>
+          <option value="tron">Tron</option>
+          <option value="tron-ares">Ares</option>
+          <option value="matrix">Matrix</option>
+          <option value="sms">SMS</option>
+          <option value="gb">GB</option>
+          <option value="ps5">PS5</option>
+          <option value="macintosh">Macintosh</option>
+          <option value="msdos">MS-DOS</option>
+        </select>
+      </div>
     </div>
   </div>
 
@@ -1495,6 +1750,7 @@ if (file_exists($dataFile)) {
     <div class="screensaver-content">
       <div class="screensaver-clock" id="screensaverClock"></div>
       <div class="screensaver-day-bars" id="screensaverDayBars"></div>
+      <div class="screensaver-midi-track" id="screensaverMidiTrack" aria-live="polite"></div>
     </div>
   </div>
 
@@ -1541,6 +1797,26 @@ if (file_exists($dataFile)) {
           <button class="btn-save" type="submit" id="categoryModalSaveBtn">Save</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="midiPlaylistModal">
+    <div class="modal">
+      <h3>MIDI Playlist</h3>
+      <p class="empty-state-msg" id="midiPlaylistEmpty" style="display:none">No tracks. Add a MIDI file via URL or upload.</p>
+      <div class="midi-add-row" style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+        <input type="text" id="midiUrlInput" placeholder="MIDI URL or path (e.g. midi/song.mid)" style="flex:1;min-width:180px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
+        <input type="text" id="midiNameInput" placeholder="Track name (optional)" style="width:120px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
+        <button class="btn-save" type="button" id="midiAddUrlBtn" style="padding:0.4rem 0.6rem;font-size:0.75rem">Add URL</button>
+        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.75rem">
+          <input type="file" id="midiFileInput" accept=".mid,.midi" style="display:none">
+          <span class="link-icon" style="padding:0.35rem 0.5rem;font-size:0.7rem">Upload</span>
+        </label>
+      </div>
+      <div class="time-blocks-list" id="midiPlaylistList" style="max-height:200px;overflow-y:auto"></div>
+      <div class="modal-actions" style="margin-top:0.5rem">
+        <button class="btn-cancel" type="button" id="midiPlaylistCloseBtn">Close</button>
+      </div>
     </div>
   </div>
 
@@ -1818,6 +2094,7 @@ if (file_exists($dataFile)) {
         resizeMystify();
         updateClock();
         screensaverDayBars.innerHTML = getDayBarHtml(false);
+        if (window._midiPlayerUpdateScreensaverTrack) window._midiPlayerUpdateScreensaverTrack();
         drawMystify();
       }
 
@@ -2135,6 +2412,7 @@ if (file_exists($dataFile)) {
         data = d;
         render();
         updateDayBars();
+        if (window._midiPlayerRefresh) window._midiPlayerRefresh();
       }).catch(() => {
         render();
       });
@@ -2562,6 +2840,276 @@ if (file_exists($dataFile)) {
       saveCategory();
     });
     categoryModal.addEventListener('click', e => { if (e.target === categoryModal) closeCategoryModal(); });
+
+    (function initMidiPlayer() {
+      const playlist = document.getElementById('midiPlaylistList');
+      const playlistModal = document.getElementById('midiPlaylistModal');
+      const urlInput = document.getElementById('midiUrlInput');
+      const nameInput = document.getElementById('midiNameInput');
+      const addUrlBtn = document.getElementById('midiAddUrlBtn');
+      const fileInput = document.getElementById('midiFileInput');
+      const playlistCloseBtn = document.getElementById('midiPlaylistCloseBtn');
+      const playlistEmpty = document.getElementById('midiPlaylistEmpty');
+      const playBtn = document.getElementById('midiPlayBtn');
+      const pauseBtn = document.getElementById('midiPauseBtn');
+      const prevBtn = document.getElementById('midiPrevBtn');
+      const nextBtn = document.getElementById('midiNextBtn');
+      const trackNameEl = document.getElementById('midiTrackName');
+      const playlistBtn = document.getElementById('midiPlaylistBtn');
+
+      let midiContext = null;
+      let midiPlayer = null;
+      let midiInput = null;
+      let midiRaf = null;
+      let midiSong = null;
+      let midiSongStart = 0;
+      let midiCurrentTime = 0;
+      let midiStepDuration = 44 / 1000;
+      let midiPlaying = false;
+      let midiOnEnded = null;
+
+      function getPlaylist() {
+        return (data.midiPlaylist || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      }
+
+      function updateTrackDisplay() {
+        const tracks = getPlaylist();
+        const idx = typeof midiCurrentTrackIndex === 'number' ? midiCurrentTrackIndex : 0;
+        const track = tracks[idx];
+        trackNameEl.textContent = track ? (track.name || track.url) : '—';
+        updateScreensaverMidiTrack();
+      }
+
+      function updateScreensaverMidiTrack() {
+        var el = document.getElementById('screensaverMidiTrack');
+        if (!el) return;
+        if (midiPlaying) {
+          var tracks = getPlaylist();
+          var track = tracks[midiCurrentTrackIndex];
+          el.textContent = track ? 'Now playing: ' + (track.name || track.url) : '';
+          el.style.display = track ? '' : 'none';
+        } else {
+          el.textContent = '';
+          el.style.display = 'none';
+        }
+      }
+
+      let midiCurrentTrackIndex = 0;
+
+      function sendNotes(song, songStart, start, end) {
+        if (!midiPlayer || !midiInput || !midiSong) return;
+        for (let t = 0; t < song.tracks.length; t++) {
+          const track = song.tracks[t];
+          for (let i = 0; i < track.notes.length; i++) {
+            if (track.notes[i].when >= start && track.notes[i].when < end) {
+              const when = songStart + track.notes[i].when;
+              let duration = track.notes[i].duration;
+              if (duration > 3) duration = 3;
+              const instr = track.info.variable;
+              const v = track.volume / 7;
+              midiPlayer.queueWaveTable(midiContext, midiInput, window[instr], when, track.notes[i].pitch, duration, v, track.notes[i].slides);
+            }
+          }
+        }
+        for (let b = 0; b < song.beats.length; b++) {
+          const beat = song.beats[b];
+          for (let i = 0; i < beat.notes.length; i++) {
+            if (beat.notes[i].when >= start && beat.notes[i].when < end) {
+              const when = songStart + beat.notes[i].when;
+              const instr = beat.info.variable;
+              const v = beat.volume / 2;
+              midiPlayer.queueWaveTable(midiContext, midiInput, window[instr], when, beat.n, 1.5, v);
+            }
+          }
+        }
+      }
+
+      function tick() {
+        if (!midiPlaying || !midiSong) return;
+        if (midiContext.currentTime > midiSongStart + midiCurrentTime - midiStepDuration) {
+          const start = midiCurrentTime;
+          midiCurrentTime += midiStepDuration;
+          if (midiCurrentTime > midiSong.duration) {
+            midiPlaying = false;
+            if (midiPlayer) midiPlayer.cancelQueue(midiContext);
+            pauseBtn.style.display = 'none';
+            playBtn.style.display = '';
+            if (midiOnEnded) midiOnEnded();
+            return;
+          }
+          sendNotes(midiSong, midiSongStart, start, midiCurrentTime);
+        }
+        midiRaf = requestAnimationFrame(tick);
+      }
+
+      function loadAndPlayMidi(url) {
+        if (!window.MIDIFile || !window.WebAudioFontPlayer) return;
+        fetch(url).then(r => r.arrayBuffer()).then(function(arrayBuffer) {
+          var midiFile = new window.MIDIFile(arrayBuffer);
+          var song = midiFile.parseSong();
+          midiContext = midiContext || new (window.AudioContext || window.webkitAudioContext)();
+          midiPlayer = midiPlayer || new window.WebAudioFontPlayer();
+          var equalizer = midiPlayer.createChannel(midiContext);
+          midiInput = equalizer.input;
+          equalizer.output.connect(midiContext.destination);
+          for (var i = 0; i < song.tracks.length; i++) {
+            var nn = midiPlayer.loader.findInstrument(song.tracks[i].program);
+            var info = midiPlayer.loader.instrumentInfo(nn);
+            song.tracks[i].info = info;
+            midiPlayer.loader.startLoad(midiContext, info.url, info.variable);
+          }
+          for (var i = 0; i < song.beats.length; i++) {
+            var nn = midiPlayer.loader.findDrum(song.beats[i].n);
+            var info = midiPlayer.loader.drumInfo(nn);
+            song.beats[i].info = info;
+            midiPlayer.loader.startLoad(midiContext, info.url, info.variable);
+          }
+          midiPlayer.loader.waitLoad(function() {
+            midiContext.resume();
+            midiSong = song;
+            midiSongStart = midiContext.currentTime;
+            midiCurrentTime = 0;
+            midiPlaying = true;
+            playBtn.style.display = 'none';
+            pauseBtn.style.display = '';
+            updateScreensaverMidiTrack();
+            midiRaf = requestAnimationFrame(tick);
+          });
+        }).catch(function(err) {
+          console.error('MIDI load error:', err);
+          alert('Could not load MIDI file. Check the URL or CORS.');
+        });
+      }
+
+      function stopMidi() {
+        midiPlaying = false;
+        if (midiRaf) cancelAnimationFrame(midiRaf);
+        midiRaf = null;
+        if (midiPlayer && midiContext) midiPlayer.cancelQueue(midiContext);
+        pauseBtn.style.display = 'none';
+        playBtn.style.display = '';
+        updateScreensaverMidiTrack();
+      }
+
+      function playCurrent() {
+        const tracks = getPlaylist();
+        if (tracks.length === 0) return;
+        midiCurrentTrackIndex = Math.max(0, Math.min(midiCurrentTrackIndex, tracks.length - 1));
+        const track = tracks[midiCurrentTrackIndex];
+        var base = window.location.href.split('/').slice(0, -1).join('/') + '/';
+        var url = track.url.startsWith('http') ? track.url : (base + track.url.replace(/^\//, ''));
+        updateTrackDisplay();
+        loadAndPlayMidi(url);
+      }
+
+      midiOnEnded = function() {
+        const tracks = getPlaylist();
+        if (tracks.length === 0) return;
+        midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        playCurrent();
+      };
+
+      playBtn.addEventListener('click', function() {
+        const tracks = getPlaylist();
+        if (tracks.length === 0) { playlistModal.classList.add('open'); return; }
+        playCurrent();
+      });
+      pauseBtn.addEventListener('click', stopMidi);
+      prevBtn.addEventListener('click', function() {
+        stopMidi();
+        const tracks = getPlaylist();
+        if (tracks.length === 0) return;
+        midiCurrentTrackIndex = (midiCurrentTrackIndex - 1 + tracks.length) % tracks.length;
+        playCurrent();
+      });
+      nextBtn.addEventListener('click', function() {
+        stopMidi();
+        const tracks = getPlaylist();
+        if (tracks.length === 0) return;
+        midiCurrentTrackIndex = (midiCurrentTrackIndex + 1) % tracks.length;
+        playCurrent();
+      });
+
+      function renderPlaylist() {
+        const tracks = getPlaylist();
+        playlistEmpty.style.display = tracks.length === 0 ? 'block' : 'none';
+        playlist.innerHTML = tracks.map(function(t, i) {
+          return '<div class="time-block-row" data-id="' + escapeHtml(t.id) + '"><span>' + escapeHtml(t.name || t.url) + '</span><button class="tb-delete" type="button">Remove</button></div>';
+        }).join('');
+        playlist.querySelectorAll('.tb-delete').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            api('removeMidiTrack', { id: btn.closest('.time-block-row').dataset.id }).then(function() {
+              data.midiPlaylist = (data.midiPlaylist || []).filter(function(x) { return x.id !== btn.closest('.time-block-row').dataset.id; });
+              renderPlaylist();
+              updateTrackDisplay();
+              updateNavButtons();
+            }).catch(function(e) { alert('Failed: ' + (e.message || 'Unknown')); });
+          });
+        });
+      }
+
+      playlistBtn.addEventListener('click', function() {
+        renderPlaylist();
+        playlistModal.classList.add('open');
+      });
+      playlistCloseBtn.addEventListener('click', function() { playlistModal.classList.remove('open'); });
+      playlistModal.addEventListener('click', function(e) { if (e.target === playlistModal) playlistModal.classList.remove('open'); });
+
+      addUrlBtn.addEventListener('click', function() {
+        var url = urlInput.value.trim();
+        var name = nameInput.value.trim();
+        if (!url) { alert('Enter a MIDI URL or path'); return; }
+        api('addMidiTrack', { url: url, name: name || undefined }).then(function(res) {
+          if (res && res.track) {
+            data.midiPlaylist = data.midiPlaylist || [];
+            data.midiPlaylist.push(res.track);
+            urlInput.value = '';
+            nameInput.value = '';
+            renderPlaylist();
+            updateTrackDisplay();
+            updateNavButtons();
+          }
+        }).catch(function(e) { alert('Failed: ' + (e.message || 'Unknown')); });
+      });
+
+      fileInput.addEventListener('change', function(e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var fd = new FormData();
+        fd.append('file', file);
+        fd.append('action', 'uploadMidi');
+        fetch('api.php?action=uploadMidi', { method: 'POST', body: fd }).then(function(r) { return r.json(); }).then(function(res) {
+          if (res && res.success && res.url) {
+            api('addMidiTrack', { url: res.url, name: res.name || file.name.replace(/\.(mid|midi)$/i, '') }).then(function(apiRes) {
+              if (apiRes && apiRes.track) {
+                data.midiPlaylist = data.midiPlaylist || [];
+                data.midiPlaylist.push(apiRes.track);
+                renderPlaylist();
+                updateTrackDisplay();
+                updateNavButtons();
+              }
+            });
+          } else {
+            alert(res && res.error ? res.error : 'Upload failed');
+          }
+          e.target.value = '';
+        }).catch(function(err) { alert('Upload failed'); e.target.value = ''; });
+      });
+
+      function updateNavButtons() {
+        var tracks = getPlaylist();
+        prevBtn.disabled = nextBtn.disabled = tracks.length === 0;
+      }
+
+      window._midiPlayerRefresh = function() {
+        updateTrackDisplay();
+        updateNavButtons();
+      };
+      window._midiPlayerUpdateScreensaverTrack = updateScreensaverMidiTrack;
+
+      updateTrackDisplay();
+      updateNavButtons();
+    })();
 
     render();
     load();

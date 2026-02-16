@@ -13,12 +13,13 @@ $dataFile = __DIR__ . '/data.json';
 function loadData() {
     global $dataFile;
     if (!file_exists($dataFile)) {
-        return array('categories' => array(), 'timeBlocks' => array());
+        return array('categories' => array(), 'timeBlocks' => array(), 'midiPlaylist' => array());
     }
     $json = file_get_contents($dataFile);
     $data = json_decode($json, true);
-    if (!$data) return array('categories' => array(), 'timeBlocks' => array());
+    if (!$data) return array('categories' => array(), 'timeBlocks' => array(), 'midiPlaylist' => array());
     if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
+    if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
     return $data;
 }
 
@@ -30,6 +31,7 @@ function saveData($data) {
     global $dataFile;
     if (empty($data['categories'])) $data['categories'] = array();
     if (empty($data['timeBlocks'])) $data['timeBlocks'] = array();
+    if (empty($data['midiPlaylist'])) $data['midiPlaylist'] = array();
     usort($data['timeBlocks'], function($a, $b) {
         $oa = isset($a['order']) ? $a['order'] : 0;
         $ob = isset($b['order']) ? $b['order'] : 0;
@@ -60,7 +62,33 @@ function generateCategoryId() {
     return 'cat-' . uniqid();
 }
 
+function generateMidiTrackId() {
+    return 'midi-' . uniqid();
+}
+
 $action = isset($_GET['action']) ? $_GET['action'] : (isset($_POST['action']) ? $_POST['action'] : '');
+
+// Handle MIDI file upload (multipart/form-data)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'uploadMidi' && !empty($_FILES['file'])) {
+    $midiDir = __DIR__ . '/midi';
+    if (!is_dir($midiDir)) {
+        mkdir($midiDir, 0755, true);
+    }
+    $file = $_FILES['file'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, array('mid', 'midi'))) {
+        echo json_encode(['error' => 'Only .mid or .midi files are allowed']);
+        exit;
+    }
+    $safeName = preg_replace('/[^a-zA-Z0-9_-]/', '_', pathinfo($file['name'], PATHINFO_FILENAME)) . '.' . $ext;
+    $target = $midiDir . '/' . $safeName;
+    if (move_uploaded_file($file['tmp_name'], $target)) {
+        echo json_encode(['success' => true, 'url' => 'midi/' . $safeName, 'name' => pathinfo($file['name'], PATHINFO_FILENAME)]);
+    } else {
+        echo json_encode(['error' => 'Upload failed']);
+    }
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($action === 'get' || $action === '')) {
     echo json_encode(loadData());
@@ -236,6 +264,53 @@ switch ($action) {
         $data['timeBlocks'] = array_values(array_filter($data['timeBlocks'], function($b) use ($blockId) {
             return (isset($b['id']) ? $b['id'] : '') !== $blockId;
         }));
+        saveData($data);
+        echo json_encode(['success' => true]);
+        break;
+
+    case 'addMidiTrack':
+        $playlist = isset($data['midiPlaylist']) ? $data['midiPlaylist'] : array();
+        $maxOrder = -1;
+        foreach ($playlist as $t) {
+            $maxOrder = max($maxOrder, isset($t['order']) ? $t['order'] : 0);
+        }
+        $url = trim(isset($input['url']) ? $input['url'] : '');
+        $name = trim(isset($input['name']) ? $input['name'] : pathinfo($url, PATHINFO_FILENAME) ?: 'Track');
+        if ($url === '') {
+            echo json_encode(['error' => 'URL is required']);
+            exit;
+        }
+        $track = array(
+            'id' => generateMidiTrackId(),
+            'name' => $name,
+            'url' => $url,
+            'order' => $maxOrder + 1
+        );
+        $data['midiPlaylist'][] = $track;
+        saveData($data);
+        echo json_encode(['success' => true, 'track' => $track]);
+        break;
+
+    case 'removeMidiTrack':
+        $trackId = isset($input['id']) ? $input['id'] : '';
+        $data['midiPlaylist'] = array_values(array_filter($data['midiPlaylist'], function($t) use ($trackId) {
+            return (isset($t['id']) ? $t['id'] : '') !== $trackId;
+        }));
+        saveData($data);
+        echo json_encode(['success' => true]);
+        break;
+
+    case 'reorderMidiPlaylist':
+        $trackIds = isset($input['trackIds']) ? $input['trackIds'] : array();
+        $order = 0;
+        foreach ($trackIds as $id) {
+            foreach ($data['midiPlaylist'] as &$t) {
+                if (isset($t['id']) && $t['id'] === $id) {
+                    $t['order'] = $order++;
+                    break;
+                }
+            }
+        }
         saveData($data);
         echo json_encode(['success' => true]);
         break;
