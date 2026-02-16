@@ -19,7 +19,7 @@ if (file_exists($dataFile)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Developer Start Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&family=Antonio:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/chicagoflf" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -223,6 +223,29 @@ if (file_exists($dataFile)) {
       --delete-btn-hover: #d4d0c8;
     }
 
+    /* Star Trek: The Next Generation / LCARS theme */
+    html[data-theme="lcars"] {
+      --bg: #0a0a12;
+      --bg-alt: #12121a;
+      --content: #ff9900;
+      --content-muted: #cc7700;
+      --button-bg: #ff8800;
+      --button-hover: #ffaa33;
+      --button-fg: #0a0a12;
+      --card-bg: rgba(255, 136, 0, 0.08);
+      --card-border: #ff8800;
+      --bevel-light: rgba(255, 136, 0, 0.35);
+      --bevel-dark: #050508;
+      --edit-btn-bg: #ff8800;
+      --edit-btn-fg: #0a0a12;
+      --edit-btn-border: #ffaa33;
+      --edit-btn-hover: #ffaa33;
+      --delete-btn-bg: #cc4400;
+      --delete-btn-fg: #0a0a12;
+      --delete-btn-border: #ff6644;
+      --delete-btn-hover: #ff6644;
+    }
+
     * { box-sizing: border-box; }
 
     body {
@@ -304,6 +327,14 @@ if (file_exists($dataFile)) {
     html[data-theme="msdos"] body {
       background: #c0c0c0;
       background-image: none;
+    }
+    html[data-theme="lcars"] body,
+    html[data-theme="lcars"] * {
+      font-family: 'Antonio', sans-serif;
+    }
+    html[data-theme="lcars"] body {
+      background: linear-gradient(180deg, #0a0a12 0%, #12121a 50%, #0a0a12 100%);
+      background-attachment: fixed;
     }
     .app { min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem; }
 
@@ -1692,6 +1723,178 @@ if (file_exists($dataFile)) {
       box-shadow: 1px 1px 0 #ffffff, -1px -1px 0 #404040;
     }
 
+    /* Star Trek TNG / LCARS theme overrides */
+    html[data-theme="lcars"] .clock {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-left: 0;
+      margin-right: 0;
+      padding: 0.75rem 1.5rem 0.75rem 1rem;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 0 20px 20px 0;
+      color: #ff9900;
+      font-size: 3.2rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-shadow: none;
+      border: none;
+      box-shadow: 0 0 0 2px rgba(255, 136, 0, 0.3);
+    }
+    html[data-theme="lcars"] .clock::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 14px;
+      background: #ff8800;
+      border-radius: 0 8px 8px 0;
+    }
+    html[data-theme="lcars"] .clock {
+      padding-left: 2rem;
+    }
+    html[data-theme="lcars"] .link-card {
+      border-color: rgba(255, 136, 0, 0.5);
+      box-shadow: inset 0 0 15px rgba(255, 136, 0, 0.06), 0 0 10px rgba(255, 136, 0, 0.08);
+    }
+    html[data-theme="lcars"] .link-card:hover {
+      background: rgba(255, 136, 0, 0.12);
+      box-shadow: inset 0 0 15px rgba(255, 136, 0, 0.1), 0 0 15px rgba(255, 136, 0, 0.18);
+    }
+    html[data-theme="lcars"] .link-card--dev { border-left-color: #ffaa33; box-shadow: 0 0 8px rgba(255, 170, 51, 0.25); }
+    html[data-theme="lcars"] .link-card--nhs { border-left-color: #8899ff; box-shadow: 0 0 8px rgba(136, 153, 255, 0.25); }
+    html[data-theme="lcars"] .link-card--private { border-left-color: #cc99ff; box-shadow: 0 0 8px rgba(204, 153, 255, 0.25); }
+    html[data-theme="lcars"] .day-bar-track {
+      border-color: #ff8800;
+      box-shadow: inset 0 0 10px rgba(255, 136, 0, 0.08), 0 0 6px rgba(255, 136, 0, 0.15);
+    }
+    html[data-theme="lcars"] .day-bar-segment.filled {
+      background: #ff8800 !important;
+      box-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
+    }
+    html[data-theme="lcars"] .day-bar-label { color: #cc7700; }
+    html[data-theme="lcars"] .section-title { color: #ff9900; }
+    html[data-theme="lcars"] .add-item-btn,
+    html[data-theme="lcars"] .add-category-row .add-category-btn,
+    html[data-theme="lcars"] .link-icon,
+    html[data-theme="lcars"] .modal .btn-save,
+    html[data-theme="lcars"] .modal-actions .btn-save {
+      border-color: #ff8800;
+      box-shadow: 0 0 8px rgba(255, 136, 0, 0.35);
+      color: #0a0a12;
+    }
+    html[data-theme="lcars"] .add-item-btn:hover,
+    html[data-theme="lcars"] .add-category-row .add-category-btn:hover,
+    html[data-theme="lcars"] .link-icon:hover,
+    html[data-theme="lcars"] .modal .btn-save:hover,
+    html[data-theme="lcars"] .modal-actions .btn-save:hover {
+      color: #0a0a12;
+      box-shadow: 0 0 12px rgba(255, 136, 0, 0.5);
+    }
+    html[data-theme="lcars"] .edit-mode-btn.active {
+      box-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+      color: #0a0a12;
+    }
+    html[data-theme="lcars"] .edit-blocks-btn { border-color: #ff8800; color: #cc7700; }
+    html[data-theme="lcars"] .edit-blocks-btn:hover { background: rgba(255, 136, 0, 0.2); color: #ff9900; }
+    html[data-theme="lcars"] .theme-select {
+      background-color: #0a0a12;
+      box-shadow: 0 0 8px rgba(255, 136, 0, 0.2);
+    }
+    html[data-theme="lcars"] .theme-select option { background: #0a0a12; color: #ff8800; }
+    html[data-theme="lcars"] .theme-select:hover,
+    html[data-theme="lcars"] .theme-select:focus { border-color: #ffaa33; box-shadow: 0 0 8px rgba(255, 136, 0, 0.3); }
+    html[data-theme="lcars"] .charms-btn,
+    html[data-theme="lcars"] .edit-mode-btn,
+    html[data-theme="lcars"] .screensaver-btn { border-color: #ff8800; color: #cc7700; }
+    html[data-theme="lcars"] .charms-btn:hover,
+    html[data-theme="lcars"] .edit-mode-btn:hover,
+    html[data-theme="lcars"] .screensaver-btn:hover { background: rgba(255, 136, 0, 0.2); color: #ff9900; }
+    html[data-theme="lcars"] .theme-charm-btn { border-color: #ff8800; color: #ff8800; }
+    html[data-theme="lcars"] .theme-charm-btn:hover { background: #ff8800; color: #0a0a12; }
+    html[data-theme="lcars"] .theme-dropdown-option:hover { background: rgba(255, 136, 0, 0.2); color: #ff9900; }
+    html[data-theme="lcars"] .midi-player-widget { border-color: #ff8800; }
+    html[data-theme="lcars"] .midi-player-widget .midi-btn { border-color: #ff8800; color: #ff9900; }
+    html[data-theme="lcars"] .midi-player-widget .midi-btn:hover { background: rgba(255, 136, 0, 0.2); color: #ffaa33; }
+    html[data-theme="lcars"] .midi-player-widget .midi-track-name { color: #cc7700; }
+    html[data-theme="lcars"] .midi-player-widget .midi-mode-btn.active {
+      background: #ff8800;
+      color: #0a0a12;
+      border-color: #ff8800;
+    }
+    html[data-theme="lcars"] .midi-player-widget .midi-mode-btn.active:hover {
+      background: #ffaa33;
+      border-color: #ffaa33;
+      color: #0a0a12;
+    }
+    html[data-theme="lcars"] .midi-progress-bar { border-color: #ff8800; }
+    html[data-theme="lcars"] .midi-progress-bar:focus { border-color: #ffaa33; }
+    html[data-theme="lcars"] .scratch-pad {
+      border-color: #ff8800;
+      box-shadow: inset 0 0 15px rgba(255, 136, 0, 0.08), 0 0 10px rgba(255, 136, 0, 0.12);
+    }
+    html[data-theme="lcars"] .scratch-pad-header { background: #ff8800; color: #0a0a12; }
+    html[data-theme="lcars"] .scratch-pad-body {
+      background: rgba(0, 0, 0, 0.6);
+      color: #ff9900;
+      caret-color: #ff9900;
+    }
+    html[data-theme="lcars"] .scratch-pad-body { scrollbar-color: #ff8800 #050508; }
+    html[data-theme="lcars"] .scratch-pad-body::-webkit-scrollbar-track { background: #050508; }
+    html[data-theme="lcars"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #ff8800; }
+    html[data-theme="lcars"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #ffaa33; }
+    html[data-theme="lcars"] .scratch-pad-body::placeholder { color: rgba(255, 136, 0, 0.5); }
+    html[data-theme="lcars"] #musicControlsModal input::placeholder { color: rgba(255, 136, 0, 0.5); }
+    html[data-theme="lcars"] .scratch-pad-title::before { content: 'LCARS / '; opacity: 0.8; }
+    html[data-theme="lcars"] .scratch-pad-tab { background: rgba(255, 136, 0, 0.15); color: #0a0a12; }
+    html[data-theme="lcars"] .scratch-pad-tab:hover { background: rgba(255, 136, 0, 0.3); color: #0a0a12; }
+    html[data-theme="lcars"] .scratch-pad-tab.active { background: #0a0a12; color: #ff8800; }
+    html[data-theme="lcars"] .scratch-pad-run-js-btn,
+    html[data-theme="lcars"] .scratch-pad-maximize-btn {
+      background: #0a0a12;
+      color: #ff8800;
+      border-color: #ff8800;
+    }
+    html[data-theme="lcars"] .scratch-pad-run-js-btn:hover,
+    html[data-theme="lcars"] .scratch-pad-maximize-btn:hover {
+      background: #ff8800;
+      color: #0a0a12;
+    }
+    html[data-theme="lcars"] .scratch-pad-stop-btn {
+      background: #0a0a12;
+      color: #ff8800;
+      border-color: #ff8800;
+    }
+    html[data-theme="lcars"] .scratch-pad-stop-btn:hover:not(:disabled) {
+      background: #ff8800;
+      color: #0a0a12;
+    }
+    html[data-theme="lcars"] .modal {
+      border-color: #ff8800;
+      box-shadow: 0 0 30px rgba(255, 136, 0, 0.15);
+    }
+    html[data-theme="lcars"] .modal h3,
+    html[data-theme="lcars"] .modal label { color: #ff9900; }
+    html[data-theme="lcars"] .modal input,
+    html[data-theme="lcars"] .modal select {
+      background: #0a0a12;
+      border: 2px solid #ff8800;
+      color: #ff9900;
+    }
+    html[data-theme="lcars"] .modal input:focus,
+    html[data-theme="lcars"] .modal select:focus {
+      border-color: #ffaa33;
+      box-shadow: 0 0 8px rgba(255, 136, 0, 0.3);
+    }
+    html[data-theme="lcars"] .modal-actions .btn-cancel {
+      background: #12121a;
+      color: #ff9900;
+      border: 2px solid #ff8800;
+    }
+    html[data-theme="lcars"] .modal-actions .btn-cancel:hover { background: rgba(255, 136, 0, 0.15); }
+
     /* Mac-style zoom animation (Visit link) */
     :root {
       --visit-zoom-duration: var(--scratch-maximize-duration);
@@ -1788,6 +1991,31 @@ if (file_exists($dataFile)) {
       color: #000000;
       text-shadow: 1px 1px 0 #ffffff;
     }
+    html[data-theme="lcars"] .screensaver-clock {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem 2rem 1rem 2.5rem;
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 0 24px 24px 0;
+      color: #ff9900;
+      font-size: 4rem;
+      font-weight: 700;
+      letter-spacing: 0.25em;
+      text-shadow: none;
+      box-shadow: 0 0 0 2px rgba(255, 136, 0, 0.4);
+    }
+    html[data-theme="lcars"] .screensaver-clock::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 18px;
+      background: #ff8800;
+      border-radius: 0 10px 10px 0;
+    }
     .screensaver-day-bars {
       min-width: 280px;
       max-width: 90vw;
@@ -1830,6 +2058,7 @@ if (file_exists($dataFile)) {
     html[data-theme="ps5"] .screensaver-midi-track { color: rgba(255, 255, 255, 0.6); }
     html[data-theme="macintosh"] .screensaver-midi-track { color: #000000; }
     html[data-theme="msdos"] .screensaver-midi-track { color: #404040; }
+    html[data-theme="lcars"] .screensaver-midi-track { color: rgba(255, 136, 0, 0.7); }
     html[data-theme="tron"] .screensaver-day-bars .day-bar-track {
       border-color: #00ffff;
       box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.2);
@@ -1858,6 +2087,14 @@ if (file_exists($dataFile)) {
     html[data-theme="ps5"] .screensaver-day-bars .day-bar-segment.filled {
       background: linear-gradient(90deg, #006fcd, #0077e6) !important;
       border-radius: 4px;
+    }
+    html[data-theme="lcars"] .screensaver-day-bars .day-bar-track {
+      border-color: #ff8800;
+      box-shadow: inset 0 0 10px rgba(255, 136, 0, 0.08);
+    }
+    html[data-theme="lcars"] .screensaver-day-bars .day-bar-segment.filled {
+      background: #ff8800 !important;
+      box-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
     }
 
     /* Fade out main content when screensaver activates */
@@ -1923,6 +2160,7 @@ if (file_exists($dataFile)) {
           <button class="theme-dropdown-option" data-theme="sms">SMS</button>
           <button class="theme-dropdown-option" data-theme="gb">GB</button>
           <button class="theme-dropdown-option" data-theme="ps5">PS5</button>
+          <button class="theme-dropdown-option" data-theme="lcars">TNG</button>
           <button class="theme-dropdown-option" data-theme="macintosh">Macintosh</button>
           <button class="theme-dropdown-option" data-theme="msdos">MS-DOS</button>
         </div>
@@ -1934,6 +2172,7 @@ if (file_exists($dataFile)) {
           <option value="sms">SMS</option>
           <option value="gb">GB</option>
           <option value="ps5">PS5</option>
+          <option value="lcars">TNG</option>
           <option value="macintosh">Macintosh</option>
           <option value="msdos">MS-DOS</option>
         </select>
@@ -2083,6 +2322,7 @@ if (file_exists($dataFile)) {
       sms: 'INSERT CART',
       gb: 'NINTENDO',
       ps5: 'PlayStation',
+      lcars: 'Star Trek TNG',
       macintosh: 'Macintosh'
     };
     function updateTitle(theme) {
@@ -2130,7 +2370,7 @@ if (file_exists($dataFile)) {
     })();
 
     (function initThemeShortcut() {
-      var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'sms', 'gb', 'ps5', 'macintosh', 'msdos'];
+      var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'sms', 'gb', 'ps5', 'lcars', 'macintosh', 'msdos'];
       document.addEventListener('keydown', function(e) {
         if (e.altKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
           e.preventDefault();
@@ -2271,6 +2511,7 @@ if (file_exists($dataFile)) {
         sms: { fps: 15, scale: 0.75 },
         gb: { fps: 10, scale: 0.5 },
         matrix: { fps: 10, scale: 0.5 },
+        lcars: { fps: 60, scale: 1 },
         macintosh: { fps: 15, scale: 0.66 },
         msdos: { fps: 15, scale: 0.66 }
       };
