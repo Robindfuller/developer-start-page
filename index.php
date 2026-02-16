@@ -375,12 +375,6 @@ if (file_exists($dataFile)) {
       gap: 0.5rem;
     }
 
-    .header-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
     .theme-switcher {
       display: flex;
       align-items: center;
@@ -429,6 +423,10 @@ if (file_exists($dataFile)) {
       color: var(--content-muted);
       font-size: 0.65rem;
     }
+    .midi-player-modal .midi-track-name {
+      max-width: 14rem;
+      font-size: 0.8rem;
+    }
     .midi-player-widget .midi-playlist-btn {
       padding: 0 0.25rem;
       font-size: 0.7rem;
@@ -464,18 +462,22 @@ if (file_exists($dataFile)) {
       font-size: 0.65rem;
     }
 
-    .fixed-buttons {
+    .charms-menu {
       position: fixed;
       bottom: 1rem;
-      right: 1rem;
+      left: 1rem;
       display: flex;
-      gap: 0.5rem;
-      align-items: center;
+      flex-direction: column;
+      gap: 0.35rem;
+      align-items: stretch;
+      z-index: 100;
     }
+    .charms-btn,
     .edit-mode-btn,
     .screensaver-btn {
-      width: 2rem;
-      height: 2rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      min-width: 2.25rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -483,15 +485,60 @@ if (file_exists($dataFile)) {
       border: 3px solid var(--card-border);
       color: var(--content-muted);
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 1rem;
       font-family: inherit;
       opacity: 0.7;
       box-shadow: 2px 2px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
       transition: opacity 0.15s, background 0.15s;
     }
+    .charms-btn:hover,
     .edit-mode-btn:hover,
     .screensaver-btn:hover { opacity: 1; background: var(--card-border); }
     .edit-mode-btn.active { opacity: 1; background: var(--button-bg); border-color: var(--button-bg); color: white; box-shadow: 2px 2px 0 #994400; }
+
+    .theme-switcher-charms {
+      position: relative;
+    }
+    .theme-dropdown {
+      position: absolute;
+      bottom: 100%;
+      left: 0;
+      margin-bottom: 0.25rem;
+      background-color: var(--bg-alt);
+      border: 3px solid var(--card-border);
+      box-shadow: 3px 3px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
+      min-width: 8rem;
+      max-height: 12rem;
+      overflow-y: auto;
+      display: none;
+      z-index: 101;
+    }
+    .theme-dropdown.open { display: block; }
+    .theme-dropdown-option {
+      display: block;
+      width: 100%;
+      padding: 0.4rem 0.6rem;
+      text-align: left;
+      font-size: 0.75rem;
+      font-family: inherit;
+      background: none;
+      border: none;
+      color: var(--content);
+      cursor: pointer;
+    }
+    .theme-dropdown-option:hover { background: var(--card-border); color: var(--bg); }
+
+    .theme-charm-btn { border-color: var(--button-bg); color: var(--button-bg); }
+    .theme-charm-btn:hover { background: var(--button-bg); color: var(--button-fg, white); }
+
+    .music-charm-playing {
+      color: var(--button-fg, #fff) !important;
+      background: var(--button-bg) !important;
+      border-color: var(--button-bg) !important;
+      opacity: 1;
+    }
+
+    .fixed-buttons { display: none; }
 
     h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--content); font-family: 'Silkscreen', monospace; letter-spacing: 0.05em; }
 
@@ -706,9 +753,13 @@ if (file_exists($dataFile)) {
     .midi-add-row input,
     .midi-add-row button,
     .midi-add-row label,
-    #midiPlaylistModal .modal h3,
-    #midiPlaylistModal .time-block-row {
+    #musicControlsModal .modal h3,
+    #musicControlsModal .time-block-row {
       font-family: inherit;
+    }
+    #musicControlsModal input::placeholder {
+      color: var(--content-muted);
+      opacity: 0.8;
     }
     .midi-add-row {
       align-items: flex-start;
@@ -926,6 +977,7 @@ if (file_exists($dataFile)) {
     html[data-theme="tron"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #00ffff; }
     html[data-theme="tron"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
     html[data-theme="tron"] .scratch-pad-body::placeholder { color: rgba(0, 255, 255, 0.5); }
+    html[data-theme="tron"] #musicControlsModal input::placeholder { color: rgba(0, 255, 255, 0.5); }
     html[data-theme="tron"] .scratch-pad-title::before { content: 'root@work: '; opacity: 0.7; }
     html[data-theme="tron"] .scratch-pad-tab { background: rgba(0,255,255,0.2); color: #0a0e17; }
     html[data-theme="tron"] .scratch-pad-tab:hover { background: rgba(0,255,255,0.35); color: #0a0e17; }
@@ -999,6 +1051,7 @@ if (file_exists($dataFile)) {
     html[data-theme="tron-ares"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #ff0040; }
     html[data-theme="tron-ares"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #ff3366; }
     html[data-theme="tron-ares"] .scratch-pad-body::placeholder { color: rgba(255, 0, 64, 0.5); }
+    html[data-theme="tron-ares"] #musicControlsModal input::placeholder { color: rgba(255, 0, 64, 0.5); }
     html[data-theme="tron-ares"] .scratch-pad-title::before { content: 'root@ares: '; opacity: 0.7; }
     html[data-theme="tron-ares"] .scratch-pad-tab { background: rgba(255,0,64,0.2); color: #170a0a; }
     html[data-theme="tron-ares"] .scratch-pad-tab:hover { background: rgba(255,0,64,0.35); color: #170a0a; }
@@ -1047,6 +1100,7 @@ if (file_exists($dataFile)) {
     html[data-theme="matrix"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #00ff41; }
     html[data-theme="matrix"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #33ff66; }
     html[data-theme="matrix"] .scratch-pad-body::placeholder { color: rgba(0, 255, 65, 0.5); }
+    html[data-theme="matrix"] #musicControlsModal input::placeholder { color: rgba(0, 255, 65, 0.5); }
     html[data-theme="matrix"] .scratch-pad-title::before { content: '> '; opacity: 0.7; }
     html[data-theme="matrix"] .scratch-pad-tab { background: rgba(0,255,65,0.2); color: #0d0d0d; }
     html[data-theme="matrix"] .scratch-pad-tab:hover { background: rgba(0,255,65,0.35); color: #0d0d0d; }
@@ -1099,8 +1153,8 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="gb"] .midi-player-widget,
     html[data-theme="gb"] .midi-player-widget *,
-    html[data-theme="gb"] #midiPlaylistModal .modal,
-    html[data-theme="gb"] #midiPlaylistModal .modal * { font-family: 'Pixelify Sans', monospace; }
+    html[data-theme="gb"] #musicControlsModal .modal,
+    html[data-theme="gb"] #musicControlsModal .modal * { font-family: 'Pixelify Sans', monospace; }
 
     /* Sega Master System theme overrides */
     html[data-theme="sms"] .link-card:hover {
@@ -1131,16 +1185,16 @@ if (file_exists($dataFile)) {
     html[data-theme="sms"] .scratch-pad * { font-family: 'VT323', monospace; }
     html[data-theme="sms"] .midi-player-widget,
     html[data-theme="sms"] .midi-player-widget *,
-    html[data-theme="sms"] #midiPlaylistModal .modal,
-    html[data-theme="sms"] #midiPlaylistModal .modal * { font-family: 'VT323', monospace; }
+    html[data-theme="sms"] #musicControlsModal .modal,
+    html[data-theme="sms"] #musicControlsModal .modal * { font-family: 'VT323', monospace; }
 
     /* Megadrive/16-bit theme scratch-pad font */
     html[data-theme="megadrive"] .scratch-pad,
     html[data-theme="megadrive"] .scratch-pad * { font-family: 'VT323', monospace; }
     html[data-theme="megadrive"] .midi-player-widget,
     html[data-theme="megadrive"] .midi-player-widget *,
-    html[data-theme="megadrive"] #midiPlaylistModal .modal,
-    html[data-theme="megadrive"] #midiPlaylistModal .modal * { font-family: 'VT323', monospace; }
+    html[data-theme="megadrive"] #musicControlsModal .modal,
+    html[data-theme="megadrive"] #musicControlsModal .modal * { font-family: 'VT323', monospace; }
 
     /* PlayStation 5 theme overrides */
     html[data-theme="ps5"] .clock {
@@ -1235,6 +1289,7 @@ if (file_exists($dataFile)) {
     html[data-theme="ps5"] .scratch-pad-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius: 4px; }
     html[data-theme="ps5"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.45); }
     html[data-theme="ps5"] .scratch-pad-body::placeholder { color: rgba(255, 255, 255, 0.35); }
+    html[data-theme="ps5"] #musicControlsModal input::placeholder { color: rgba(255, 255, 255, 0.35); }
     html[data-theme="ps5"] .scratch-pad-tab { background: rgba(255,255,255,0.08); color: #8e8e93; }
     html[data-theme="ps5"] .scratch-pad-tab:hover { background: rgba(255,255,255,0.12); color: #ffffff; }
     html[data-theme="ps5"] .scratch-pad-tab.active { background: rgba(255,255,255,0.15); color: #ffffff; }
@@ -1350,6 +1405,7 @@ if (file_exists($dataFile)) {
       caret-color: #000000;
     }
     html[data-theme="macintosh"] .scratch-pad-body::placeholder { color: #000000; }
+    html[data-theme="macintosh"] #musicControlsModal input::placeholder { color: rgba(255, 255, 255, 0.6); }
     html[data-theme="macintosh"] .scratch-pad-title::before { content: 'NotePad: '; opacity: 1; }
     html[data-theme="macintosh"] .scratch-pad-tab {
       background: #ffffff;
@@ -1445,6 +1501,7 @@ if (file_exists($dataFile)) {
     html[data-theme="msdos"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #404040; }
     html[data-theme="msdos"] .scratch-pad-body::-webkit-scrollbar-thumb:hover { background: #808080; }
     html[data-theme="msdos"] .scratch-pad-body::placeholder { color: rgba(192, 192, 192, 0.5); }
+    html[data-theme="msdos"] #musicControlsModal input::placeholder { color: rgba(192, 192, 192, 0.5); }
     html[data-theme="msdos"] .scratch-pad-title::before { content: 'C:\\> '; color: #00aa00; opacity: 1; }
     html[data-theme="msdos"] .scratch-pad-tab {
       background: rgba(255,255,255,0.2);
@@ -1677,7 +1734,7 @@ if (file_exists($dataFile)) {
     body.screensaver-active .sidebar-header,
     body.screensaver-active #categoriesContainer,
     body.screensaver-active .scratch-pad,
-    body.screensaver-active .fixed-buttons {
+    body.screensaver-active .charms-menu {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -1698,16 +1755,6 @@ if (file_exists($dataFile)) {
       <div class="day-bars" id="dayBars"></div>
       <div class="sidebar-header">
         <h1 id="appTitle">Developer Start Page</h1>
-        <div class="header-controls">
-          <div class="midi-player-widget" id="midiPlayerWidget">
-            <button class="midi-btn" id="midiPrevBtn" type="button" title="Previous" aria-label="Previous">⏮</button>
-            <button class="midi-btn" id="midiPlayBtn" type="button" title="Play" aria-label="Play">▶</button>
-            <button class="midi-btn" id="midiPauseBtn" type="button" title="Pause" aria-label="Pause" style="display:none">⏸</button>
-            <button class="midi-btn" id="midiNextBtn" type="button" title="Next" aria-label="Next">⏭</button>
-            <span class="midi-track-name" id="midiTrackName">—</span>
-            <button class="midi-btn midi-playlist-btn" id="midiPlaylistBtn" type="button" title="Manage playlist">♪</button>
-          </div>
-        </div>
       </div>
       <div id="categoriesContainer"></div>
       <div class="scratch-pad" id="scratchPad">
@@ -1726,11 +1773,24 @@ if (file_exists($dataFile)) {
         <textarea class="scratch-pad-body" id="scratchPadText" placeholder="Text notes..." rows="4"></textarea>
       </div>
     </aside>
-    <div class="fixed-buttons">
+    <nav class="charms-menu">
+      <button class="charms-btn" id="musicCharmBtn" type="button" title="Music controls" aria-label="Music controls">♪</button>
       <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
       <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
-      <div class="theme-switcher theme-switcher-fixed">
-        <select class="theme-select" id="themeSelect" aria-label="Select theme">
+      <div class="theme-switcher-charms">
+        <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme" aria-label="Theme">&#9881;</button>
+        <div class="theme-dropdown" id="themeDropdown">
+          <button class="theme-dropdown-option" data-theme="megadrive">16-bit</button>
+          <button class="theme-dropdown-option" data-theme="tron">Tron</button>
+          <button class="theme-dropdown-option" data-theme="tron-ares">Ares</button>
+          <button class="theme-dropdown-option" data-theme="matrix">Matrix</button>
+          <button class="theme-dropdown-option" data-theme="sms">SMS</button>
+          <button class="theme-dropdown-option" data-theme="gb">GB</button>
+          <button class="theme-dropdown-option" data-theme="ps5">PS5</button>
+          <button class="theme-dropdown-option" data-theme="macintosh">Macintosh</button>
+          <button class="theme-dropdown-option" data-theme="msdos">MS-DOS</button>
+        </div>
+        <select class="theme-select" id="themeSelect" aria-label="Select theme" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0">
           <option value="megadrive">16-bit</option>
           <option value="tron">Tron</option>
           <option value="tron-ares">Ares</option>
@@ -1742,7 +1802,7 @@ if (file_exists($dataFile)) {
           <option value="msdos">MS-DOS</option>
         </select>
       </div>
-    </div>
+    </nav>
   </div>
 
   <div class="screensaver-overlay" id="screensaverOverlay" aria-hidden="true">
@@ -1798,22 +1858,31 @@ if (file_exists($dataFile)) {
     </div>
   </div>
 
-  <div class="modal-overlay" id="midiPlaylistModal">
+  <div class="modal-overlay" id="musicControlsModal">
     <div class="modal">
-      <h3>MIDI Playlist</h3>
-      <p class="empty-state-msg" id="midiPlaylistEmpty" style="display:none">No tracks. Add a MIDI file via URL or upload.</p>
-      <div class="midi-add-row" style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap">
-        <input type="text" id="midiUrlInput" placeholder="MIDI URL or path (e.g. midi/song.mid)" style="flex:1;min-width:180px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
-        <input type="text" id="midiNameInput" placeholder="Track name (optional)" style="width:120px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
-        <button class="btn-save" type="button" id="midiAddUrlBtn" style="padding:0.4rem 0.6rem;font-size:0.75rem">Add URL</button>
-        <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.75rem">
-          <input type="file" id="midiFileInput" accept=".mid,.midi" style="display:none">
-          <span class="link-icon" style="padding:0.35rem 0.5rem;font-size:0.7rem">Upload</span>
-        </label>
+      <h3>Music Controls</h3>
+      <div class="midi-player-widget midi-player-modal" id="midiPlayerWidget">
+        <button class="midi-btn" id="midiPrevBtn" type="button" title="Previous" aria-label="Previous">⏮</button>
+        <button class="midi-btn" id="midiPlayBtn" type="button" title="Play" aria-label="Play">▶</button>
+        <button class="midi-btn" id="midiPauseBtn" type="button" title="Pause" aria-label="Pause" style="display:none">⏸</button>
+        <button class="midi-btn" id="midiNextBtn" type="button" title="Next" aria-label="Next">⏭</button>
+        <span class="midi-track-name" id="midiTrackName">—</span>
       </div>
-      <div class="time-blocks-list" id="midiPlaylistList" style="max-height:200px;overflow-y:auto"></div>
+      <div class="music-modal-playlist" style="margin-top:1rem">
+        <p class="empty-state-msg" id="midiPlaylistEmpty" style="display:none">No tracks. Add a MIDI file via URL or upload.</p>
+        <div class="midi-add-row" style="margin-bottom:0.75rem;display:flex;gap:0.5rem;flex-wrap:wrap">
+          <input type="text" id="midiUrlInput" placeholder="MIDI URL or path (e.g. midi/song.mid)" style="flex:1;min-width:180px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
+          <input type="text" id="midiNameInput" placeholder="Track name (optional)" style="width:120px;padding:0.4rem;font-size:0.8rem;background:var(--bevel-dark);border:2px solid var(--card-border);color:var(--content)">
+          <button class="btn-save" type="button" id="midiAddUrlBtn" style="padding:0.4rem 0.6rem;font-size:0.75rem">Add URL</button>
+          <label style="display:flex;align-items:center;gap:0.35rem;cursor:pointer;font-size:0.75rem">
+            <input type="file" id="midiFileInput" accept=".mid,.midi" style="display:none">
+            <span class="link-icon" style="padding:0.35rem 0.5rem;font-size:0.7rem">Upload</span>
+          </label>
+        </div>
+        <div class="time-blocks-list" id="midiPlaylistList" style="max-height:200px;overflow-y:auto"></div>
+      </div>
       <div class="modal-actions" style="margin-top:0.5rem">
-        <button class="btn-cancel" type="button" id="midiPlaylistCloseBtn">Close</button>
+        <button class="btn-cancel" type="button" id="musicModalCloseBtn">Close</button>
       </div>
     </div>
   </div>
@@ -1893,6 +1962,26 @@ if (file_exists($dataFile)) {
         updateTitle(theme);
       });
     }
+    (function initThemeDropdown() {
+      var themeBtn = document.getElementById('themeCharmBtn');
+      var dropdown = document.getElementById('themeDropdown');
+      if (!themeBtn || !dropdown) return;
+      themeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+      dropdown.querySelectorAll('.theme-dropdown-option').forEach(function(opt) {
+        opt.addEventListener('click', function() {
+          var theme = this.getAttribute('data-theme');
+          if (themeSelect) {
+            themeSelect.value = theme;
+            themeSelect.dispatchEvent(new Event('change'));
+          }
+          dropdown.classList.remove('open');
+        });
+      });
+      document.addEventListener('click', function() { dropdown.classList.remove('open'); });
+    })();
     const clockEl = document.getElementById('clock');
     let data = <?= json_encode($initialData) ?>;
     let sortables = [];
@@ -2891,19 +2980,19 @@ if (file_exists($dataFile)) {
 
     (function initMidiPlayer() {
       const playlist = document.getElementById('midiPlaylistList');
-      const playlistModal = document.getElementById('midiPlaylistModal');
+      const musicModal = document.getElementById('musicControlsModal');
       const urlInput = document.getElementById('midiUrlInput');
       const nameInput = document.getElementById('midiNameInput');
       const addUrlBtn = document.getElementById('midiAddUrlBtn');
       const fileInput = document.getElementById('midiFileInput');
-      const playlistCloseBtn = document.getElementById('midiPlaylistCloseBtn');
+      const musicModalCloseBtn = document.getElementById('musicModalCloseBtn');
+      const musicCharmBtn = document.getElementById('musicCharmBtn');
       const playlistEmpty = document.getElementById('midiPlaylistEmpty');
       const playBtn = document.getElementById('midiPlayBtn');
       const pauseBtn = document.getElementById('midiPauseBtn');
       const prevBtn = document.getElementById('midiPrevBtn');
       const nextBtn = document.getElementById('midiNextBtn');
       const trackNameEl = document.getElementById('midiTrackName');
-      const playlistBtn = document.getElementById('midiPlaylistBtn');
 
       let midiContext = null;
       let midiPlayer = null;
@@ -2915,6 +3004,7 @@ if (file_exists($dataFile)) {
       let midiStepDuration = 44 / 1000;
       let midiPlaying = false;
       let midiOnEnded = null;
+      let wasPlayingBeforeTabHide = false;
 
       function getPlaylist() {
         return (data.midiPlaylist || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
@@ -2939,6 +3029,18 @@ if (file_exists($dataFile)) {
         } else {
           el.textContent = '';
           el.style.display = 'none';
+        }
+      }
+
+      function updateMusicCharmIcon() {
+        var btn = document.getElementById('musicCharmBtn');
+        if (!btn) return;
+        if (midiPlaying) {
+          btn.textContent = '\u25B6';
+          btn.classList.add('music-charm-playing');
+        } else {
+          btn.textContent = '\u266A';
+          btn.classList.remove('music-charm-playing');
         }
       }
 
@@ -3023,6 +3125,8 @@ if (file_exists($dataFile)) {
             if (midiPlayer && midiContext) midiPlayer.cancelQueue(midiContext);
             pauseBtn.style.display = 'none';
             playBtn.style.display = '';
+            updateScreensaverMidiTrack();
+            updateMusicCharmIcon();
             if (midiOnEnded) midiOnEnded();
             return;
           }
@@ -3061,6 +3165,7 @@ if (file_exists($dataFile)) {
             playBtn.style.display = 'none';
             pauseBtn.style.display = '';
             updateScreensaverMidiTrack();
+            updateMusicCharmIcon();
             midiRaf = requestAnimationFrame(tick);
           });
         }).catch(function(err) {
@@ -3077,6 +3182,7 @@ if (file_exists($dataFile)) {
         pauseBtn.style.display = 'none';
         playBtn.style.display = '';
         updateScreensaverMidiTrack();
+        updateMusicCharmIcon();
       }
 
       function playCurrent() {
@@ -3136,12 +3242,28 @@ if (file_exists($dataFile)) {
         });
       }
 
-      playlistBtn.addEventListener('click', function() {
-        renderPlaylist();
-        playlistModal.classList.add('open');
+      if (musicCharmBtn) {
+        musicCharmBtn.addEventListener('click', function() {
+          renderPlaylist();
+          if (musicModal) musicModal.classList.add('open');
+        });
+      }
+      if (musicModalCloseBtn) musicModalCloseBtn.addEventListener('click', function() { if (musicModal) musicModal.classList.remove('open'); });
+      if (musicModal) musicModal.addEventListener('click', function(e) { if (e.target === musicModal) musicModal.classList.remove('open'); });
+
+      document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+          if (midiPlaying) {
+            stopMidi();
+            wasPlayingBeforeTabHide = true;
+          }
+        } else {
+          if (wasPlayingBeforeTabHide) {
+            wasPlayingBeforeTabHide = false;
+            playCurrent();
+          }
+        }
       });
-      playlistCloseBtn.addEventListener('click', function() { playlistModal.classList.remove('open'); });
-      playlistModal.addEventListener('click', function(e) { if (e.target === playlistModal) playlistModal.classList.remove('open'); });
 
       addUrlBtn.addEventListener('click', function() {
         var url = urlInput.value.trim();
@@ -3197,6 +3319,7 @@ if (file_exists($dataFile)) {
 
       updateTrackDisplay();
       updateNavButtons();
+      updateMusicCharmIcon();
     })();
 
     render();
