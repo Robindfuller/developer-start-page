@@ -873,7 +873,7 @@ if (file_exists($dataFile)) {
       align-items: flex-start;
       justify-content: space-between;
       min-height: 0;
-      aspect-ratio: 3/2;
+      aspect-ratio: 4/2;
       padding: 0.65rem;
       background: var(--card-bg);
       border: 3px solid var(--card-border);
@@ -943,15 +943,9 @@ if (file_exists($dataFile)) {
     .link-card-content .link-title {
       display: -webkit-box;
       -webkit-line-clamp: 2; -webkit-box-orient: vertical;
-      line-height: 1.25; min-height: 2.5em;
+      line-height: 1.25; min-height: 1.5em;
       overflow: hidden; text-overflow: ellipsis;
     }
-    .link-card-content .link-subtitle {
-      display: block; margin-top: 0.2rem; color: var(--content-muted);
-      font-weight: 400; font-size: 0.75rem; line-height: 1.3; height: 1.3em;
-      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-    }
-    .link-card-content .link-subtitle:empty { visibility: hidden; }
     .modal-overlay {
       display: none;
       position: fixed; inset: 0;
@@ -3039,9 +3033,41 @@ if (file_exists($dataFile)) {
       pointer-events: none;
       transition: opacity 0.6s ease, visibility 0.6s ease;
     }
+
+    /* Offline indicator – subtle, theme-aware pill */
+    .offline-indicator {
+      display: none;
+      position: fixed;
+      top: 0.5rem;
+      right: 0.5rem;
+      z-index: 50;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.65rem;
+      font-family: 'Silkscreen', 'JetBrains Mono', monospace;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--content-muted);
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      box-shadow: inset 1px 1px 0 var(--bevel-light), 2px 2px 0 var(--bevel-dark);
+      border-radius: 4px;
+      opacity: 0;
+      transform: translateY(-4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .offline-indicator.visible {
+      display: inline-block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+    body.screensaver-active .offline-indicator {
+      opacity: 0 !important;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
+  <div class="offline-indicator" id="offlineIndicator" aria-live="polite" title="Server unavailable – showing cached copy">Offline</div>
   <div class="app" id="app">
     <aside class="sidebar" id="sidebar">
       <div class="clock" id="clock"></div>
@@ -3220,6 +3246,7 @@ if (file_exists($dataFile)) {
         <div class="help-shortcuts"><code>Alt + Shift + T</code> — Cycle theme</div>
         <div class="help-shortcuts"><code>Alt + Shift + S</code> — Screensaver</div>
         <div class="help-shortcuts"><code>Alt + Shift + E</code> — Test event modal</div>
+        <div class="help-shortcuts"><code>Alt + Shift + O</code> — Simulate offline</div>
       </div>
       <div class="modal-actions" style="margin-top: 1rem;">
         <button class="btn-cancel" type="button" id="helpModalCloseBtn">Close</button>
@@ -3251,8 +3278,6 @@ if (file_exists($dataFile)) {
         <input type="hidden" id="modalCategoryId">
         <label>Title</label>
         <input type="text" id="modalItemTitle" placeholder="Item title" required>
-        <label>Subtitle</label>
-        <input type="text" id="modalItemSubtitle" placeholder="Optional subtitle">
         <label>URL</label>
         <input type="url" id="modalItemUrl" placeholder="https://..." required>
         <label>Color</label>
@@ -3274,6 +3299,46 @@ if (file_exists($dataFile)) {
   (function() {
     const app = document.getElementById('app');
     const html = document.documentElement;
+
+    /* Service Worker for offline mode */
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch(function() {});
+    }
+
+    /* Offline indicator – show when network or server unavailable */
+    (function initOfflineIndicator() {
+      var indicator = document.getElementById('offlineIndicator');
+      if (!indicator) return;
+      var serverUnavailable = false;
+      var simulateOffline = false;
+      function updateIndicator() {
+        var show = !navigator.onLine || serverUnavailable || simulateOffline;
+        indicator.classList.toggle('visible', show);
+      }
+      window.addEventListener('online', function() {
+        if (!simulateOffline) serverUnavailable = false;
+        updateIndicator();
+      });
+      window.addEventListener('offline', updateIndicator);
+      updateIndicator();
+      window._setServerUnavailable = function(v) {
+        if (!simulateOffline) serverUnavailable = !!v;
+        updateIndicator();
+      };
+      window._toggleSimulateOffline = function() {
+        simulateOffline = !simulateOffline;
+        updateIndicator();
+      };
+      /* Periodic check when we think we're offline (server was unreachable) */
+      setInterval(function() {
+        if (simulateOffline) return;
+        if (serverUnavailable && navigator.onLine) {
+          fetch('api.php?action=get', { method: 'GET' }).then(function(r) {
+            if (r.ok) window._setServerUnavailable(false);
+          }).catch(function() {});
+        }
+      }, 30000);
+    })();
 
     function escapeHtml(s) {
       const div = document.createElement('div');
@@ -3380,6 +3445,11 @@ if (file_exists($dataFile)) {
             themeSelect.value = next;
             themeSelect.dispatchEvent(new Event('change'));
           }
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'O' || e.key === 'o')) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (window._toggleSimulateOffline) window._toggleSimulateOffline();
         }
       });
     })();
@@ -3819,7 +3889,6 @@ if (file_exists($dataFile)) {
     const modalItemId = document.getElementById('modalItemId');
     const modalCategoryId = document.getElementById('modalCategoryId');
     const modalItemTitle = document.getElementById('modalItemTitle');
-    const modalItemSubtitle = document.getElementById('modalItemSubtitle');
     const modalItemUrl = document.getElementById('modalItemUrl');
     const modalItemColor = document.getElementById('modalItemColor');
     const modalCancelBtn = document.getElementById('modalCancelBtn');
@@ -3850,7 +3919,6 @@ if (file_exists($dataFile)) {
         <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${item.url}">
           <div class="link-card-content">
             <span class="link-title">${escapeHtml(item.title)}</span>
-            <span class="link-subtitle">${escapeHtml(item.subtitle || '')}</span>
           </div>
           <div class="link-actions">
             <button class="edit-item-btn" type="button" title="Edit">✎</button>
@@ -3992,7 +4060,6 @@ if (file_exists($dataFile)) {
       modalItemId.value = '';
       modalCategoryId.value = categoryId;
       modalItemTitle.value = '';
-      modalItemSubtitle.value = '';
       modalItemUrl.value = '';
       modalItemColor.value = '';
       itemModal.classList.add('open');
@@ -4005,7 +4072,6 @@ if (file_exists($dataFile)) {
       modalItemId.value = itemId;
       modalCategoryId.value = categoryId;
       modalItemTitle.value = item.title;
-      modalItemSubtitle.value = item.subtitle || '';
       modalItemUrl.value = item.url;
       modalItemColor.value = item.color || '';
       itemModal.classList.add('open');
@@ -4018,7 +4084,7 @@ if (file_exists($dataFile)) {
     function saveItem() {
       const id = modalItemId.value;
       const title = modalItemTitle.value.trim();
-      const subtitle = modalItemSubtitle.value.trim();
+      const subtitle = '';
       const url = modalItemUrl.value.trim();
       const color = modalItemColor.value;
       const categoryId = modalCategoryId.value;
@@ -4091,9 +4157,11 @@ if (file_exists($dataFile)) {
         updateDayBars();
         if (window._midiPlayerRefresh) window._midiPlayerRefresh();
         if (window._midiPlayerTryRestore) window._midiPlayerTryRestore();
+        if (window._setServerUnavailable) window._setServerUnavailable(false);
       }).catch(() => {
         render();
         if (window._midiPlayerTryRestore) window._midiPlayerTryRestore();
+        if (window._setServerUnavailable) window._setServerUnavailable(true);
       });
     }
 
