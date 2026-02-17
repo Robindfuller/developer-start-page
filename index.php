@@ -6160,7 +6160,7 @@ if (file_exists($dataFile)) {
           ctx.textAlign = 'center';
           ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
           ctx.font = '14px monospace';
-          ctx.fillText('Click Back to return', canvas.width/2, canvas.height/2 + 20);
+          ctx.fillText('Press Enter to Play Again', canvas.width/2, canvas.height/2 + 20);
           return false;
         }
         return true;
@@ -6224,7 +6224,13 @@ if (file_exists($dataFile)) {
 
       document.addEventListener('keydown', function tetrisKey(e) {
         if (!tetrisOverlay || !tetrisOverlay.classList.contains('open')) return;
-        if (!piece) return;
+        if (!piece) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            window._tetrisStart();
+          }
+          return;
+        }
         if (e.key === 'ArrowLeft') { if (!collide(px-1, py)) px--; e.preventDefault(); }
         else if (e.key === 'ArrowRight') { if (!collide(px+1, py)) px++; e.preventDefault(); }
         else if (e.key === 'ArrowDown') {
@@ -6280,9 +6286,10 @@ if (file_exists($dataFile)) {
         ctx.fillStyle = col.piece;
         ctx.font = 'bold 24px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
+        ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 20);
         ctx.font = '14px monospace';
-        ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 20);
+        ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 5);
+        ctx.fillText('Press Enter to Play Again', canvas.width/2, canvas.height/2 + 30);
       }
 
       function tick() {
@@ -6333,7 +6340,13 @@ if (file_exists($dataFile)) {
 
       document.addEventListener('keydown', function snakeKey(e) {
         if (!snakeOverlay || !snakeOverlay.classList.contains('open')) return;
-        if (!gameLoop) return;
+        if (!gameLoop) {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            window._snakeStart();
+          }
+          return;
+        }
         if (e.key === 'ArrowUp' && dir.y !== 1) { dir = {x:0,y:-1}; e.preventDefault(); }
         else if (e.key === 'ArrowDown' && dir.y !== -1) { dir = {x:0,y:1}; e.preventDefault(); }
         else if (e.key === 'ArrowLeft' && dir.x !== 1) { dir = {x:-1,y:0}; e.preventDefault(); }
