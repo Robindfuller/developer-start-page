@@ -19,7 +19,7 @@ if (file_exists($dataFile)) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Developer Start Page</title>
-  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&family=Antonio:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Silkscreen:wght@400;700&family=Orbitron:wght@400;700&family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=VT323&family=Pixelify+Sans:wght@400;700&family=Antonio:wght@400;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/chicagoflf" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
@@ -223,6 +223,98 @@ if (file_exists($dataFile)) {
       --delete-btn-hover: #d4d0c8;
     }
 
+    /* Catppuccin Mocha theme (dark) – Hyprland-style */
+    html[data-theme="catppuccin"] {
+      --bg: #1e1e2e;
+      --bg-alt: #181825;
+      --content: #cdd6f4;
+      --content-muted: #bac2de;
+      --button-bg: #89b4fa;
+      --button-hover: #b4befe;
+      --button-fg: #1e1e2e;
+      --card-bg: #313244;
+      --card-border: #45475a;
+      --bevel-light: #585b70;
+      --bevel-dark: #11111b;
+      --edit-btn-bg: #89b4fa;
+      --edit-btn-fg: #1e1e2e;
+      --edit-btn-border: #b4befe;
+      --edit-btn-hover: #b4befe;
+      --delete-btn-bg: #f38ba8;
+      --delete-btn-fg: #1e1e2e;
+      --delete-btn-border: #eba0ac;
+      --delete-btn-hover: #eba0ac;
+    }
+
+    /* Catppuccin Latte theme (light) – Hyprland-style */
+    html[data-theme="catppuccin-latte"] {
+      --bg: #eff1f5;
+      --bg-alt: #e6e9ef;
+      --content: #4c4f69;
+      --content-muted: #5c5f77;
+      --button-bg: #1e66f5;
+      --button-hover: #3584e4;
+      --button-fg: #ffffff;
+      --card-bg: #ccd0da;
+      --card-border: #bcc0cc;
+      --bevel-light: #acb0be;
+      --bevel-dark: #9ca0b0;
+      --edit-btn-bg: #1e66f5;
+      --edit-btn-fg: #ffffff;
+      --edit-btn-border: #3584e4;
+      --edit-btn-hover: #3584e4;
+      --delete-btn-bg: #d20f39;
+      --delete-btn-fg: #ffffff;
+      --delete-btn-border: #e64553;
+      --delete-btn-hover: #e64553;
+    }
+
+    /* Everforest theme (dark) */
+    html[data-theme="everforest"] {
+      --bg: #2D353B;
+      --bg-alt: #232A2E;
+      --content: #D3C6AA;
+      --content-muted: #859289;
+      --button-bg: #A7C080;
+      --button-hover: #83C092;
+      --button-fg: #2D353B;
+      --card-bg: #343F44;
+      --card-border: #3D484D;
+      --bevel-light: #475258;
+      --bevel-dark: #1E2326;
+      --edit-btn-bg: #A7C080;
+      --edit-btn-fg: #2D353B;
+      --edit-btn-border: #83C092;
+      --edit-btn-hover: #83C092;
+      --delete-btn-bg: #E67E80;
+      --delete-btn-fg: #2D353B;
+      --delete-btn-border: #E69875;
+      --delete-btn-hover: #E69875;
+    }
+
+    /* Tokyo Night theme (dark) */
+    html[data-theme="tokyo-night"] {
+      --bg: #1a1b26;
+      --bg-alt: #16161e;
+      --content: #c0caf5;
+      --content-muted: #a9b1d6;
+      --button-bg: #7aa2f7;
+      --button-hover: #7dcfff;
+      --button-fg: #1a1b26;
+      --card-bg: #24283b;
+      --card-border: #414868;
+      --bevel-light: #565f89;
+      --bevel-dark: #16161e;
+      --edit-btn-bg: #7aa2f7;
+      --edit-btn-fg: #1a1b26;
+      --edit-btn-border: #7dcfff;
+      --edit-btn-hover: #7dcfff;
+      --delete-btn-bg: #f7768e;
+      --delete-btn-fg: #1a1b26;
+      --delete-btn-border: #ff9e64;
+      --delete-btn-hover: #ff9e64;
+    }
+
     /* Star Trek: The Next Generation / LCARS theme */
     html[data-theme="lcars"] {
       --bg: #0a0a12;
@@ -334,6 +426,38 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="lcars"] body {
       background: linear-gradient(180deg, #0a0a12 0%, #12121a 50%, #0a0a12 100%);
+      background-attachment: fixed;
+    }
+    html[data-theme="catppuccin"] body,
+    html[data-theme="catppuccin"] * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="catppuccin"] body {
+      background: linear-gradient(180deg, #1e1e2e 0%, #181825 50%, #11111b 100%);
+      background-attachment: fixed;
+    }
+    html[data-theme="catppuccin-latte"] body,
+    html[data-theme="catppuccin-latte"] * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="catppuccin-latte"] body {
+      background: linear-gradient(180deg, #eff1f5 0%, #e6e9ef 50%, #dce0e8 100%);
+      background-attachment: fixed;
+    }
+    html[data-theme="everforest"] body,
+    html[data-theme="everforest"] * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="everforest"] body {
+      background: linear-gradient(180deg, #2D353B 0%, #232A2E 50%, #1E2326 100%);
+      background-attachment: fixed;
+    }
+    html[data-theme="tokyo-night"] body,
+    html[data-theme="tokyo-night"] * {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    html[data-theme="tokyo-night"] body {
+      background: linear-gradient(180deg, #1a1b26 0%, #16161e 50%, #13141a 100%);
       background-attachment: fixed;
     }
     .app { min-height: 100vh; display: flex; justify-content: center; align-items: flex-start; padding: 2rem; }
@@ -614,27 +738,42 @@ if (file_exists($dataFile)) {
       box-shadow: 3px 3px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
       min-width: 8rem;
       max-height: 12rem;
-      overflow-y: auto;
       display: none;
+      flex-direction: column;
       z-index: 101;
+    }
+    .theme-dropdown.open { display: flex; }
+    .theme-dropdown-options {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
       scrollbar-color: var(--card-border) var(--bevel-dark);
       scrollbar-width: thin;
     }
-    .theme-dropdown::-webkit-scrollbar {
+    .theme-dropdown-options::-webkit-scrollbar {
       width: 8px;
     }
-    .theme-dropdown::-webkit-scrollbar-track {
+    .theme-dropdown-options::-webkit-scrollbar-track {
       background: var(--bevel-dark);
     }
-    .theme-dropdown::-webkit-scrollbar-thumb {
+    .theme-dropdown-options::-webkit-scrollbar-thumb {
       background: var(--card-border);
       border: 2px solid var(--bevel-dark);
       border-radius: 2px;
     }
-    .theme-dropdown::-webkit-scrollbar-thumb:hover {
+    .theme-dropdown-options::-webkit-scrollbar-thumb:hover {
       background: var(--button-bg);
     }
-    .theme-dropdown.open { display: block; }
+    .theme-dropdown-header {
+      padding: 0.4rem 0.6rem;
+      font-size: 0.65rem;
+      color: var(--content-muted);
+      font-family: 'Silkscreen', monospace;
+      border-bottom: 2px solid var(--card-border);
+      background: var(--bg-alt);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
     .theme-dropdown-option {
       display: block;
       width: 100%;
@@ -1334,6 +1473,610 @@ if (file_exists($dataFile)) {
     html[data-theme="sms"] .midi-player-widget *,
     html[data-theme="sms"] #musicControlsModal .modal,
     html[data-theme="sms"] #musicControlsModal .modal * { font-family: 'VT323', monospace; }
+
+    /* Catppuccin Mocha component overrides */
+    html[data-theme="catppuccin"] .clock {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #cdd6f4;
+      text-shadow: none;
+    }
+    html[data-theme="catppuccin"] h1,
+    html[data-theme="catppuccin"] .section-title,
+    html[data-theme="catppuccin"] .day-bar-label,
+    html[data-theme="catppuccin"] .theme-dropdown-header { font-family: 'Inter', sans-serif; }
+    html[data-theme="catppuccin"] .link-card {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #45475a;
+      background: #313244;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    html[data-theme="catppuccin"] .link-card:hover {
+      background: #45475a;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      transform: translateY(-1px);
+    }
+    html[data-theme="catppuccin"] .link-card--dev { border-left: 4px solid #a6e3a1; }
+    html[data-theme="catppuccin"] .link-card--nhs { border-left: 4px solid #89b4fa; }
+    html[data-theme="catppuccin"] .link-card--private { border-left: 4px solid #f9e2af; }
+    html[data-theme="catppuccin"] .link-icon,
+    html[data-theme="catppuccin"] .edit-item-btn,
+    html[data-theme="catppuccin"] .delete-item-btn {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="catppuccin"] .link-icon {
+      box-shadow: 0 2px 6px rgba(137, 180, 250, 0.3);
+    }
+    html[data-theme="catppuccin"] .day-bar-track {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #45475a;
+      background: #313244;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="catppuccin"] .day-bar-segment {
+      border-radius: 0;
+      background: #45475a;
+    }
+    html[data-theme="catppuccin"] .day-bar-segment.filled {
+      background: #89b4fa !important;
+      box-shadow: 0 0 12px rgba(137, 180, 250, 0.4);
+    }
+    html[data-theme="catppuccin"] .add-item-btn,
+    html[data-theme="catppuccin"] .add-category-row .add-category-btn,
+    html[data-theme="catppuccin"] .link-icon,
+    html[data-theme="catppuccin"] .modal .btn-save,
+    html[data-theme="catppuccin"] .modal-actions .btn-save {
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 6px rgba(137, 180, 250, 0.3);
+    }
+    html[data-theme="catppuccin"] .edit-mode-btn {
+      border-radius: 0;
+      border-width: 2px;
+    }
+    html[data-theme="catppuccin"] .edit-mode-btn.active {
+      box-shadow: 0 0 16px rgba(137, 180, 250, 0.5);
+    }
+    html[data-theme="catppuccin"] .charms-btn,
+    html[data-theme="catppuccin"] .edit-mode-btn,
+    html[data-theme="catppuccin"] .screensaver-btn {
+      border-radius: 0;
+      border-width: 2px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="catppuccin"] .theme-dropdown {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin"] .theme-dropdown-option { font-family: 'Inter', sans-serif; }
+    html[data-theme="catppuccin"] .theme-select {
+      background-color: #1e1e2e;
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin"] .theme-select option { background: #1e1e2e; color: #cdd6f4; }
+    html[data-theme="catppuccin"] .modal {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #45475a;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+    html[data-theme="catppuccin"] .modal-actions .btn-cancel,
+    html[data-theme="catppuccin"] .modal-actions .btn-save {
+      border-radius: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="catppuccin"] .scratch-pad {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #45475a;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="catppuccin"] .scratch-pad-header {
+      background: #45475a;
+      color: #cdd6f4;
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+    }
+    html[data-theme="catppuccin"] .scratch-pad-body {
+      background: #181825;
+      color: #cdd6f4;
+      caret-color: #89b4fa;
+      scrollbar-color: #45475a #313244;
+    }
+    html[data-theme="catppuccin"] .scratch-pad-body::-webkit-scrollbar-track { background: #313244; }
+    html[data-theme="catppuccin"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #45475a; border-radius: 0; }
+    html[data-theme="catppuccin"] .scratch-pad-body::placeholder { color: rgba(205, 214, 244, 0.4); }
+    html[data-theme="catppuccin"] #musicControlsModal input::placeholder { color: rgba(205, 214, 244, 0.4); }
+    html[data-theme="catppuccin"] .scratch-pad-tab {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      background: #313244;
+      color: #a6adc8;
+    }
+    html[data-theme="catppuccin"] .scratch-pad-tab:hover { background: #45475a; color: #cdd6f4; }
+    html[data-theme="catppuccin"] .scratch-pad-tab.active { background: #1e1e2e; color: #89b4fa; }
+    html[data-theme="catppuccin"] .midi-player-widget {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin"] .midi-player-widget .midi-btn {
+      border-radius: 0;
+    }
+    html[data-theme="catppuccin"] .modal input,
+    html[data-theme="catppuccin"] .modal select {
+      border-radius: 0;
+      border-color: #45475a;
+      background: #313244;
+      box-shadow: none;
+    }
+    html[data-theme="catppuccin"] .modal input:focus,
+    html[data-theme="catppuccin"] .modal select:focus {
+      border-color: #89b4fa;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(137, 180, 250, 0.3);
+    }
+    html[data-theme="catppuccin"] .theme-dropdown-option:hover {
+      background: #45475a;
+      color: #cdd6f4;
+    }
+
+    /* Catppuccin Latte component overrides */
+    html[data-theme="catppuccin-latte"] .clock {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #4c4f69;
+      text-shadow: none;
+    }
+    html[data-theme="catppuccin-latte"] h1,
+    html[data-theme="catppuccin-latte"] .section-title,
+    html[data-theme="catppuccin-latte"] .day-bar-label,
+    html[data-theme="catppuccin-latte"] .theme-dropdown-header { font-family: 'Inter', sans-serif; }
+    html[data-theme="catppuccin-latte"] .link-card {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #bcc0cc;
+      background: #ccd0da;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    html[data-theme="catppuccin-latte"] .link-card:hover {
+      background: #bcc0cc;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+      transform: translateY(-1px);
+    }
+    html[data-theme="catppuccin-latte"] .link-card--dev { border-left: 4px solid #40a02b; }
+    html[data-theme="catppuccin-latte"] .link-card--nhs { border-left: 4px solid #1e66f5; }
+    html[data-theme="catppuccin-latte"] .link-card--private { border-left: 4px solid #df8e1d; }
+    html[data-theme="catppuccin-latte"] .link-icon,
+    html[data-theme="catppuccin-latte"] .edit-item-btn,
+    html[data-theme="catppuccin-latte"] .delete-item-btn {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+    }
+    html[data-theme="catppuccin-latte"] .link-icon {
+      box-shadow: 0 2px 6px rgba(30, 102, 245, 0.25);
+    }
+    html[data-theme="catppuccin-latte"] .day-bar-track {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #bcc0cc;
+      background: #ccd0da;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+    }
+    html[data-theme="catppuccin-latte"] .day-bar-segment {
+      border-radius: 0;
+      background: #acb0be;
+    }
+    html[data-theme="catppuccin-latte"] .day-bar-segment.filled {
+      background: #1e66f5 !important;
+      box-shadow: 0 0 12px rgba(30, 102, 245, 0.35);
+    }
+    html[data-theme="catppuccin-latte"] .add-item-btn,
+    html[data-theme="catppuccin-latte"] .add-category-row .add-category-btn,
+    html[data-theme="catppuccin-latte"] .link-icon,
+    html[data-theme="catppuccin-latte"] .modal .btn-save,
+    html[data-theme="catppuccin-latte"] .modal-actions .btn-save {
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 6px rgba(30, 102, 245, 0.25);
+    }
+    html[data-theme="catppuccin-latte"] .edit-mode-btn {
+      border-radius: 0;
+      border-width: 2px;
+    }
+    html[data-theme="catppuccin-latte"] .edit-mode-btn.active {
+      box-shadow: 0 0 16px rgba(30, 102, 245, 0.4);
+    }
+    html[data-theme="catppuccin-latte"] .charms-btn,
+    html[data-theme="catppuccin-latte"] .edit-mode-btn,
+    html[data-theme="catppuccin-latte"] .screensaver-btn {
+      border-radius: 0;
+      border-width: 2px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    html[data-theme="catppuccin-latte"] .theme-dropdown {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin-latte"] .theme-dropdown-option { font-family: 'Inter', sans-serif; }
+    html[data-theme="catppuccin-latte"] .theme-select {
+      background-color: #eff1f5;
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin-latte"] .theme-select option { background: #eff1f5; color: #4c4f69; }
+    html[data-theme="catppuccin-latte"] .modal {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #bcc0cc;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.15);
+    }
+    html[data-theme="catppuccin-latte"] .modal-actions .btn-cancel,
+    html[data-theme="catppuccin-latte"] .modal-actions .btn-save {
+      border-radius: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+    html[data-theme="catppuccin-latte"] .scratch-pad {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #bcc0cc;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+    html[data-theme="catppuccin-latte"] .scratch-pad-header {
+      background: #bcc0cc;
+      color: #4c4f69;
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+    }
+    html[data-theme="catppuccin-latte"] .scratch-pad-body {
+      background: #eff1f5;
+      color: #4c4f69;
+      caret-color: #1e66f5;
+      scrollbar-color: #bcc0cc #ccd0da;
+    }
+    html[data-theme="catppuccin-latte"] .scratch-pad-body::-webkit-scrollbar-track { background: #ccd0da; }
+    html[data-theme="catppuccin-latte"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #bcc0cc; border-radius: 0; }
+    html[data-theme="catppuccin-latte"] .scratch-pad-body::placeholder { color: rgba(76, 79, 105, 0.4); }
+    html[data-theme="catppuccin-latte"] #musicControlsModal input::placeholder { color: rgba(76, 79, 105, 0.4); }
+    html[data-theme="catppuccin-latte"] .scratch-pad-tab {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      background: #ccd0da;
+      color: #6c6f85;
+    }
+    html[data-theme="catppuccin-latte"] .scratch-pad-tab:hover { background: #bcc0cc; color: #4c4f69; }
+    html[data-theme="catppuccin-latte"] .scratch-pad-tab.active { background: #eff1f5; color: #1e66f5; }
+    html[data-theme="catppuccin-latte"] .midi-player-widget {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="catppuccin-latte"] .midi-player-widget .midi-btn {
+      border-radius: 0;
+    }
+    html[data-theme="catppuccin-latte"] .modal input,
+    html[data-theme="catppuccin-latte"] .modal select {
+      border-radius: 0;
+      border-color: #bcc0cc;
+      background: #eff1f5;
+      box-shadow: none;
+    }
+    html[data-theme="catppuccin-latte"] .modal input:focus,
+    html[data-theme="catppuccin-latte"] .modal select:focus {
+      border-color: #1e66f5;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(30, 102, 245, 0.25);
+    }
+    html[data-theme="catppuccin-latte"] .theme-dropdown-option:hover {
+      background: #bcc0cc;
+      color: #4c4f69;
+    }
+
+    /* Everforest component overrides */
+    html[data-theme="everforest"] .clock {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #D3C6AA;
+      text-shadow: none;
+    }
+    html[data-theme="everforest"] h1,
+    html[data-theme="everforest"] .section-title,
+    html[data-theme="everforest"] .day-bar-label,
+    html[data-theme="everforest"] .theme-dropdown-header { font-family: 'Inter', sans-serif; }
+    html[data-theme="everforest"] .link-card {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #3D484D;
+      background: #343F44;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    html[data-theme="everforest"] .link-card:hover {
+      background: #3D484D;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      transform: translateY(-1px);
+    }
+    html[data-theme="everforest"] .link-card--dev { border-left: 4px solid #A7C080; }
+    html[data-theme="everforest"] .link-card--nhs { border-left: 4px solid #7FBBB3; }
+    html[data-theme="everforest"] .link-card--private { border-left: 4px solid #DBBC7F; }
+    html[data-theme="everforest"] .link-icon,
+    html[data-theme="everforest"] .edit-item-btn,
+    html[data-theme="everforest"] .delete-item-btn {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="everforest"] .link-icon {
+      box-shadow: 0 2px 6px rgba(167, 192, 128, 0.3);
+    }
+    html[data-theme="everforest"] .day-bar-track {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #3D484D;
+      background: #343F44;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="everforest"] .day-bar-segment {
+      border-radius: 0;
+      background: #3D484D;
+    }
+    html[data-theme="everforest"] .day-bar-segment.filled {
+      background: #A7C080 !important;
+      box-shadow: 0 0 12px rgba(167, 192, 128, 0.4);
+    }
+    html[data-theme="everforest"] .add-item-btn,
+    html[data-theme="everforest"] .add-category-row .add-category-btn,
+    html[data-theme="everforest"] .link-icon,
+    html[data-theme="everforest"] .modal .btn-save,
+    html[data-theme="everforest"] .modal-actions .btn-save {
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 6px rgba(167, 192, 128, 0.3);
+    }
+    html[data-theme="everforest"] .edit-mode-btn { border-radius: 0; border-width: 2px; }
+    html[data-theme="everforest"] .edit-mode-btn.active {
+      box-shadow: 0 0 16px rgba(167, 192, 128, 0.5);
+    }
+    html[data-theme="everforest"] .charms-btn,
+    html[data-theme="everforest"] .edit-mode-btn,
+    html[data-theme="everforest"] .screensaver-btn {
+      border-radius: 0;
+      border-width: 2px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="everforest"] .theme-dropdown { border-radius: 0; border-width: 1px; }
+    html[data-theme="everforest"] .theme-dropdown-option { font-family: 'Inter', sans-serif; }
+    html[data-theme="everforest"] .theme-select {
+      background-color: #2D353B;
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="everforest"] .theme-select option { background: #2D353B; color: #D3C6AA; }
+    html[data-theme="everforest"] .modal {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #3D484D;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+    }
+    html[data-theme="everforest"] .modal-actions .btn-cancel,
+    html[data-theme="everforest"] .modal-actions .btn-save {
+      border-radius: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="everforest"] .scratch-pad {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #3D484D;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="everforest"] .scratch-pad-header {
+      background: #3D484D;
+      color: #D3C6AA;
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+    }
+    html[data-theme="everforest"] .scratch-pad-body {
+      background: #232A2E;
+      color: #D3C6AA;
+      caret-color: #A7C080;
+      scrollbar-color: #3D484D #343F44;
+    }
+    html[data-theme="everforest"] .scratch-pad-body::-webkit-scrollbar-track { background: #343F44; }
+    html[data-theme="everforest"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #3D484D; border-radius: 0; }
+    html[data-theme="everforest"] .scratch-pad-body::placeholder { color: rgba(211, 198, 170, 0.4); }
+    html[data-theme="everforest"] #musicControlsModal input::placeholder { color: rgba(211, 198, 170, 0.4); }
+    html[data-theme="everforest"] .scratch-pad-tab {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      background: #343F44;
+      color: #859289;
+    }
+    html[data-theme="everforest"] .scratch-pad-tab:hover { background: #3D484D; color: #D3C6AA; }
+    html[data-theme="everforest"] .scratch-pad-tab.active { background: #2D353B; color: #A7C080; }
+    html[data-theme="everforest"] .midi-player-widget {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="everforest"] .midi-player-widget .midi-btn { border-radius: 0; }
+    html[data-theme="everforest"] .modal input,
+    html[data-theme="everforest"] .modal select {
+      border-radius: 0;
+      border-color: #3D484D;
+      background: #343F44;
+      box-shadow: none;
+    }
+    html[data-theme="everforest"] .modal input:focus,
+    html[data-theme="everforest"] .modal select:focus {
+      border-color: #A7C080;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(167, 192, 128, 0.3);
+    }
+    html[data-theme="everforest"] .theme-dropdown-option:hover {
+      background: #3D484D;
+      color: #D3C6AA;
+    }
+
+    /* Tokyo Night component overrides */
+    html[data-theme="tokyo-night"] .clock {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #c0caf5;
+      text-shadow: none;
+    }
+    html[data-theme="tokyo-night"] h1,
+    html[data-theme="tokyo-night"] .section-title,
+    html[data-theme="tokyo-night"] .day-bar-label,
+    html[data-theme="tokyo-night"] .theme-dropdown-header { font-family: 'Inter', sans-serif; }
+    html[data-theme="tokyo-night"] .link-card {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #414868;
+      background: #24283b;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+    }
+    html[data-theme="tokyo-night"] .link-card:hover {
+      background: #414868;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      transform: translateY(-1px);
+    }
+    html[data-theme="tokyo-night"] .link-card--dev { border-left: 4px solid #9ece6a; }
+    html[data-theme="tokyo-night"] .link-card--nhs { border-left: 4px solid #7dcfff; }
+    html[data-theme="tokyo-night"] .link-card--private { border-left: 4px solid #e0af68; }
+    html[data-theme="tokyo-night"] .link-icon,
+    html[data-theme="tokyo-night"] .edit-item-btn,
+    html[data-theme="tokyo-night"] .delete-item-btn {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="tokyo-night"] .link-icon {
+      box-shadow: 0 2px 6px rgba(122, 162, 247, 0.3);
+    }
+    html[data-theme="tokyo-night"] .day-bar-track {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #414868;
+      background: #24283b;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+    html[data-theme="tokyo-night"] .day-bar-segment {
+      border-radius: 0;
+      background: #414868;
+    }
+    html[data-theme="tokyo-night"] .day-bar-segment.filled {
+      background: #7aa2f7 !important;
+      box-shadow: 0 0 12px rgba(122, 162, 247, 0.4);
+    }
+    html[data-theme="tokyo-night"] .add-item-btn,
+    html[data-theme="tokyo-night"] .add-category-row .add-category-btn,
+    html[data-theme="tokyo-night"] .link-icon,
+    html[data-theme="tokyo-night"] .modal .btn-save,
+    html[data-theme="tokyo-night"] .modal-actions .btn-save {
+      border-radius: 0;
+      border: none;
+      box-shadow: 0 2px 6px rgba(122, 162, 247, 0.3);
+    }
+    html[data-theme="tokyo-night"] .edit-mode-btn { border-radius: 0; border-width: 2px; }
+    html[data-theme="tokyo-night"] .edit-mode-btn.active {
+      box-shadow: 0 0 16px rgba(122, 162, 247, 0.5);
+    }
+    html[data-theme="tokyo-night"] .charms-btn,
+    html[data-theme="tokyo-night"] .edit-mode-btn,
+    html[data-theme="tokyo-night"] .screensaver-btn {
+      border-radius: 0;
+      border-width: 2px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    html[data-theme="tokyo-night"] .theme-dropdown { border-radius: 0; border-width: 1px; }
+    html[data-theme="tokyo-night"] .theme-dropdown-option { font-family: 'Inter', sans-serif; }
+    html[data-theme="tokyo-night"] .theme-select {
+      background-color: #1a1b26;
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="tokyo-night"] .theme-select option { background: #1a1b26; color: #c0caf5; }
+    html[data-theme="tokyo-night"] .modal {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #414868;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+    }
+    html[data-theme="tokyo-night"] .modal-actions .btn-cancel,
+    html[data-theme="tokyo-night"] .modal-actions .btn-save {
+      border-radius: 0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+    html[data-theme="tokyo-night"] .scratch-pad {
+      border-radius: 0;
+      border-width: 1px;
+      border-color: #414868;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    html[data-theme="tokyo-night"] .scratch-pad-header {
+      background: #414868;
+      color: #c0caf5;
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+    }
+    html[data-theme="tokyo-night"] .scratch-pad-body {
+      background: #16161e;
+      color: #c0caf5;
+      caret-color: #7aa2f7;
+      scrollbar-color: #414868 #24283b;
+    }
+    html[data-theme="tokyo-night"] .scratch-pad-body::-webkit-scrollbar-track { background: #24283b; }
+    html[data-theme="tokyo-night"] .scratch-pad-body::-webkit-scrollbar-thumb { background: #414868; border-radius: 0; }
+    html[data-theme="tokyo-night"] .scratch-pad-body::placeholder { color: rgba(192, 202, 245, 0.4); }
+    html[data-theme="tokyo-night"] #musicControlsModal input::placeholder { color: rgba(192, 202, 245, 0.4); }
+    html[data-theme="tokyo-night"] .scratch-pad-tab {
+      font-family: 'Inter', sans-serif;
+      border-radius: 0;
+      background: #24283b;
+      color: #565f89;
+    }
+    html[data-theme="tokyo-night"] .scratch-pad-tab:hover { background: #414868; color: #c0caf5; }
+    html[data-theme="tokyo-night"] .scratch-pad-tab.active { background: #1a1b26; color: #7aa2f7; }
+    html[data-theme="tokyo-night"] .midi-player-widget {
+      border-radius: 0;
+      border-width: 1px;
+    }
+    html[data-theme="tokyo-night"] .midi-player-widget .midi-btn { border-radius: 0; }
+    html[data-theme="tokyo-night"] .modal input,
+    html[data-theme="tokyo-night"] .modal select {
+      border-radius: 0;
+      border-color: #414868;
+      background: #24283b;
+      box-shadow: none;
+    }
+    html[data-theme="tokyo-night"] .modal input:focus,
+    html[data-theme="tokyo-night"] .modal select:focus {
+      border-color: #7aa2f7;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(122, 162, 247, 0.3);
+    }
+    html[data-theme="tokyo-night"] .theme-dropdown-option:hover {
+      background: #414868;
+      color: #c0caf5;
+    }
 
     /* Megadrive/16-bit theme scratch-pad font */
     html[data-theme="megadrive"] .scratch-pad,
@@ -2147,28 +2890,40 @@ if (file_exists($dataFile)) {
       </div>
     </aside>
     <nav class="charms-menu">
+      <button class="charms-btn" id="fullscreenCharmBtn" type="button" title="Fullscreen" aria-label="Fullscreen">⛶</button>
       <button class="charms-btn" id="musicCharmBtn" type="button" title="Music controls" aria-label="Music controls">♪</button>
       <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
       <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
       <div class="theme-switcher-charms">
         <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme (Alt+Shift+T to cycle)" aria-label="Theme">&#9881;</button>
         <div class="theme-dropdown" id="themeDropdown">
-          <button class="theme-dropdown-option" data-theme="megadrive">16-bit</button>
-          <button class="theme-dropdown-option" data-theme="tron">Tron</button>
-          <button class="theme-dropdown-option" data-theme="tron-ares">Ares</button>
-          <button class="theme-dropdown-option" data-theme="matrix">Matrix</button>
-          <button class="theme-dropdown-option" data-theme="sms">SMS</button>
-          <button class="theme-dropdown-option" data-theme="gb">GB</button>
-          <button class="theme-dropdown-option" data-theme="ps5">PS5</button>
-          <button class="theme-dropdown-option" data-theme="lcars">TNG</button>
-          <button class="theme-dropdown-option" data-theme="macintosh">Macintosh</button>
-          <button class="theme-dropdown-option" data-theme="msdos">MS-DOS</button>
+          <div class="theme-dropdown-header">Shift + Alt + T to cycle</div>
+          <div class="theme-dropdown-options">
+            <button class="theme-dropdown-option" data-theme="megadrive">16-bit</button>
+            <button class="theme-dropdown-option" data-theme="tron">Tron</button>
+            <button class="theme-dropdown-option" data-theme="tron-ares">Ares</button>
+            <button class="theme-dropdown-option" data-theme="matrix">Matrix</button>
+            <button class="theme-dropdown-option" data-theme="catppuccin">Catppuccin</button>
+            <button class="theme-dropdown-option" data-theme="catppuccin-latte">Catppuccin Latte</button>
+            <button class="theme-dropdown-option" data-theme="everforest">Everforest</button>
+            <button class="theme-dropdown-option" data-theme="tokyo-night">Tokyo Night</button>
+            <button class="theme-dropdown-option" data-theme="sms">SMS</button>
+            <button class="theme-dropdown-option" data-theme="gb">GB</button>
+            <button class="theme-dropdown-option" data-theme="ps5">PS5</button>
+            <button class="theme-dropdown-option" data-theme="lcars">TNG</button>
+            <button class="theme-dropdown-option" data-theme="macintosh">Macintosh</button>
+            <button class="theme-dropdown-option" data-theme="msdos">MS-DOS</button>
+          </div>
         </div>
         <select class="theme-select" id="themeSelect" aria-label="Select theme" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0">
           <option value="megadrive">16-bit</option>
           <option value="tron">Tron</option>
           <option value="tron-ares">Ares</option>
           <option value="matrix">Matrix</option>
+          <option value="catppuccin">Catppuccin</option>
+          <option value="catppuccin-latte">Catppuccin Latte</option>
+          <option value="everforest">Everforest</option>
+          <option value="tokyo-night">Tokyo Night</option>
           <option value="sms">SMS</option>
           <option value="gb">GB</option>
           <option value="ps5">PS5</option>
@@ -2319,6 +3074,10 @@ if (file_exists($dataFile)) {
       tron: 'root@work:~$',
       'tron-ares': 'root@work:~$',
       matrix: '> SYSTEM ONLINE',
+      catppuccin: 'Catppuccin Mocha',
+      'catppuccin-latte': 'Catppuccin Latte',
+      everforest: 'Everforest',
+      'tokyo-night': 'Tokyo Night',
       sms: 'INSERT CART',
       gb: 'NINTENDO',
       ps5: 'PlayStation',
@@ -2370,7 +3129,7 @@ if (file_exists($dataFile)) {
     })();
 
     (function initThemeShortcut() {
-      var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'sms', 'gb', 'ps5', 'lcars', 'macintosh', 'msdos'];
+      var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'catppuccin', 'catppuccin-latte', 'everforest', 'tokyo-night', 'sms', 'gb', 'ps5', 'lcars', 'macintosh', 'msdos'];
       document.addEventListener('keydown', function(e) {
         if (e.altKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
           e.preventDefault();
@@ -3383,6 +4142,27 @@ if (file_exists($dataFile)) {
           maxBtn.textContent = isMax ? '\u2921' : '\u26B6';
           maxBtn.title = isMax ? 'Restore' : 'Full screen';
         });
+      }
+
+      const fullscreenBtn = document.getElementById('fullscreenCharmBtn');
+      if (fullscreenBtn && document.documentElement.requestFullscreen) {
+        function updateFullscreenIcon() {
+          const isFull = !!document.fullscreenElement;
+          fullscreenBtn.textContent = isFull ? '\u2921' : '\u26B6';
+          fullscreenBtn.title = isFull ? 'Exit fullscreen' : 'Fullscreen';
+          fullscreenBtn.setAttribute('aria-label', isFull ? 'Exit fullscreen' : 'Fullscreen');
+        }
+        fullscreenBtn.addEventListener('click', function() {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          } else {
+            document.documentElement.requestFullscreen();
+          }
+        });
+        document.addEventListener('fullscreenchange', updateFullscreenIcon);
+        updateFullscreenIcon();
+      } else if (fullscreenBtn) {
+        fullscreenBtn.style.display = 'none';
       }
     })();
 
