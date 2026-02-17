@@ -4051,14 +4051,14 @@ if (file_exists($dataFile)) {
       let modalsOpenBeforeScreensaver = [];
 
       const MYSTIFY_THEME = {
-        ps5: { fps: 60, scale: 1 },
-        tron: { fps: 60, scale: 1 },
-        'tron-ares': { fps: 60, scale: 1 },
+        ps5: { fps: 30, scale: 1 },
+        tron: { fps: 30, scale: 1 },
+        'tron-ares': { fps: 30, scale: 1 },
         megadrive: { fps: 15, scale: 0.75 },
         sms: { fps: 15, scale: 0.75 },
         gb: { fps: 10, scale: 0.5 },
         matrix: { fps: 10, scale: 0.5 },
-        lcars: { fps: 60, scale: 1 },
+        lcars: { fps: 30, scale: 1 },
         macintosh: { fps: 15, scale: 0.66 },
         msdos: { fps: 15, scale: 0.66 }
       };
