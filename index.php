@@ -2878,10 +2878,8 @@ if (file_exists($dataFile)) {
           <span class="scratch-pad-tabs">
             <button class="scratch-pad-tab active" type="button" id="scratchPadTextTab" data-tab="text">Text</button>
             <button class="scratch-pad-tab" type="button" id="scratchPadBasicTab" data-tab="basic">Basic</button>
-            <button class="scratch-pad-tab" type="button" id="scratchPadJsTab" data-tab="javascript">JavaScript</button>
           </span>
           <span class="scratch-pad-header-actions">
-            <button class="scratch-pad-run-js-btn" type="button" id="scratchPadRunJsBtn" title="Run JavaScript" style="display:none">RUN</button>
             <button class="scratch-pad-stop-btn" type="button" id="scratchPadStopBtn" title="Stop execution" style="display:none">STOP</button>
             <button class="scratch-pad-maximize-btn" type="button" id="scratchPadMaximizeBtn" title="Full screen">⛶</button>
           </span>
@@ -3865,13 +3863,10 @@ if (file_exists($dataFile)) {
       const el = document.getElementById('scratchPadText');
       const textTab = document.getElementById('scratchPadTextTab');
       const basicTab = document.getElementById('scratchPadBasicTab');
-      const jsTab = document.getElementById('scratchPadJsTab');
       const stopBtn = document.getElementById('scratchPadStopBtn');
-      const runJsBtn = document.getElementById('scratchPadRunJsBtn');
       let activeTab = 'text';
       let textContent = '';
       let basicContent = '';
-      let jsContent = '';
       let isStreaming = false;
       let streamTimeoutId = null;
       let stateBeforeRun = '';
@@ -3882,22 +3877,19 @@ if (file_exists($dataFile)) {
         const legacy = localStorage.getItem('devStartPageScratch') || '';
         textContent = localStorage.getItem('devStartPageScratchText') || '';
         basicContent = localStorage.getItem('devStartPageScratchBasic') || '';
-        jsContent = localStorage.getItem('devStartPageScratchJs') || '';
         activeTab = localStorage.getItem('devStartPageScratchTab') || 'text';
-        if (legacy && !textContent && !basicContent && !jsContent) {
+        if (activeTab === 'javascript') activeTab = 'text';
+        if (legacy && !textContent && !basicContent) {
           textContent = legacy;
           basicContent = legacy;
-          jsContent = legacy;
         }
       } catch (e) {}
       function saveContent() {
         if (activeTab === 'text') textContent = el.value;
         else if (activeTab === 'basic') basicContent = el.value;
-        else if (activeTab === 'javascript') jsContent = el.value;
         try {
           localStorage.setItem('devStartPageScratchText', textContent);
           localStorage.setItem('devStartPageScratchBasic', basicContent);
-          localStorage.setItem('devStartPageScratchJs', jsContent);
         } catch (e) {}
       }
       let initialLoad = true;
@@ -3907,50 +3899,25 @@ if (file_exists($dataFile)) {
         activeTab = tab;
         try { localStorage.setItem('devStartPageScratchTab', activeTab); } catch (e) {}
         if (tab === 'text') el.value = textContent;
-        else if (tab === 'basic') el.value = basicContent;
-        else el.value = jsContent;
-        el.placeholder = tab === 'text' ? 'Notes, reminders, quick thoughts...' : tab === 'basic' ? '10 PRINT "Hello"\n20 GOTO 10\nRUN' : 'console.log("Hello");\n\n// Click RUN or Ctrl+Enter to execute';
+        else el.value = basicContent;
+        el.placeholder = tab === 'text' ? 'Notes, reminders, quick thoughts...' : '10 PRINT "Hello"\n20 GOTO 10\nRUN';
         textTab.classList.toggle('active', tab === 'text');
         basicTab.classList.toggle('active', tab === 'basic');
-        jsTab.classList.toggle('active', tab === 'javascript');
         updateActionButtons();
       }
       function updateActionButtons() {
         const inBasic = activeTab === 'basic';
-        const inJs = activeTab === 'javascript';
         const showStopBtn = inBasic && (isStreaming || hasOutputFromRun);
-        stopBtn.style.display = showStopBtn ? '' : 'none';
-        stopBtn.textContent = isStreaming ? 'STOP' : 'RESET';
-        stopBtn.title = isStreaming ? 'Stop execution' : 'Reset to before RUN';
-        runJsBtn.style.display = inJs ? '' : 'none';
+        if (stopBtn) {
+          stopBtn.style.display = showStopBtn ? '' : 'none';
+          stopBtn.textContent = isStreaming ? 'STOP' : 'RESET';
+          stopBtn.title = isStreaming ? 'Stop execution' : 'Reset to before RUN';
+        }
       }
       el.addEventListener('input', saveContent);
       if (textTab) textTab.addEventListener('click', () => switchTab('text'));
       if (basicTab) basicTab.addEventListener('click', () => switchTab('basic'));
-      if (jsTab) jsTab.addEventListener('click', () => switchTab('javascript'));
       switchTab(activeTab);
-
-      function runJavaScript(source) {
-        const outBuf = [];
-        const origLog = console.log;
-        const origWarn = console.warn;
-        const origError = console.error;
-        console.log = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
-        console.warn = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
-        console.error = function() { outBuf.push(Array.from(arguments).map(String).join(' ')); };
-        try {
-          const fn = new Function(source);
-          const result = fn();
-          if (result !== undefined) outBuf.push(String(result));
-        } catch (e) {
-          outBuf.push('Error: ' + (e.message || e));
-        } finally {
-          console.log = origLog;
-          console.warn = origWarn;
-          console.error = origError;
-        }
-        return outBuf.join('\n') + (outBuf.length ? '\n' : '');
-      }
 
       function runBasic(source) {
         const lines = [];
@@ -4052,11 +4019,6 @@ if (file_exists($dataFile)) {
       }
 
       el.addEventListener('keydown', function(e) {
-        if (activeTab === 'javascript' && (e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-          e.preventDefault();
-          runJsBtn && runJsBtn.click();
-          return;
-        }
         if (e.key !== 'Enter' || activeTab !== 'basic' || isStreaming) return;
         const text = el.value;
         const pos = el.selectionStart;
@@ -4120,18 +4082,6 @@ if (file_exists($dataFile)) {
             saveContent();
           }
           updateActionButtons();
-        });
-      }
-      if (runJsBtn) {
-        runJsBtn.addEventListener('click', function() {
-          if (activeTab !== 'javascript') return;
-          const raw = el.value;
-          const code = raw.includes('// --- output ---') ? raw.split('// --- output ---')[0].trimEnd() : raw;
-          jsContent = code;
-          saveContent();
-          const output = runJavaScript(code);
-          el.value = code + (output ? '\n\n// --- output ---\n' + output : '');
-          el.scrollTop = el.scrollHeight;
         });
       }
 
