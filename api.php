@@ -61,7 +61,19 @@ function saveData($data) {
             });
         }
     }
-    return file_put_contents($dataFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+    $tmpFile = $dataFile . '.tmp.' . getmypid();
+    $written = file_put_contents($tmpFile, $json);
+    if ($written === false) {
+        error_log('saveData failed: could not write to ' . $tmpFile . ' (check permissions)');
+        return false;
+    }
+    if (!rename($tmpFile, $dataFile)) {
+        @unlink($tmpFile);
+        error_log('saveData failed: could not rename ' . $tmpFile . ' to ' . $dataFile . ' (file may be locked - close in editor)');
+        return false;
+    }
+    return $written;
 }
 
 function generateId() {
@@ -100,7 +112,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $action === 'uploadMidi' && !empty(
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET' && $action === 'debug') {
+    header('Cache-Control: no-store, no-cache');
+    $path = realpath($dataFile) ?: $dataFile;
+    $out = [
+        'dataFile' => $dataFile,
+        'resolvedPath' => realpath($dataFile) ?: '(file does not exist)',
+        'fileExists' => file_exists($dataFile),
+        'isWritable' => file_exists($dataFile) ? is_writable($dataFile) : is_writable(dirname($dataFile)),
+        'cwd' => getcwd(),
+        '__DIR__' => __DIR__
+    ];
+    $testFile = __DIR__ . '/data.json.api-write-test';
+    $marker = 'api-write-test-' . time();
+    if (file_put_contents($testFile, $marker) !== false) {
+        $readBack = file_get_contents($testFile);
+        @unlink($testFile);
+        $out['writeTestFile'] = $testFile;
+        $out['writeTestPersisted'] = ($readBack === $marker);
+    }
+    echo json_encode($out);
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'GET' && ($action === 'get' || $action === '')) {
+    header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+    header('Pragma: no-cache');
+    header('Expires: 0');
     echo json_encode(loadData());
     exit;
 }
@@ -160,8 +198,48 @@ switch ($action) {
                 }
             }
         }
-        saveData($data);
-        echo json_encode(['success' => $found]);
+        if (!$found) {
+            echo json_encode(['success' => false, 'error' => 'Item not found.']);
+            exit;
+        }
+        $canWrite = file_exists($dataFile) ? is_writable($dataFile) : is_writable(dirname($dataFile));
+        if (!$canWrite) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'data.json is not writable. Check permissions. Path: ' . $dataFile]);
+            exit;
+        }
+        $written = saveData($data);
+        if ($written === false) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Write failed. Path: ' . $dataFile]);
+            exit;
+        }
+        // Verify: read back and confirm our change persisted
+        clearstatcache(true, $dataFile);
+        $verify = @file_get_contents($dataFile);
+        if ($verify !== false) {
+            $check = json_decode($verify, true);
+            $expectedUrl = isset($input['url']) ? trim($input['url']) : null;
+            foreach (isset($check['categories']) ? $check['categories'] : array() as $c) {
+                foreach (isset($c['items']) ? $c['items'] : array() as $i) {
+                    if ((isset($i['id']) ? $i['id'] : '') === $itemId) {
+                        $actualUrl = isset($i['url']) ? $i['url'] : '';
+                        if ($expectedUrl !== null && $actualUrl !== $expectedUrl) {
+                            error_log('saveData verify failed: expected ' . $expectedUrl . ' got ' . $actualUrl . ' - data.json may be open in an editor (close it)');
+                            http_response_code(500);
+                            echo json_encode([
+                                'success' => false,
+                                'error' => 'Save did not persist. Close data.json in your editor and try again.',
+                                '_debug' => ['expected' => $expectedUrl, 'actual' => $actualUrl]
+                            ]);
+                            exit;
+                        }
+                        break 2;
+                    }
+                }
+            }
+        }
+        echo json_encode(['success' => true]);
         break;
 
     case 'delete':

@@ -10,7 +10,8 @@ A retro-styled developer start page with quick links, a visual day planner, and 
 - **Theme switcher**   Nine themes: 16-bit Megadrive, Tron, Tron Ares (red), Matrix, Sega Master System, Game Boy, PlayStation 5, Macintosh (1984), MS-DOS.
 - **Scratch pad**   Three tabs: **Text** for notes and quick thoughts; **Basic** for a built-in BASIC interpreter; **JavaScript** to run arbitrary JS (captures `console.log`). Maximize button (?) for full-screen editing.
 - **Edit mode**   Toggle via the pencil button (bottom-right) to manage categories, items, and events.
-- **Screen saver**   Mystify-style bouncing-line animation. Activates after 60 seconds of idle time, or via the ? button (bottom-right). Shows clock and day planner. Theme-aware (different FPS/scale per theme). Move mouse or press a key to exit.
+- **Offline mode**   When the server is unavailable (e.g. VM switched off), the page loads from cache. A subtle "Offline" indicator appears; links and data from your last visit remain usable.
+- **Screen saver**   Mystify-style bouncing-line animation. Activates after 60 seconds of idle time, or via the ◐ button (bottom-right). Shows clock and day planner. Theme-aware (different FPS/scale per theme). Move mouse or press a key to exit.
 
 ## Requirements
 
@@ -139,17 +140,47 @@ RUN
 
 - Max 10,000 execution steps (prevents infinite loops from hanging the tab)
 - Output truncated at 50,000 characters
-- No `IF`, `FOR`, `INPUT`, or other advanced statements ? ? it's intentionally minimal
+- No `IF`, `FOR`, `INPUT`, or other advanced statements — it's intentionally minimal
 
 It's a nostalgic throwback: line numbers, `PRINT`, `GOTO`, and `LET` in a modern start page.
+
+## Offline Mode
+
+When the server is unreachable (network offline, VM switched off, etc.), the app loads from cache and displays a subtle "Offline" indicator in the top-right corner. Your categories, links, scratch pad, and day planner data from the last successful visit remain available.
+
+- **First visit** — Load the page while online so it can be cached.
+- **Testing** — Press **Alt + Shift + O** to simulate offline mode (toggle on/off).
+- **Back online** — The indicator disappears when the server responds again.
 
 ## Screen Saver
 
 The screen saver shows a Mystify-style bouncing-line animation with the clock and day planner overlay. It:
 
-- **Activates** after 60 seconds of inactivity, or immediately when you click the ? button (bottom-right).
-- **Adapts to the current theme** ? different themes use different FPS and pixel scale (e.g. Game Boy runs at 10 FPS with chunky pixels; Tron runs at 60 FPS with smooth lines).
+- **Activates** after 60 seconds of inactivity, or immediately when you click the ◐ button (bottom-right).
+- **Adapts to the current theme** — different themes use different FPS and pixel scale (e.g. Game Boy runs at 10 FPS with chunky pixels; Tron runs at 60 FPS with smooth lines).
 - **Exits** on any mouse movement, key press, touch, or scroll.
+
+## Keyboard Shortcuts
+
+### Charms
+
+| Shortcut | Action |
+|----------|--------|
+| Alt + Shift + C | Charms (focus & expand menu) |
+| Alt + Shift + F | Fullscreen |
+| Alt + Shift + M | Music (open playlist) |
+| Alt + Shift + S | Screensaver |
+| Alt + Shift + H | Help |
+| Alt + Shift + D | Edit mode |
+| Alt + Shift + T | Cycle theme |
+
+### Other
+
+| Shortcut | Action |
+|----------|--------|
+| Escape | Close any open modal |
+| Alt + Shift + E | Test event notification modal |
+| Alt + Shift + O | Simulate offline mode |
 
 ## License
 

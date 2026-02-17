@@ -697,10 +697,49 @@ if (file_exists($dataFile)) {
       left: 1rem;
       display: flex;
       flex-direction: column;
+      justify-content: flex-end;
       gap: 0.35rem;
       align-items: stretch;
       z-index: 100;
     }
+    .charms-tray {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      align-items: stretch;
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transform: translateY(0.5rem);
+      transition: max-height 0.25s ease, opacity 0.2s ease, transform 0.2s ease;
+    }
+    .charms-menu:hover .charms-tray,
+    .charms-menu:focus-within .charms-tray {
+      max-height: 20rem;
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      overflow: visible;
+    }
+    .charms-hamburger {
+      width: 2.25rem;
+      height: 2.25rem;
+      min-width: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      border: 3px solid var(--card-border);
+      color: var(--content-muted);
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-family: inherit;
+      opacity: 0.85;
+      box-shadow: 2px 2px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
+      transition: opacity 0.15s, background 0.15s;
+    }
+    .charms-hamburger:hover { opacity: 1; background: var(--card-border); }
     .charms-btn,
     .edit-mode-btn,
     .screensaver-btn {
@@ -796,6 +835,48 @@ if (file_exists($dataFile)) {
       background: var(--button-bg) !important;
       border-color: var(--button-bg) !important;
       opacity: 1;
+    }
+    .music-charm-pin {
+      display: none;
+    }
+    .charms-menu.music-playing .music-charm-pin {
+      display: flex;
+    }
+    .charms-menu:hover .music-charm-pin,
+    .charms-menu:focus-within .music-charm-pin {
+      display: none;
+    }
+
+    /* Charm tooltips only – instant show, in-theme */
+    .charms-menu [data-tooltip] {
+      position: relative;
+    }
+    .charms-menu [data-tooltip]::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      left: 100%;
+      bottom: 50%;
+      margin-left: 0.4rem;
+      transform: translateY(50%);
+      padding: 0.25rem 0.55rem;
+      font-size: 0.68rem;
+      font-family: inherit;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      color: var(--content);
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      box-shadow: 2px 2px 0 var(--bevel-dark), inset 1px 1px 0 var(--bevel-light);
+      pointer-events: none;
+      z-index: 1001;
+      opacity: 0;
+      visibility: hidden;
+      transition: none;
+    }
+    .charms-menu [data-tooltip]:hover::after {
+      opacity: 1;
+      visibility: visible;
+      transition: none;
     }
 
     .fixed-buttons { display: none; }
@@ -1618,6 +1699,7 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 16px rgba(137, 180, 250, 0.5);
     }
     html[data-theme="catppuccin"] .charms-btn,
+    html[data-theme="catppuccin"] .charms-hamburger,
     html[data-theme="catppuccin"] .edit-mode-btn,
     html[data-theme="catppuccin"] .screensaver-btn {
       border-radius: 0;
@@ -1773,6 +1855,7 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 16px rgba(30, 102, 245, 0.4);
     }
     html[data-theme="catppuccin-latte"] .charms-btn,
+    html[data-theme="catppuccin-latte"] .charms-hamburger,
     html[data-theme="catppuccin-latte"] .edit-mode-btn,
     html[data-theme="catppuccin-latte"] .screensaver-btn {
       border-radius: 0;
@@ -1925,6 +2008,7 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 16px rgba(167, 192, 128, 0.5);
     }
     html[data-theme="everforest"] .charms-btn,
+    html[data-theme="everforest"] .charms-hamburger,
     html[data-theme="everforest"] .edit-mode-btn,
     html[data-theme="everforest"] .screensaver-btn {
       border-radius: 0;
@@ -2072,6 +2156,7 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 16px rgba(122, 162, 247, 0.5);
     }
     html[data-theme="tokyo-night"] .charms-btn,
+    html[data-theme="tokyo-night"] .charms-hamburger,
     html[data-theme="tokyo-night"] .edit-mode-btn,
     html[data-theme="tokyo-night"] .screensaver-btn {
       border-radius: 0;
@@ -2622,9 +2707,11 @@ if (file_exists($dataFile)) {
     html[data-theme="lcars"] .theme-select:hover,
     html[data-theme="lcars"] .theme-select:focus { border-color: #ffaa33; box-shadow: 0 0 8px rgba(255, 136, 0, 0.3); }
     html[data-theme="lcars"] .charms-btn,
+    html[data-theme="lcars"] .charms-hamburger,
     html[data-theme="lcars"] .edit-mode-btn,
     html[data-theme="lcars"] .screensaver-btn { border-color: #ff8800; color: #cc7700; }
     html[data-theme="lcars"] .charms-btn:hover,
+    html[data-theme="lcars"] .charms-hamburger:hover,
     html[data-theme="lcars"] .edit-mode-btn:hover,
     html[data-theme="lcars"] .screensaver-btn:hover { background: rgba(255, 136, 0, 0.2); color: #ff9900; }
     html[data-theme="lcars"] .theme-charm-btn { border-color: #ff8800; color: #ff8800; }
@@ -3067,7 +3154,7 @@ if (file_exists($dataFile)) {
   </style>
 </head>
 <body>
-  <div class="offline-indicator" id="offlineIndicator" aria-live="polite" title="Server unavailable – showing cached copy">Offline</div>
+  <div class="offline-indicator" id="offlineIndicator" aria-live="polite" data-tooltip="Server unavailable – showing cached copy">Offline</div>
   <div class="app" id="app">
     <aside class="sidebar" id="sidebar">
       <div class="clock" id="clock"></div>
@@ -3083,8 +3170,8 @@ if (file_exists($dataFile)) {
             <button class="scratch-pad-tab" type="button" id="scratchPadBasicTab" data-tab="basic">Basic</button>
           </span>
           <span class="scratch-pad-header-actions">
-            <button class="scratch-pad-stop-btn" type="button" id="scratchPadStopBtn" title="Stop execution" style="display:none">STOP</button>
-            <button class="scratch-pad-maximize-btn" type="button" id="scratchPadMaximizeBtn" title="Full screen">⛶</button>
+            <button class="scratch-pad-stop-btn" type="button" id="scratchPadStopBtn" data-tooltip="Stop execution" data-tooltip-pos="right" style="display:none">STOP</button>
+            <button class="scratch-pad-maximize-btn" type="button" id="scratchPadMaximizeBtn" data-tooltip="Full screen" data-tooltip-pos="right">⛶</button>
           </span>
         </div>
         <div class="scratch-pad-body-container">
@@ -3093,14 +3180,15 @@ if (file_exists($dataFile)) {
         </div>
       </div>
     </aside>
-    <nav class="charms-menu">
-      <button class="charms-btn" id="fullscreenCharmBtn" type="button" title="Fullscreen" aria-label="Fullscreen">⛶</button>
-      <button class="charms-btn" id="musicCharmBtn" type="button" title="Music controls" aria-label="Music controls">♪</button>
-      <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
-      <button class="charms-btn" id="helpCharmBtn" type="button" title="Help" aria-label="Help">?</button>
-      <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
-      <div class="theme-switcher-charms">
-        <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme (Alt+Shift+T to cycle)" aria-label="Theme">&#9881;</button>
+    <nav class="charms-menu" aria-label="Charms">
+      <div class="charms-tray">
+        <button class="charms-btn" id="fullscreenCharmBtn" type="button" data-tooltip="Fullscreen (Alt+Shift+F)" data-tooltip-pos="right" aria-label="Fullscreen">⛶</button>
+        <button class="charms-btn music-charm-in-tray" id="musicCharmBtnTray" type="button" data-tooltip="Music (Alt+Shift+M)" data-tooltip-pos="right" aria-label="Music controls">♪</button>
+        <button class="screensaver-btn" id="screensaverBtn" type="button" data-tooltip="Screensaver (Alt+Shift+S)" data-tooltip-pos="right">◐</button>
+        <button class="charms-btn" id="helpCharmBtn" type="button" data-tooltip="Help (Alt+Shift+H)" data-tooltip-pos="right" aria-label="Help">?</button>
+        <button class="edit-mode-btn" id="editModeBtn" type="button" data-tooltip="Edit (Alt+Shift+D)" data-tooltip-pos="right">✎</button>
+        <div class="theme-switcher-charms">
+          <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" data-tooltip="Theme (Alt+Shift+T)" data-tooltip-pos="right" aria-label="Theme">&#9881;</button>
         <div class="theme-dropdown" id="themeDropdown">
           <div class="theme-dropdown-header">Shift + Alt + T to cycle</div>
           <div class="theme-dropdown-options">
@@ -3136,7 +3224,10 @@ if (file_exists($dataFile)) {
           <option value="macintosh">Macintosh</option>
           <option value="msdos">MS-DOS</option>
         </select>
+        </div>
       </div>
+      <button class="charms-btn music-charm-pin" id="musicCharmBtn" type="button" data-tooltip="Music (Alt+Shift+M)" data-tooltip-pos="right" aria-label="Music controls">♪</button>
+      <button class="charms-hamburger" id="charmsHamburgerBtn" type="button" data-tooltip="Charms (Alt+Shift+C)" data-tooltip-pos="right" aria-label="Open charms" aria-expanded="false">☰</button>
     </nav>
   </div>
 
@@ -3195,20 +3286,20 @@ if (file_exists($dataFile)) {
     <div class="modal">
       <h3>Music Controls</h3>
       <div class="midi-player-widget midi-player-modal" id="midiPlayerWidget">
-        <button class="midi-btn" id="midiPrevBtn" type="button" title="Previous" aria-label="Previous">⏮</button>
-        <button class="midi-btn" id="midiPlayBtn" type="button" title="Play" aria-label="Play">▶</button>
-        <button class="midi-btn" id="midiPauseBtn" type="button" title="Pause" aria-label="Pause" style="display:none">⏸</button>
-        <button class="midi-btn" id="midiNextBtn" type="button" title="Next" aria-label="Next">⏭</button>
+        <button class="midi-btn" id="midiPrevBtn" type="button" data-tooltip="Previous" aria-label="Previous">⏮</button>
+        <button class="midi-btn" id="midiPlayBtn" type="button" data-tooltip="Play" aria-label="Play">▶</button>
+        <button class="midi-btn" id="midiPauseBtn" type="button" data-tooltip="Pause" aria-label="Pause" style="display:none">⏸</button>
+        <button class="midi-btn" id="midiNextBtn" type="button" data-tooltip="Next" aria-label="Next">⏭</button>
         <span class="midi-track-name" id="midiTrackName">—</span>
         <div class="midi-mode-group">
           <span class="midi-mode-sep" aria-hidden="true">|</span>
-          <button class="midi-btn midi-mode-btn" id="midiShuffleBtn" type="button" title="Shuffle" aria-label="Shuffle" aria-pressed="false"><span class="material-icons">shuffle</span></button>
-          <button class="midi-btn midi-mode-btn" id="midiRepeatOneBtn" type="button" title="Repeat current song" aria-label="Repeat one" aria-pressed="false"><span class="material-icons">repeat_one</span></button>
-          <button class="midi-btn midi-mode-btn" id="midiRepeatAllBtn" type="button" title="Repeat playlist" aria-label="Repeat all" aria-pressed="false"><span class="material-icons">repeat</span></button>
+          <button class="midi-btn midi-mode-btn" id="midiShuffleBtn" type="button" data-tooltip="Shuffle" aria-label="Shuffle" aria-pressed="false"><span class="material-icons">shuffle</span></button>
+          <button class="midi-btn midi-mode-btn" id="midiRepeatOneBtn" type="button" data-tooltip="Repeat current song" aria-label="Repeat one" aria-pressed="false"><span class="material-icons">repeat_one</span></button>
+          <button class="midi-btn midi-mode-btn" id="midiRepeatAllBtn" type="button" data-tooltip="Repeat playlist" aria-label="Repeat all" aria-pressed="false"><span class="material-icons">repeat</span></button>
         </div>
       </div>
       <div class="midi-progress-wrap" style="margin-top:0.5rem">
-        <div class="midi-progress-bar" id="midiProgressBar" role="slider" aria-label="Track position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0" title="Click to seek">
+        <div class="midi-progress-bar" id="midiProgressBar" role="slider" aria-label="Track position" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" tabindex="0" data-tooltip="Click to seek">
           <div class="midi-progress-fill" id="midiProgressFill"></div>
         </div>
         <span class="midi-progress-time" id="midiProgressTime">0:00 / 0:00</span>
@@ -3242,11 +3333,20 @@ if (file_exists($dataFile)) {
           <li><strong>Scratchpad</strong> — Text notes with checkboxes (<code>[ ]</code> or <code>-</code> for bullets); Basic tab runs a simple BASIC interpreter.</li>
           <li><strong>Daily events</strong> — Edit mode shows &ldquo;Edit blocks&rdquo; to customize your day timeline.</li>
           <li><strong>Charms</strong> — Fullscreen, music, screensaver, theme switcher, and this help.</li>
+          <li><strong>Offline mode</strong> — When the server is unavailable, the page loads from cache and shows an &ldquo;Offline&rdquo; indicator. Links and data from your last visit remain usable.</li>
         </ul>
-        <div class="help-shortcuts"><code>Alt + Shift + T</code> — Cycle theme</div>
+        <p style="margin-top:0.75rem;margin-bottom:0.5rem">Charms shortcuts:</p>
+        <div class="help-shortcuts"><code>Alt + Shift + C</code> — Charms (focus & expand)</div>
+        <div class="help-shortcuts"><code>Alt + Shift + F</code> — Fullscreen</div>
+        <div class="help-shortcuts"><code>Alt + Shift + M</code> — Music</div>
         <div class="help-shortcuts"><code>Alt + Shift + S</code> — Screensaver</div>
+        <div class="help-shortcuts"><code>Alt + Shift + H</code> — Help</div>
+        <div class="help-shortcuts"><code>Alt + Shift + D</code> — Edit mode</div>
+        <div class="help-shortcuts"><code>Alt + Shift + T</code> — Cycle theme</div>
+        <p style="margin-top:0.75rem;margin-bottom:0.5rem">Other shortcuts:</p>
         <div class="help-shortcuts"><code>Alt + Shift + E</code> — Test event modal</div>
-        <div class="help-shortcuts"><code>Alt + Shift + O</code> — Simulate offline</div>
+        <div class="help-shortcuts"><code>Alt + Shift + O</code> — Simulate offline (test the indicator)</div>
+        <div class="help-shortcuts"><code>Escape</code> — Close any open modal</div>
       </div>
       <div class="modal-actions" style="margin-top: 1rem;">
         <button class="btn-cancel" type="button" id="helpModalCloseBtn">Close</button>
@@ -3425,6 +3525,19 @@ if (file_exists($dataFile)) {
     (function initThemeShortcut() {
       var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'catppuccin', 'catppuccin-latte', 'everforest', 'tokyo-night', 'sms', 'gb', 'ps5', 'lcars', 'macintosh', 'msdos'];
       document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          var openModals = document.querySelectorAll('.modal-overlay.open');
+          if (openModals.length > 0) {
+            e.preventDefault();
+            var eventModal = document.getElementById('eventNotificationModal');
+            if (eventModal && eventModal.classList.contains('open')) {
+              var dismissBtn = document.getElementById('eventNotificationDismissBtn');
+              if (dismissBtn) dismissBtn.click();
+            }
+            openModals.forEach(function(m) { m.classList.remove('open'); });
+          }
+          return;
+        }
         if (e.altKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
           e.preventDefault();
           e.stopPropagation();
@@ -3450,6 +3563,44 @@ if (file_exists($dataFile)) {
           e.preventDefault();
           e.stopPropagation();
           if (window._toggleSimulateOffline) window._toggleSimulateOffline();
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'F' || e.key === 'f')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var fs = document.getElementById('fullscreenCharmBtn');
+          if (fs && document.documentElement.requestFullscreen) {
+            if (document.fullscreenElement) document.exitFullscreen();
+            else document.documentElement.requestFullscreen();
+          }
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'M' || e.key === 'm')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var btn = document.getElementById('musicCharmBtn');
+          if (btn) btn.click();
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'H' || e.key === 'h')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var hm = document.getElementById('helpModal');
+          if (hm) hm.classList.add('open');
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'D' || e.key === 'd')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var app = document.getElementById('app');
+          var emb = document.getElementById('editModeBtn');
+          if (app && emb) {
+            app.classList.toggle('edit-mode');
+            emb.classList.toggle('active', app.classList.contains('edit-mode'));
+            emb.dataset.tooltip = app.classList.contains('edit-mode') ? 'Done (Alt+Shift+D)' : 'Edit (Alt+Shift+D)';
+          }
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
+          e.preventDefault();
+          e.stopPropagation();
+          var ch = document.getElementById('charmsHamburgerBtn');
+          if (ch) ch.focus();
         }
       });
     })();
@@ -3504,7 +3655,7 @@ if (file_exists($dataFile)) {
       if (blocks.length === 0) {
         const emptyHtml = '<div class="day-bar-label">No events</div><div class="day-bar-track"></div>';
         const core = emptyHtml;
-        if (includeEditBtn) return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit daily events">Edit events</button><div class="day-bar">${core}</div></div>`;
+        if (includeEditBtn) return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" data-tooltip="Edit daily events">Edit events</button><div class="day-bar">${core}</div></div>`;
         return `<div class="day-bar">${core}</div>`;
       }
       const now = new Date();
@@ -3539,7 +3690,7 @@ if (file_exists($dataFile)) {
       }).join('');
       const coreHtml = `<div class="day-bar-label">${label}</div><div class="day-bar-track">${segmentsHtml}</div>`;
       if (includeEditBtn) {
-        return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" title="Edit time blocks">Edit blocks</button><div class="day-bar">${coreHtml}</div></div>`;
+        return `<div class="day-bar-wrap"><button class="edit-blocks-btn" type="button" id="editBlocksBtn" data-tooltip="Edit time blocks">Edit blocks</button><div class="day-bar">${coreHtml}</div></div>`;
       }
       return `<div class="day-bar">${coreHtml}</div>`;
     }
@@ -3897,6 +4048,7 @@ if (file_exists($dataFile)) {
     function api(action, body) {
       const opts = { method: body ? 'POST' : 'GET' };
       let url = 'api.php?action=' + action;
+      if (!body && action === 'get') url += '&_=' + Date.now();
       if (body) {
         opts.headers = { 'Content-Type': 'application/json' };
         opts.body = JSON.stringify(body);
@@ -3921,9 +4073,9 @@ if (file_exists($dataFile)) {
             <span class="link-title">${escapeHtml(item.title)}</span>
           </div>
           <div class="link-actions">
-            <button class="edit-item-btn" type="button" title="Edit">✎</button>
-            <button class="delete-item-btn" type="button" title="Delete">✕</button>
-            <a class="link-icon" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" title="Visit">Visit</a>
+            <button class="edit-item-btn" type="button" data-tooltip="Edit">✎</button>
+            <button class="delete-item-btn" type="button" data-tooltip="Delete">✕</button>
+            <a class="link-icon" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" data-tooltip="Visit">Visit</a>
           </div>
         </div>
       `;
@@ -4178,7 +4330,7 @@ if (file_exists($dataFile)) {
         return `
         <div class="time-block-row" data-id="${escapeHtml(b.id || '')}">
           <span>${escapeHtml(b.label)} (${decimalToTimeStr(t)})</span>
-          ${isCustom ? '<button class="tb-edit" type="button" title="Edit">Edit</button><button class="tb-delete" type="button" title="Delete">Delete</button>' : ''}
+          ${isCustom ? '<button class="tb-edit" type="button" data-tooltip="Edit">Edit</button><button class="tb-delete" type="button" data-tooltip="Delete">Delete</button>' : ''}
         </div>`;
       }).join('');
       timeBlocksList.querySelectorAll('.tb-edit').forEach(btn => {
@@ -4285,7 +4437,7 @@ if (file_exists($dataFile)) {
     editModeBtn.addEventListener('click', () => {
       app.classList.toggle('edit-mode');
       editModeBtn.classList.toggle('active', app.classList.contains('edit-mode'));
-      editModeBtn.title = app.classList.contains('edit-mode') ? 'Done' : 'Edit';
+      editModeBtn.dataset.tooltip = app.classList.contains('edit-mode') ? 'Done (Alt+Shift+D)' : 'Edit (Alt+Shift+D)';
     });
 
     (function initScratchPad() {
@@ -4736,7 +4888,7 @@ if (file_exists($dataFile)) {
         function updateFullscreenIcon() {
           const isFull = !!document.fullscreenElement;
           fullscreenBtn.textContent = isFull ? '\u2921' : '\u26B6';
-          fullscreenBtn.title = isFull ? 'Exit fullscreen' : 'Fullscreen';
+          fullscreenBtn.dataset.tooltip = isFull ? 'Exit fullscreen (Alt+Shift+F)' : 'Fullscreen (Alt+Shift+F)';
           fullscreenBtn.setAttribute('aria-label', isFull ? 'Exit fullscreen' : 'Fullscreen');
         }
         fullscreenBtn.addEventListener('click', function() {
@@ -4776,6 +4928,8 @@ if (file_exists($dataFile)) {
       const fileInput = document.getElementById('midiFileInput');
       const musicModalCloseBtn = document.getElementById('musicModalCloseBtn');
       const musicCharmBtn = document.getElementById('musicCharmBtn');
+      const musicCharmBtnTray = document.getElementById('musicCharmBtnTray');
+      const charmsMenu = document.querySelector('.charms-menu');
       const playlistEmpty = document.getElementById('midiPlaylistEmpty');
       const playBtn = document.getElementById('midiPlayBtn');
       const pauseBtn = document.getElementById('midiPauseBtn');
@@ -4878,22 +5032,24 @@ if (file_exists($dataFile)) {
       }
 
       function updateMusicCharmIcon() {
-        var btn = document.getElementById('musicCharmBtn');
-        if (!btn) return;
-        if (midiPlaying) {
-          var tracks = getPlaylist();
-          var track = tracks[midiCurrentTrackIndex];
-          var trackName = track ? (track.name || track.url) : '';
-          btn.textContent = '\u25B6';
-          btn.classList.add('music-charm-playing');
-          btn.title = trackName ? 'Now playing: ' + trackName : 'Music controls';
-          btn.setAttribute('aria-label', trackName ? 'Now playing: ' + trackName : 'Music controls');
-        } else {
-          btn.textContent = '\u266A';
-          btn.classList.remove('music-charm-playing');
-          btn.title = 'Music controls';
-          btn.setAttribute('aria-label', 'Music controls');
-        }
+        if (charmsMenu) charmsMenu.classList.toggle('music-playing', midiPlaying);
+        [musicCharmBtn, musicCharmBtnTray].forEach(function(btn) {
+          if (!btn) return;
+          if (midiPlaying) {
+            var tracks = getPlaylist();
+            var track = tracks[midiCurrentTrackIndex];
+            var trackName = track ? (track.name || track.url) : '';
+            btn.textContent = '\u25B6';
+            btn.classList.add('music-charm-playing');
+            btn.title = trackName ? 'Now playing: ' + trackName : 'Music controls';
+            btn.setAttribute('aria-label', trackName ? 'Now playing: ' + trackName : 'Music controls');
+          } else {
+            btn.textContent = '\u266A';
+            btn.classList.remove('music-charm-playing');
+            btn.title = 'Music controls';
+            btn.setAttribute('aria-label', 'Music controls');
+          }
+        });
       }
 
       let midiCurrentTrackIndex = 0;
@@ -5258,13 +5414,13 @@ if (file_exists($dataFile)) {
         });
       }
 
-      if (musicCharmBtn) {
-        musicCharmBtn.addEventListener('click', function() {
-          renderPlaylist();
-          updateProgressBar();
-          if (musicModal) musicModal.classList.add('open');
-        });
+      function openMusicModal() {
+        renderPlaylist();
+        updateProgressBar();
+        if (musicModal) musicModal.classList.add('open');
       }
+      if (musicCharmBtn) musicCharmBtn.addEventListener('click', openMusicModal);
+      if (musicCharmBtnTray) musicCharmBtnTray.addEventListener('click', openMusicModal);
       if (musicModalCloseBtn) musicModalCloseBtn.addEventListener('click', function() { if (musicModal) musicModal.classList.remove('open'); });
       if (musicModal) musicModal.addEventListener('click', function(e) { if (e.target === musicModal) musicModal.classList.remove('open'); });
 
