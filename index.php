@@ -37,10 +37,14 @@ if (file_exists($dataFile)) {
       --card-border: #4a4480;
       --bevel-light: #5a54a0;
       --bevel-dark: #1a1630;
-      --palette-1: #00cc66;
-      --palette-2: #0088ff;
-      --palette-3: #ffaa00;
-    }
+    --palette-1: #00cc66;
+    --palette-2: #0088ff;
+    --palette-3: #ffaa00;
+    --game-board-bg: #1a1630;
+    --game-piece: #00cc66;
+    --game-piece-light: #4a4480;
+    --game-border: #4a4480;
+  }
 
     /* Tron theme */
     html[data-theme="tron"] {
@@ -66,6 +70,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00ff88;
       --palette-2: #00d4ff;
       --palette-3: #ff00aa;
+      --game-board-bg: #0a0e17;
+      --game-piece: #00ffff;
+      --game-piece-light: #00e5ff;
+      --game-border: #00ffff;
     }
 
     /* Tron Ares theme (red) */
@@ -92,6 +100,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00ff88;
       --palette-2: #ff3366;
       --palette-3: #ff0066;
+      --game-board-bg: #170a0a;
+      --game-piece: #ff0040;
+      --game-piece-light: #ff3366;
+      --game-border: #ff0040;
     }
 
     /* Matrix theme */
@@ -118,6 +130,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00ff41;
       --palette-2: #33ff66;
       --palette-3: #00cc34;
+      --game-board-bg: #0d0d0d;
+      --game-piece: #00ff41;
+      --game-piece-light: #33ff66;
+      --game-border: #00ff41;
     }
 
     /* Sega Master System theme (8-bit) */
@@ -144,6 +160,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00aaff;
       --palette-2: #33bbff;
       --palette-3: #ff8844;
+      --game-board-bg: #181830;
+      --game-piece: #00aaff;
+      --game-piece-light: #33bbff;
+      --game-border: #4040a0;
     }
 
     /* PlayStation 5 theme (ultra modern) */
@@ -170,6 +190,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00c853;
       --palette-2: #006fcd;
       --palette-3: #ffab00;
+      --game-board-bg: #0c0c0c;
+      --game-piece: #00c853;
+      --game-piece-light: #006fcd;
+      --game-border: rgba(255,255,255,0.12);
     }
 
     /* Original Game Boy theme */
@@ -196,6 +220,10 @@ if (file_exists($dataFile)) {
       --palette-1: #306230;
       --palette-2: #0f380f;
       --palette-3: #506230;
+      --game-board-bg: #0f380f;
+      --game-piece: #8bac0f;
+      --game-piece-light: #9bbc0f;
+      --game-border: #306230;
     }
 
     /* Original Macintosh (1984) theme – 1-bit black and white */
@@ -222,6 +250,10 @@ if (file_exists($dataFile)) {
       --palette-1: #000000;
       --palette-2: #000000;
       --palette-3: #000000;
+      --game-board-bg: #ffffff;
+      --game-piece: #000000;
+      --game-piece-light: #000000;
+      --game-border: #000000;
     }
 
     /* MS-DOS theme – mid-90s window (gray chrome, black/white content, subtle color) */
@@ -248,6 +280,10 @@ if (file_exists($dataFile)) {
       --palette-1: #00a000;
       --palette-2: #0000aa;
       --palette-3: #aa5500;
+      --game-board-bg: #000000;
+      --game-piece: #00a000;
+      --game-piece-light: #00a000;
+      --game-border: #808080;
     }
 
     /* Catppuccin Mocha theme (dark) – Hyprland-style */
@@ -274,6 +310,10 @@ if (file_exists($dataFile)) {
       --palette-1: #a6e3a1;
       --palette-2: #89b4fa;
       --palette-3: #f9e2af;
+      --game-board-bg: #1e1e2e;
+      --game-piece: #a6e3a1;
+      --game-piece-light: #89b4fa;
+      --game-border: #45475a;
     }
 
     /* Catppuccin Latte theme (light) – Hyprland-style */
@@ -300,6 +340,10 @@ if (file_exists($dataFile)) {
       --palette-1: #40a02b;
       --palette-2: #1e66f5;
       --palette-3: #df8e1d;
+      --game-board-bg: #2D353B;
+      --game-piece: #A7C080;
+      --game-piece-light: #7FBBB3;
+      --game-border: #3D484D;
     }
 
     /* Everforest theme (dark) */
@@ -326,6 +370,10 @@ if (file_exists($dataFile)) {
       --palette-1: #A7C080;
       --palette-2: #7FBBB3;
       --palette-3: #DBBC7F;
+      --game-board-bg: #2D353B;
+      --game-piece: #A7C080;
+      --game-piece-light: #7FBBB3;
+      --game-border: #3D484D;
     }
 
     /* Tokyo Night theme (dark) */
@@ -352,6 +400,10 @@ if (file_exists($dataFile)) {
       --palette-1: #9ece6a;
       --palette-2: #7dcfff;
       --palette-3: #e0af68;
+      --game-board-bg: #1a1b26;
+      --game-piece: #9ece6a;
+      --game-piece-light: #7dcfff;
+      --game-border: #414868;
     }
 
     /* Star Trek: The Next Generation / LCARS theme */
@@ -378,6 +430,10 @@ if (file_exists($dataFile)) {
       --palette-1: #ffaa33;
       --palette-2: #8899ff;
       --palette-3: #cc99ff;
+      --game-board-bg: #0a0a12;
+      --game-piece: #ff9900;
+      --game-piece-light: #ffaa33;
+      --game-border: #ff8800;
     }
 
     * { box-sizing: border-box; }
@@ -3335,6 +3391,80 @@ if (file_exists($dataFile)) {
     html[data-theme="lcars"] .offline-indicator.visible {
       animation: none;
     }
+
+    /* Game menu and overlays */
+    .game-menu-modal .game-menu-buttons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .game-menu-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 1.25rem 1.5rem;
+      min-width: 140px;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    .game-menu-btn:hover {
+      background: var(--card-border);
+      color: var(--button-fg, var(--bg));
+    }
+    .game-menu-btn-icon { font-size: 1.5rem; }
+    .game-menu-btn-desc { font-size: 0.7rem; opacity: 0.8; }
+    .game-overlay {
+      /* Inherit theme backdrop from .modal-overlay (16-bit, gb, etc.) */
+    }
+    .game-overlay-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 320px;
+    }
+    .game-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.85rem;
+    }
+    .game-back-btn {
+      padding: 0.35rem 0.75rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      font-family: inherit;
+      font-size: 0.8rem;
+      cursor: pointer;
+    }
+    .game-back-btn:hover {
+      background: var(--card-border);
+    }
+    .tetris-wrap, .snake-wrap {
+      background: var(--game-board-bg);
+      border: 4px solid var(--game-border);
+    }
+    #tetrisCanvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    #snakeCanvas {
+      display: block;
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
   </style>
 </head>
 <body>
@@ -3532,6 +3662,7 @@ if (file_exists($dataFile)) {
         <p style="margin-top:0.75rem;margin-bottom:0.5rem">Other shortcuts:</p>
         <div class="help-shortcuts"><code>Alt + Shift + E</code> — Test event modal</div>
         <div class="help-shortcuts"><code>Alt + Shift + O</code> — Simulate offline (test the indicator)</div>
+        <div class="help-shortcuts"><code>Alt + Shift + G</code> — Games (Tetris, Snake)</div>
         <div class="help-shortcuts"><code>Escape</code> — Close any open modal</div>
       </div>
       <div class="modal-actions" style="margin-top: 1rem;">
@@ -3552,6 +3683,57 @@ if (file_exists($dataFile)) {
       </div>
       <div class="modal-actions" style="margin-top: 1rem;">
         <button class="btn-save" type="button" id="eventNotificationDismissBtn">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="gameMenuModal">
+    <div class="modal game-menu-modal">
+      <h3>Games</h3>
+      <div class="game-menu-buttons">
+        <button class="game-menu-btn" type="button" id="gameMenuTetrisBtn">
+          <span class="game-menu-btn-icon">▦</span>
+          <span>Tetris</span>
+          <span class="game-menu-btn-desc">Game Boy style</span>
+        </button>
+        <button class="game-menu-btn" type="button" id="gameMenuSnakeBtn">
+          <span class="game-menu-btn-icon">◆</span>
+          <span>Snake</span>
+          <span class="game-menu-btn-desc">Nokia style</span>
+        </button>
+      </div>
+      <div class="modal-actions" style="margin-top:1rem">
+        <button class="btn-cancel" type="button" id="gameMenuCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay game-overlay" id="tetrisGameOverlay">
+    <div class="game-overlay-inner">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>Score: <strong id="tetrisScore">0</strong></span>
+          <span>Level: <strong id="tetrisLevel">0</strong></span>
+          <span>Lines: <strong id="tetrisLines">0</strong></span>
+        </div>
+        <button class="game-back-btn" type="button" id="tetrisBackBtn">← Back</button>
+      </div>
+      <div class="tetris-wrap">
+        <canvas id="tetrisCanvas" width="200" height="360"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay game-overlay" id="snakeGameOverlay">
+    <div class="game-overlay-inner">
+      <div class="game-header">
+        <div class="game-stats">
+          <span>Score: <strong id="snakeScore">0</strong></span>
+        </div>
+        <button class="game-back-btn" type="button" id="snakeBackBtn">← Back</button>
+      </div>
+      <div class="snake-wrap">
+        <canvas id="snakeCanvas" width="300" height="300"></canvas>
       </div>
     </div>
   </div>
@@ -3745,6 +3927,10 @@ if (file_exists($dataFile)) {
               var dismissBtn = document.getElementById('eventNotificationDismissBtn');
               if (dismissBtn) dismissBtn.click();
             }
+            var tetrisO = document.getElementById('tetrisGameOverlay');
+            var snakeO = document.getElementById('snakeGameOverlay');
+            if (tetrisO && tetrisO.classList.contains('open') && window._tetrisStop) window._tetrisStop();
+            if (snakeO && snakeO.classList.contains('open') && window._snakeStop) window._snakeStop();
             openModals.forEach(function(m) { m.classList.remove('open'); });
           }
           return;
@@ -3812,6 +3998,11 @@ if (file_exists($dataFile)) {
           e.stopPropagation();
           var ch = document.getElementById('charmsHamburgerBtn');
           if (ch) ch.focus();
+        }
+        if (e.altKey && e.shiftKey && (e.key === 'G' || e.key === 'g')) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (window._openGameMenu) window._openGameMenu();
         }
       });
     })();
@@ -5833,6 +6024,330 @@ if (file_exists($dataFile)) {
       updateTrackDisplay();
       updateNavButtons();
       updateMusicCharmIcon();
+    })();
+
+    /* Hidden game menu and games (Alt+Shift+G) */
+    (function initGames() {
+      var gameMenuModal = document.getElementById('gameMenuModal');
+      var tetrisOverlay = document.getElementById('tetrisGameOverlay');
+      var snakeOverlay = document.getElementById('snakeGameOverlay');
+
+      window._openGameMenu = function() {
+        if (tetrisOverlay && tetrisOverlay.classList.contains('open')) { if (window._tetrisStop) window._tetrisStop(); tetrisOverlay.classList.remove('open'); }
+        if (snakeOverlay && snakeOverlay.classList.contains('open')) { if (window._snakeStop) window._snakeStop(); snakeOverlay.classList.remove('open'); }
+        if (gameMenuModal) gameMenuModal.classList.add('open');
+      };
+
+      function closeGameMenu() { if (gameMenuModal) gameMenuModal.classList.remove('open'); }
+
+      document.getElementById('gameMenuCloseBtn').addEventListener('click', closeGameMenu);
+      if (gameMenuModal) gameMenuModal.addEventListener('click', function(e) { if (e.target === gameMenuModal) closeGameMenu(); });
+
+      document.getElementById('gameMenuTetrisBtn').addEventListener('click', function() {
+        closeGameMenu();
+        if (tetrisOverlay) tetrisOverlay.classList.add('open');
+        if (window._tetrisStart) window._tetrisStart();
+      });
+      document.getElementById('gameMenuSnakeBtn').addEventListener('click', function() {
+        closeGameMenu();
+        if (snakeOverlay) snakeOverlay.classList.add('open');
+        if (window._snakeStart) window._snakeStart();
+      });
+
+      document.getElementById('tetrisBackBtn').addEventListener('click', function() {
+        if (window._tetrisStop) window._tetrisStop();
+        if (tetrisOverlay) tetrisOverlay.classList.remove('open');
+        gameMenuModal.classList.add('open');
+      });
+      document.getElementById('snakeBackBtn').addEventListener('click', function() {
+        if (window._snakeStop) window._snakeStop();
+        if (snakeOverlay) snakeOverlay.classList.remove('open');
+        gameMenuModal.classList.add('open');
+      });
+    })();
+
+    /* Tetris - Game Boy style (10x18, 9 levels 0-9, Nintendo scoring) */
+    (function initTetris() {
+      var tetrisOverlay = document.getElementById('tetrisGameOverlay');
+      var canvas = document.getElementById('tetrisCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var COLS = 10, ROWS = 18;
+      var CELL = 20;
+      canvas.width = COLS * CELL;
+      canvas.height = ROWS * CELL;
+
+      var GB_FRAMES = [53,49,45,41,37,33,28,22,17,11,10,9,8,7,6,6,5,5,4,4,3];
+      var SHAPES = [
+        [[1,1,1,1]],
+        [[1,1],[1,1]],
+        [[0,1,0],[1,1,1]],
+        [[0,1,1],[1,1,0]],
+        [[1,1,0],[0,1,1]],
+        [[1,0,0],[1,1,1]],
+        [[0,0,1],[1,1,1]]
+      ];
+      function getGameColors() {
+        var s = getComputedStyle(document.documentElement);
+        return {
+          bg: (s.getPropertyValue('--game-board-bg') || '#0f380f').trim(),
+          piece: (s.getPropertyValue('--game-piece') || '#9bbc0f').trim(),
+          pieceLight: (s.getPropertyValue('--game-piece-light') || '#8bac0f').trim()
+        };
+      }
+
+      var board = [], piece = null, px = 0, py = 0;
+      var score = 0, level = 0, lines = 0;
+      var gameLoop = null, frameCount = 0;
+      var linesUntilLevel = 0;
+
+      function initBoard() {
+        board = [];
+        for (var r = 0; r < ROWS; r++) {
+          board[r] = [];
+          for (var c = 0; c < COLS; c++) board[r][c] = 0;
+        }
+      }
+
+      function newPiece() {
+        var idx = Math.floor(Math.random() * SHAPES.length);
+        piece = SHAPES[idx].map(function(row){ return row.slice(); });
+        px = Math.floor((COLS - piece[0].length) / 2);
+        py = 0;
+        return !collide(px, py);
+      }
+
+      function collide(x, y) {
+        for (var r = 0; r < piece.length; r++) {
+          for (var c = 0; c < piece[r].length; c++) {
+            if (piece[r][c]) {
+              var nr = y + r, nc = x + c;
+              if (nr < 0 || nc < 0 || nc >= COLS || nr >= ROWS) return true;
+              if (nr >= 0 && board[nr][nc]) return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      function lock() {
+        for (var r = 0; r < piece.length; r++) {
+          for (var c = 0; c < piece[r].length; c++) {
+            if (piece[r][c]) board[py+r][px+c] = 1;
+          }
+        }
+        var cleared = 0;
+        for (var r = ROWS - 1; r >= 0; r--) {
+          if (board[r].every(function(c){ return c; })) {
+            board.splice(r, 1);
+            board.unshift(Array(COLS).fill(0));
+            cleared++; r++;
+          }
+        }
+        if (cleared > 0) {
+          var mult = level + 1;
+          if (cleared === 1) score += 40 * mult;
+          else if (cleared === 2) score += 100 * mult;
+          else if (cleared === 3) score += 300 * mult;
+          else score += 1200 * mult;
+          lines += cleared;
+          linesUntilLevel -= cleared;
+          if (linesUntilLevel <= 0) {
+            level = Math.min(20, level + 1);
+            linesUntilLevel = 10;
+          }
+        }
+        updateUI();
+        if (!newPiece()) {
+          piece = null;
+          draw();
+          var col = getGameColors();
+          ctx.fillStyle = 'rgba(0,0,0,0.6)';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = col.piece;
+          ctx.font = 'bold 24px monospace';
+          ctx.textAlign = 'center';
+          ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
+          ctx.font = '14px monospace';
+          ctx.fillText('Click Back to return', canvas.width/2, canvas.height/2 + 20);
+          return false;
+        }
+        return true;
+      }
+
+      function updateUI() {
+        var se = document.getElementById('tetrisScore'), le = document.getElementById('tetrisLevel'), ln = document.getElementById('tetrisLines');
+        if (se) se.textContent = score; if (le) le.textContent = level; if (ln) ln.textContent = lines;
+      }
+
+      function draw() {
+        var col = getGameColors();
+        ctx.fillStyle = col.bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (var r = 0; r < ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            if (board[r][c]) {
+              ctx.fillStyle = col.pieceLight;
+              ctx.fillRect(c*CELL+1, r*CELL+1, CELL-1, CELL-1);
+              ctx.fillStyle = col.piece;
+              ctx.fillRect(c*CELL+2, r*CELL+2, CELL-4, CELL-4);
+            }
+          }
+        }
+        if (piece) {
+          ctx.fillStyle = col.piece;
+          for (var r = 0; r < piece.length; r++) {
+            for (var c = 0; c < piece[r].length; c++) {
+              if (piece[r][c]) ctx.fillRect((px+c)*CELL+1, (py+r)*CELL+1, CELL-1, CELL-1);
+            }
+          }
+        }
+      }
+
+      function tick() {
+        frameCount++;
+        var fpr = GB_FRAMES[Math.min(level, 20)];
+        if (frameCount >= fpr) {
+          frameCount = 0;
+          if (!collide(px, py + 1)) py++;
+          else {
+            if (!lock()) { window._tetrisStop(); return; }
+          }
+        }
+        draw();
+      }
+
+      window._tetrisStart = function() {
+        if (gameLoop) return;
+        initBoard();
+        score = 0; level = 0; lines = 0; frameCount = 0;
+        linesUntilLevel = 10;
+        newPiece();
+        updateUI();
+        draw();
+        gameLoop = setInterval(tick, 1000/60);
+      };
+      window._tetrisStop = function() {
+        if (gameLoop) { clearInterval(gameLoop); gameLoop = null; }
+      };
+
+      document.addEventListener('keydown', function tetrisKey(e) {
+        if (!tetrisOverlay || !tetrisOverlay.classList.contains('open')) return;
+        if (!piece) return;
+        if (e.key === 'ArrowLeft') { if (!collide(px-1, py)) px--; e.preventDefault(); }
+        else if (e.key === 'ArrowRight') { if (!collide(px+1, py)) px++; e.preventDefault(); }
+        else if (e.key === 'ArrowDown') {
+          if (!collide(px, py+1)) { py++; score++; } else { lock(); }
+          e.preventDefault();
+        }
+        else if (e.key === 'ArrowUp' || e.key === ' ') {
+          var rot = [];
+          for (var c = 0; c < piece[0].length; c++) {
+            rot[c] = [];
+            for (var r = piece.length-1; r >= 0; r--) rot[c].push(piece[r][c]);
+          }
+          if (!collide(px, py)) { piece = rot; }
+          e.preventDefault();
+        }
+      });
+    })();
+
+    /* Snake - Nokia style (grid, 90° turns, eat & grow, die on wall/self) */
+    (function initSnake() {
+      var snakeOverlay = document.getElementById('snakeGameOverlay');
+      var canvas = document.getElementById('snakeCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var GRID = 15;
+      var CELL = 20;
+      canvas.width = GRID * CELL;
+      canvas.height = GRID * CELL;
+
+      var snake = [], food = {x:0,y:0};
+      var dir = {x:0,y:-1};
+      var score = 0, gameLoop = null;
+
+      function initGame() {
+        snake = [{x:7,y:7},{x:7,y:8},{x:7,y:9}];
+        dir = {x:0,y:-1};
+        score = 0;
+        spawnFood();
+      }
+
+      function spawnFood() {
+        do {
+          food.x = Math.floor(Math.random() * GRID);
+          food.y = Math.floor(Math.random() * GRID);
+        } while (snake.some(function(s){ return s.x === food.x && s.y === food.y; }));
+      }
+
+      function drawGameOver() {
+        draw();
+        var col = getGameColors();
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = col.piece;
+        ctx.font = 'bold 24px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('GAME OVER', canvas.width/2, canvas.height/2 - 10);
+        ctx.font = '14px monospace';
+        ctx.fillText('Score: ' + score, canvas.width/2, canvas.height/2 + 20);
+      }
+
+      function tick() {
+        var head = snake[0];
+        var nx = head.x + dir.x, ny = head.y + dir.y;
+        if (nx < 0 || nx >= GRID || ny < 0 || ny >= GRID) { drawGameOver(); window._snakeStop(); return; }
+        if (snake.some(function(s){ return s.x === nx && s.y === ny; })) { drawGameOver(); window._snakeStop(); return; }
+        snake.unshift({x:nx,y:ny});
+        if (nx === food.x && ny === food.y) { score++; spawnFood(); }
+        else snake.pop();
+        var se = document.getElementById('snakeScore'); if (se) se.textContent = score;
+        draw();
+      }
+
+      function getGameColors() {
+        var s = getComputedStyle(document.documentElement);
+        return {
+          bg: (s.getPropertyValue('--game-board-bg') || '#0f380f').trim(),
+          piece: (s.getPropertyValue('--game-piece') || '#9bbc0f').trim(),
+          pieceLight: (s.getPropertyValue('--game-piece-light') || '#8bac0f').trim()
+        };
+      }
+
+      function draw() {
+        var col = getGameColors();
+        ctx.fillStyle = col.bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = col.piece;
+        snake.forEach(function(s) {
+          ctx.fillRect(s.x*CELL+1, s.y*CELL+1, CELL-1, CELL-1);
+        });
+        ctx.fillStyle = col.pieceLight;
+        ctx.beginPath();
+        ctx.arc(food.x*CELL+CELL/2, food.y*CELL+CELL/2, CELL/2-2, 0, Math.PI*2);
+        ctx.fill();
+      }
+
+      window._snakeStart = function() {
+        if (gameLoop) return;
+        initGame();
+        var se = document.getElementById('snakeScore'); if (se) se.textContent = '0';
+        draw();
+        gameLoop = setInterval(tick, 120);
+      };
+      window._snakeStop = function() {
+        if (gameLoop) { clearInterval(gameLoop); gameLoop = null; }
+      };
+
+      document.addEventListener('keydown', function snakeKey(e) {
+        if (!snakeOverlay || !snakeOverlay.classList.contains('open')) return;
+        if (!gameLoop) return;
+        if (e.key === 'ArrowUp' && dir.y !== 1) { dir = {x:0,y:-1}; e.preventDefault(); }
+        else if (e.key === 'ArrowDown' && dir.y !== -1) { dir = {x:0,y:1}; e.preventDefault(); }
+        else if (e.key === 'ArrowLeft' && dir.x !== 1) { dir = {x:-1,y:0}; e.preventDefault(); }
+        else if (e.key === 'ArrowRight' && dir.x !== -1) { dir = {x:1,y:0}; e.preventDefault(); }
+      });
     })();
 
     render();
