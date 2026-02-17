@@ -3418,38 +3418,27 @@ if (file_exists($dataFile)) {
     }
     .game-menu-btn-icon { font-size: 1.5rem; }
     .game-menu-btn-desc { font-size: 0.7rem; opacity: 0.8; }
-    .game-overlay {
-      /* Inherit theme backdrop from .modal-overlay (16-bit, gb, etc.) */
-    }
-    .game-overlay-inner {
+    .game-modal {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
     }
-    .game-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      max-width: 320px;
+    .game-modal-title {
+      margin-bottom: 0.5rem;
     }
-    .game-stats {
+    .game-modal-stats {
       display: flex;
       gap: 1rem;
       font-size: 0.85rem;
+      margin-bottom: 0.75rem;
     }
-    .game-back-btn {
-      padding: 0.35rem 0.75rem;
-      background: var(--card-bg);
-      border: 2px solid var(--card-border);
-      color: var(--content);
-      font-family: inherit;
-      font-size: 0.8rem;
-      cursor: pointer;
+    .game-modal-actions {
+      margin-top: 1rem;
+      margin-bottom: 0;
+      width: 100%;
     }
-    .game-back-btn:hover {
-      background: var(--card-border);
+    .game-modal-actions .btn-cancel {
+      background: var(--bg-alt);
     }
     .tetris-wrap, .snake-wrap {
       background: var(--game-board-bg);
@@ -3709,31 +3698,33 @@ if (file_exists($dataFile)) {
   </div>
 
   <div class="modal-overlay game-overlay" id="tetrisGameOverlay">
-    <div class="game-overlay-inner">
-      <div class="game-header">
-        <div class="game-stats">
-          <span>Score: <strong id="tetrisScore">0</strong></span>
-          <span>Level: <strong id="tetrisLevel">0</strong></span>
-          <span>Lines: <strong id="tetrisLines">0</strong></span>
-        </div>
-        <button class="game-back-btn" type="button" id="tetrisBackBtn">← Back</button>
+    <div class="modal game-modal">
+      <h3 class="game-modal-title">Tetris</h3>
+      <div class="game-stats game-modal-stats">
+        <span>Score: <strong id="tetrisScore">0</strong></span>
+        <span>Level: <strong id="tetrisLevel">0</strong></span>
+        <span>Lines: <strong id="tetrisLines">0</strong></span>
       </div>
       <div class="tetris-wrap">
         <canvas id="tetrisCanvas" width="200" height="360"></canvas>
+      </div>
+      <div class="modal-actions game-modal-actions">
+        <button class="btn-cancel" type="button" id="tetrisBackBtn">← Back</button>
       </div>
     </div>
   </div>
 
   <div class="modal-overlay game-overlay" id="snakeGameOverlay">
-    <div class="game-overlay-inner">
-      <div class="game-header">
-        <div class="game-stats">
-          <span>Score: <strong id="snakeScore">0</strong></span>
-        </div>
-        <button class="game-back-btn" type="button" id="snakeBackBtn">← Back</button>
+    <div class="modal game-modal">
+      <h3 class="game-modal-title">Snake</h3>
+      <div class="game-stats game-modal-stats">
+        <span>Score: <strong id="snakeScore">0</strong></span>
       </div>
       <div class="snake-wrap">
         <canvas id="snakeCanvas" width="300" height="300"></canvas>
+      </div>
+      <div class="modal-actions game-modal-actions">
+        <button class="btn-cancel" type="button" id="snakeBackBtn">← Back</button>
       </div>
     </div>
   </div>
