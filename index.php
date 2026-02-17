@@ -4044,9 +4044,12 @@ if (file_exists($dataFile)) {
       const screensaverDayBars = document.getElementById('screensaverDayBars');
       let idleTimer = null;
       let mystifyRAF = null;
+      let mystifyTimeout = null;
       let mystifyLastDraw = 0;
       let mystifyPoints = [];
       let mystifyHistory = [];
+      let mystifyCachedColors = null;
+      let mystifyCtx = null;
       let manualActivationGraceUntil = 0;
       let modalsOpenBeforeScreensaver = [];
 
@@ -4073,8 +4076,15 @@ if (file_exists($dataFile)) {
         idleTimer = setTimeout(enterScreensaver, IDLE_MS);
       }
 
-      function getMystifyColor() {
-        return getComputedStyle(document.documentElement).getPropertyValue('--content').trim() || '#e0e0ff';
+      function refreshMystifyCachedColors() {
+        const bg = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#1a1630';
+        const content = getComputedStyle(document.documentElement).getPropertyValue('--content').trim() || '#e0e0ff';
+        const bgRgb = bg.startsWith('#') ? hexToRgb(bg) : parseRgb(bg);
+        const contentRgb = content.startsWith('#') ? hexToRgb(content) : parseRgb(content);
+        mystifyCachedColors = {
+          bgStyle: bgRgb ? 'rgb(' + bgRgb.r + ',' + bgRgb.g + ',' + bgRgb.b + ')' : '#1a1630',
+          baseRgb: contentRgb ? (contentRgb.r + ',' + contentRgb.g + ',' + contentRgb.b) : '224,224,255'
+        };
       }
 
       function drawMystify(now) {
@@ -4083,22 +4093,24 @@ if (file_exists($dataFile)) {
         const cfg = getMystifyThemeConfig();
         const frameInterval = 1000 / cfg.fps;
         if (now - mystifyLastDraw < frameInterval) {
-          mystifyRAF = requestAnimationFrame(drawMystify);
+          if (cfg.fps <= 15) {
+            mystifyTimeout = setTimeout(function() { drawMystify(performance.now()); }, Math.ceil(frameInterval));
+          } else {
+            mystifyRAF = requestAnimationFrame(drawMystify);
+          }
           return;
         }
         mystifyLastDraw = now;
-        const ctx = mystifyCanvas.getContext('2d');
+        const ctx = mystifyCtx || mystifyCanvas.getContext('2d');
+        if (!mystifyCtx) mystifyCtx = ctx;
         const dpr = window.devicePixelRatio || 1;
         const scale = cfg.scale;
         const w = mystifyCanvas.width / (dpr * scale);
         const h = mystifyCanvas.height / (dpr * scale);
-        const bgColor = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || '#1a1630';
-        const bgRgb = bgColor.startsWith('#') ? hexToRgb(bgColor) : parseRgb(bgColor);
-        ctx.fillStyle = bgRgb ? 'rgb(' + bgRgb.r + ',' + bgRgb.g + ',' + bgRgb.b + ')' : '#1a1630';
+        if (!mystifyCachedColors) refreshMystifyCachedColors();
+        ctx.fillStyle = mystifyCachedColors.bgStyle;
         ctx.fillRect(0, 0, w, h);
-        const color = getMystifyColor();
-        const rgb = color.startsWith('#') ? hexToRgb(color) : parseRgb(color);
-        const baseRgb = rgb ? (rgb.r + ',' + rgb.g + ',' + rgb.b) : '224,224,255';
+        const baseRgb = mystifyCachedColors.baseRgb;
         ctx.lineWidth = scale < 1 ? Math.max(1, 2 * scale) : 2;
         function drawPoly(points, alpha) {
           if (!points || points.length < 2) return;
@@ -4123,7 +4135,11 @@ if (file_exists($dataFile)) {
           if (p.x <= 0 || p.x >= w) p.dx = -p.dx;
           if (p.y <= 0 || p.y >= h) p.dy = -p.dy;
         }
-        mystifyRAF = requestAnimationFrame(drawMystify);
+        if (cfg.fps <= 15) {
+          mystifyTimeout = setTimeout(function() { drawMystify(performance.now()); }, Math.ceil(frameInterval));
+        } else {
+          mystifyRAF = requestAnimationFrame(drawMystify);
+        }
       }
       function hexToRgb(hex) {
         const m = hex.slice(1).match(/.{2}/g);
@@ -4134,7 +4150,20 @@ if (file_exists($dataFile)) {
         return m && m.length >= 3 ? { r: +m[0], g: +m[1], b: +m[2] } : null;
       }
 
+      var resizeMystifyDebounceTimer = null;
       function resizeMystify() {
+        if (!mystifyCanvas || !overlay) return;
+        if (overlay.classList.contains('active')) {
+          if (resizeMystifyDebounceTimer) clearTimeout(resizeMystifyDebounceTimer);
+          resizeMystifyDebounceTimer = setTimeout(function doResize() {
+            resizeMystifyDebounceTimer = null;
+            resizeMystifyInner();
+          }, 120);
+          return;
+        }
+        resizeMystifyInner();
+      }
+      function resizeMystifyInner() {
         if (!mystifyCanvas || !overlay) return;
         const dpr = window.devicePixelRatio || 1;
         const cfg = getMystifyThemeConfig();
@@ -4167,6 +4196,7 @@ if (file_exists($dataFile)) {
           }
         }
         mystifyHistory = [];
+        mystifyCachedColors = null;
       }
 
       function enterScreensaver(manualActivation) {
@@ -4186,6 +4216,8 @@ if (file_exists($dataFile)) {
         overlay.setAttribute('aria-hidden', 'false');
         mystifyHistory = [];
         mystifyLastDraw = 0;
+        mystifyCachedColors = null;
+        refreshMystifyCachedColors();
         resizeMystify();
         updateClock();
         screensaverDayBars.innerHTML = getDayBarHtml(false);
@@ -4211,6 +4243,10 @@ if (file_exists($dataFile)) {
           cancelAnimationFrame(mystifyRAF);
           mystifyRAF = null;
         }
+        if (mystifyTimeout) {
+          clearTimeout(mystifyTimeout);
+          mystifyTimeout = null;
+        }
       }
 
       window._enterScreensaver = function(manual) { enterScreensaver(manual); };
@@ -4224,7 +4260,10 @@ if (file_exists($dataFile)) {
       window.addEventListener('resize', resizeMystify);
       (function observeTheme() {
         var mo = new MutationObserver(function() {
-          if (overlay && overlay.classList.contains('active')) resizeMystify();
+          if (overlay && overlay.classList.contains('active')) {
+            mystifyCachedColors = null;
+            resizeMystify();
+          }
         });
         mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
       })();
@@ -4441,7 +4480,22 @@ if (file_exists($dataFile)) {
 
     function saveOrder(categoryId, linksEl) {
       const itemIds = [...linksEl.querySelectorAll('.link-card')].map(c => c.dataset.id);
-      api('reorder', { categoryId, itemIds }).then(() => load());
+      if (!itemIds.length) return;
+      var cat = data.categories && data.categories.find(function(c) { return c.id === categoryId; });
+      if (cat && cat.items && cat.items.length) {
+        var ordered = [];
+        for (var i = 0; i < itemIds.length; i++) {
+          var item = cat.items.find(function(it) { return it.id === itemIds[i]; });
+          if (item) ordered.push(item);
+        }
+        cat.items = ordered;
+        cat.items.forEach(function(item, idx) { item.order = idx; });
+      }
+      render();
+      api('reorder', { action: 'reorder', categoryId: categoryId, itemIds: itemIds }).catch(function(err) {
+        load();
+        alert('Could not save order. ' + (err && err.message ? err.message : 'Please try again.'));
+      });
     }
 
     const categoryModal = document.getElementById('categoryModal');

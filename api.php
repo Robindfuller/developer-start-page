@@ -154,6 +154,9 @@ $input = json_decode($rawInput, true);
 if (!$input) {
     $input = $_POST;
 }
+if (empty($action) && !empty($input['action'])) {
+    $action = $input['action'];
+}
 $data = loadData();
 
 switch ($action) {
@@ -257,21 +260,47 @@ switch ($action) {
     case 'reorder':
         $categoryId = isset($input['categoryId']) ? $input['categoryId'] : '';
         $itemIds = isset($input['itemIds']) ? $input['itemIds'] : array();
+        if (!is_array($itemIds)) {
+            $itemIds = array_values($itemIds);
+        }
+        $reordered = false;
         foreach ($data['categories'] as &$cat) {
-            if ($cat['id'] === $categoryId) {
-                $order = 0;
+            if ($cat['id'] === $categoryId && !empty($cat['items'])) {
+                $itemsById = array();
+                foreach ($cat['items'] as $item) {
+                    $itemsById[$item['id']] = $item;
+                }
+                $newItems = array();
+                $addedIds = array();
                 foreach ($itemIds as $id) {
-                    foreach (isset($cat['items']) ? $cat['items'] : array() as &$item) {
-                        if ($item['id'] === $id) {
-                            $item['order'] = $order++;
-                            break;
-                        }
+                    $sid = (string) $id;
+                    if (isset($itemsById[$sid])) {
+                        $itemsById[$sid]['order'] = count($newItems);
+                        $newItems[] = $itemsById[$sid];
+                        $addedIds[] = $itemsById[$sid]['id'];
                     }
                 }
+                foreach ($cat['items'] as $item) {
+                    if (!in_array($item['id'], $addedIds)) {
+                        $item['order'] = count($newItems);
+                        $newItems[] = $item;
+                    }
+                }
+                $cat['items'] = $newItems;
+                $reordered = true;
                 break;
             }
         }
-        saveData($data);
+        if (!$reordered) {
+            http_response_code(400);
+            echo json_encode(['error' => 'Category not found or no items to reorder']);
+            exit;
+        }
+        if (saveData($data) === false) {
+            http_response_code(500);
+            echo json_encode(['error' => 'Failed to save data']);
+            exit;
+        }
         echo json_encode(['success' => true]);
         break;
 
