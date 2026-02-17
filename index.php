@@ -2716,19 +2716,18 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="lcars"] .modal-actions .btn-cancel:hover { background: rgba(255, 136, 0, 0.15); }
 
-    /* Retro themes: modal overlays that fit the era (no alpha transparency) */
-    /* 16-bit style: dithered checkerboard (like Mega Drive/SMS transparency simulation) */
+    /* Retro themes: modal overlays that fit the era */
+    /* 16-bit style: low-res dithered grid (black pixel / transparent alternating – see through where not black) */
     html[data-theme="megadrive"] .modal-overlay,
     html[data-theme="sms"] .modal-overlay {
-      background-color: var(--bg);
       background-image: repeating-conic-gradient(
         from 0deg at 50% 50%,
         #000 0deg 90deg,
-        var(--bg) 90deg 180deg,
+        transparent 90deg 180deg,
         #000 180deg 270deg,
-        var(--bg) 270deg 360deg
+        transparent 270deg 360deg
       );
-      background-size: 4px 4px;
+      background-size: 8px 8px;
     }
     /* Simpler systems: solid overlay (completely hides content behind modal) */
     html[data-theme="gb"] .modal-overlay,
@@ -2975,11 +2974,47 @@ if (file_exists($dataFile)) {
       height: 100%;
       background: var(--button-bg);
       width: 100%;
-      transition: width 0.2s linear;
+      transition: none;
+    }
+    .event-notification-progress-fill.countdown-active {
+      animation: event-countdown-shrink 30s linear forwards;
+    }
+    @keyframes event-countdown-shrink {
+      from { width: 100%; }
+      to { width: 0%; }
     }
     .event-notification-countdown {
       font-size: 0.75rem;
       color: var(--content-muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 8.5em;
+      display: inline-block;
+    }
+    html[data-theme="gb"] .help-modal-content .help-shortcuts {
+      color: #9bbc0f;
+    }
+    html[data-theme="gb"] .help-modal-content .help-shortcuts code {
+      color: #9bbc0f;
+    }
+    html[data-theme="macintosh"] .help-modal-content .help-shortcuts {
+      color: #ffffff;
+    }
+    html[data-theme="macintosh"] .help-modal-content .help-shortcuts code {
+      color: #ffffff;
+    }
+    html[data-theme="gb"] .event-notification-progress-bar {
+      background: #8bac0f;
+      border-color: #306230;
+    }
+    html[data-theme="gb"] .event-notification-progress-fill {
+      background: #0f380f;
+    }
+    html[data-theme="macintosh"] .event-notification-progress-bar {
+      background: #ffffff;
+      border-color: #000000;
+    }
+    html[data-theme="macintosh"] .event-notification-progress-fill {
+      background: #000000;
     }
 
     /* Fade out main content when screensaver activates */
@@ -3183,6 +3218,7 @@ if (file_exists($dataFile)) {
           <li><strong>Charms</strong> — Fullscreen, music, screensaver, theme switcher, and this help.</li>
         </ul>
         <div class="help-shortcuts"><code>Alt + Shift + T</code> — Cycle theme</div>
+        <div class="help-shortcuts"><code>Alt + Shift + S</code> — Screensaver</div>
         <div class="help-shortcuts"><code>Alt + Shift + E</code> — Test event modal</div>
       </div>
       <div class="modal-actions" style="margin-top: 1rem;">
@@ -3329,6 +3365,11 @@ if (file_exists($dataFile)) {
           e.stopPropagation();
           if (window._showTestEventModal) window._showTestEventModal();
         }
+        if (e.altKey && e.shiftKey && (e.key === 'S' || e.key === 's')) {
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          if (window._enterScreensaver) window._enterScreensaver(true);
+        }
         if (e.altKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
           e.preventDefault();
           e.stopPropagation();
@@ -3471,6 +3512,10 @@ if (file_exists($dataFile)) {
       function closeEventModal() {
         if (!modal) return;
         modal.classList.remove('open');
+        if (progressFill) {
+          progressFill.classList.remove('countdown-active');
+          progressFill.style.width = '100%';
+        }
         if (eventModalCountdownInterval) {
           clearInterval(eventModalCountdownInterval);
           eventModalCountdownInterval = null;
@@ -3489,7 +3534,10 @@ if (file_exists($dataFile)) {
         timeEl.textContent = 'Time: ' + timeStr;
         modal.classList.add('open');
         let remainingSec = EVENT_MODAL_DURATION_SEC;
+        progressFill.classList.remove('countdown-active');
         progressFill.style.width = '100%';
+        progressFill.offsetHeight;
+        progressFill.classList.add('countdown-active');
         countdownEl.textContent = 'Closing in ' + remainingSec + 's';
         if (modal.querySelector('[role="progressbar"]')) {
           modal.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', remainingSec);
@@ -3500,8 +3548,6 @@ if (file_exists($dataFile)) {
             closeEventModal();
             return;
           }
-          const pct = (remainingSec / EVENT_MODAL_DURATION_SEC) * 100;
-          progressFill.style.width = pct + '%';
           countdownEl.textContent = 'Closing in ' + remainingSec + 's';
           const bar = modal.querySelector('[role="progressbar"]');
           if (bar) bar.setAttribute('aria-valuenow', remainingSec);
@@ -3735,6 +3781,7 @@ if (file_exists($dataFile)) {
         }
       }
 
+      window._enterScreensaver = function(manual) { enterScreensaver(manual); };
       const screensaverBtn = document.getElementById('screensaverBtn');
       if (screensaverBtn) {
         screensaverBtn.addEventListener('click', function() {
