@@ -1010,6 +1010,33 @@ if (file_exists($dataFile)) {
     .modal .btn-save:hover,
     .modal-actions .btn-save:hover { background: var(--button-hover); }
 
+    .help-modal-content {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--content);
+    }
+    .help-modal-content p { margin: 0 0 0.75rem 0; }
+    .help-modal-content p:last-child { margin-bottom: 0; }
+    .help-modal-content ul {
+      margin: 0 0 0.75rem 0;
+      padding-left: 1.25rem;
+      list-style: disc;
+    }
+    .help-modal-content li { margin-bottom: 0.25rem; }
+    .help-modal-content li:last-child { margin-bottom: 0; }
+    .help-modal-content .help-shortcuts {
+      margin-top: 0.5rem;
+      padding: 0.5rem 0.6rem;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+    .help-modal-content .help-shortcuts code {
+      color: var(--button-bg);
+      font-weight: 700;
+    }
+
     .midi-add-row input,
     .midi-add-row button,
     .midi-add-row label,
@@ -1137,6 +1164,57 @@ if (file_exists($dataFile)) {
     }
     .scratch-pad-stop-btn:hover:not(:disabled) { background: var(--card-border); color: var(--button-fg, var(--content)); }
     .scratch-pad-title { opacity: 0.9; }
+    .scratch-pad-body-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .scratch-pad-text-editor {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .scratch-pad-text-editor:empty::before {
+      content: attr(data-placeholder);
+      color: var(--content-muted);
+      opacity: 0.7;
+    }
+    .scratch-pad-line {
+      display: flex;
+      align-items: center;
+      flex-wrap: nowrap;
+      gap: 0.35rem;
+      min-height: 1.4em;
+    }
+    .scratch-pad-line input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 1em;
+      height: 1em;
+      margin: 0;
+      vertical-align: middle;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      border-radius: 2px;
+    }
+    .scratch-pad-line input[type="checkbox"]:checked {
+      background: var(--card-border);
+      border-color: var(--card-border);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M10.3 2.8L4.5 8.6 1.7 5.8 2.8 4.7l1.7 1.7 5.1-5.1 1.1 1.1z'/%3E%3C/svg%3E");
+      background-size: 70%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+    .scratch-pad-line input[type="checkbox"]:checked + .scratch-pad-line-text {
+      text-decoration: line-through;
+      color: var(--content-muted);
+    }
+    .scratch-pad-line-text {
+      flex: 1;
+      min-width: 0;
+    }
     .scratch-pad-body {
       flex: 1;
       width: 100%;
@@ -2638,6 +2716,27 @@ if (file_exists($dataFile)) {
     }
     html[data-theme="lcars"] .modal-actions .btn-cancel:hover { background: rgba(255, 136, 0, 0.15); }
 
+    /* Retro themes: modal overlays that fit the era (no alpha transparency) */
+    /* 16-bit style: dithered checkerboard (like Mega Drive/SMS transparency simulation) */
+    html[data-theme="megadrive"] .modal-overlay,
+    html[data-theme="sms"] .modal-overlay {
+      background-color: var(--bg);
+      background-image: repeating-conic-gradient(
+        from 0deg at 50% 50%,
+        #000 0deg 90deg,
+        var(--bg) 90deg 180deg,
+        #000 180deg 270deg,
+        var(--bg) 270deg 360deg
+      );
+      background-size: 4px 4px;
+    }
+    /* Simpler systems: solid overlay (completely hides content behind modal) */
+    html[data-theme="gb"] .modal-overlay,
+    html[data-theme="macintosh"] .modal-overlay,
+    html[data-theme="msdos"] .modal-overlay {
+      background: var(--bg);
+    }
+
     /* Mac-style zoom animation (Visit link) */
     :root {
       --visit-zoom-duration: var(--scratch-maximize-duration);
@@ -2787,6 +2886,9 @@ if (file_exists($dataFile)) {
       background: rgba(0, 0, 0, 0.5);
       transition: background 0.3s;
     }
+    .screensaver-day-bars .day-bar-segment.filled {
+      background: var(--button-bg);
+    }
     .screensaver-midi-track {
       font-size: 0.85rem;
       color: var(--content-muted);
@@ -2840,6 +2942,46 @@ if (file_exists($dataFile)) {
       box-shadow: 0 0 8px rgba(255, 136, 0, 0.5);
     }
 
+    /* Event notification modal – themed */
+    .event-notification-modal .modal {
+      border-width: 3px;
+      border-color: var(--card-border);
+      box-shadow: inset 2px 2px 0 var(--bevel-light), 6px 6px 0 var(--bevel-dark);
+    }
+    .event-notification-title {
+      color: var(--content);
+      margin: 0 0 0.25rem 0;
+      font-size: 1.25rem;
+    }
+    .event-notification-time {
+      color: var(--content-muted);
+      margin: 0 0 1rem 0;
+      font-size: 0.9rem;
+    }
+    .event-notification-progress-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      margin-bottom: 0.5rem;
+    }
+    .event-notification-progress-bar {
+      height: 8px;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      overflow: hidden;
+      border-radius: 4px;
+    }
+    .event-notification-progress-fill {
+      height: 100%;
+      background: var(--button-bg);
+      width: 100%;
+      transition: width 0.2s linear;
+    }
+    .event-notification-countdown {
+      font-size: 0.75rem;
+      color: var(--content-muted);
+    }
+
     /* Fade out main content when screensaver activates */
     .sidebar-header,
     #categoriesContainer,
@@ -2884,13 +3026,17 @@ if (file_exists($dataFile)) {
             <button class="scratch-pad-maximize-btn" type="button" id="scratchPadMaximizeBtn" title="Full screen">⛶</button>
           </span>
         </div>
-        <textarea class="scratch-pad-body" id="scratchPadText" placeholder="Text notes..." rows="4"></textarea>
+        <div class="scratch-pad-body-container">
+          <div class="scratch-pad-body scratch-pad-text-editor" id="scratchPadText" contenteditable="true" data-placeholder="Text notes..." role="textbox"></div>
+          <textarea class="scratch-pad-body" id="scratchPadBasic" placeholder="10 PRINT &quot;Hello&quot; ... RUN" rows="4" style="display:none"></textarea>
+        </div>
       </div>
     </aside>
     <nav class="charms-menu">
       <button class="charms-btn" id="fullscreenCharmBtn" type="button" title="Fullscreen" aria-label="Fullscreen">⛶</button>
       <button class="charms-btn" id="musicCharmBtn" type="button" title="Music controls" aria-label="Music controls">♪</button>
       <button class="screensaver-btn" id="screensaverBtn" type="button" title="Screensaver">◐</button>
+      <button class="charms-btn" id="helpCharmBtn" type="button" title="Help" aria-label="Help">?</button>
       <button class="edit-mode-btn" id="editModeBtn" type="button" title="Edit">✎</button>
       <div class="theme-switcher-charms">
         <button class="charms-btn theme-charm-btn" id="themeCharmBtn" type="button" title="Theme (Alt+Shift+T to cycle)" aria-label="Theme">&#9881;</button>
@@ -3025,6 +3171,42 @@ if (file_exists($dataFile)) {
     </div>
   </div>
 
+  <div class="modal-overlay" id="helpModal">
+    <div class="modal">
+      <h3>Help</h3>
+      <div class="help-modal-content">
+        <p>Welcome! This is your developer start page. Here&rsquo;s a quick overview:</p>
+        <ul>
+          <li><strong>Categories & links</strong> — Click cards to visit; use Edit mode to add, edit, reorder, or delete.</li>
+          <li><strong>Scratchpad</strong> — Text notes with checkboxes (<code>[ ]</code> or <code>-</code> for bullets); Basic tab runs a simple BASIC interpreter.</li>
+          <li><strong>Daily events</strong> — Edit mode shows &ldquo;Edit blocks&rdquo; to customize your day timeline.</li>
+          <li><strong>Charms</strong> — Fullscreen, music, screensaver, theme switcher, and this help.</li>
+        </ul>
+        <div class="help-shortcuts"><code>Alt + Shift + T</code> — Cycle theme</div>
+        <div class="help-shortcuts"><code>Alt + Shift + E</code> — Test event modal</div>
+      </div>
+      <div class="modal-actions" style="margin-top: 1rem;">
+        <button class="btn-cancel" type="button" id="helpModalCloseBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay event-notification-modal" id="eventNotificationModal">
+    <div class="modal event-notification-modal-inner">
+      <h3 class="event-notification-title" id="eventNotificationTitle">Event</h3>
+      <p class="event-notification-time" id="eventNotificationTime"></p>
+      <div class="event-notification-progress-wrap">
+        <div class="event-notification-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="30" aria-valuenow="30" aria-label="Auto-close countdown">
+          <div class="event-notification-progress-fill" id="eventNotificationProgressFill"></div>
+        </div>
+        <span class="event-notification-countdown" id="eventNotificationCountdown">Closing in 30s</span>
+      </div>
+      <div class="modal-actions" style="margin-top: 1rem;">
+        <button class="btn-save" type="button" id="eventNotificationDismissBtn">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal-overlay" id="itemModal">
     <div class="modal">
       <form id="itemForm" novalidate>
@@ -3126,9 +3308,27 @@ if (file_exists($dataFile)) {
       document.addEventListener('click', function() { dropdown.classList.remove('open'); });
     })();
 
+    (function initHelpModal() {
+      const helpCharmBtn = document.getElementById('helpCharmBtn');
+      const helpModal = document.getElementById('helpModal');
+      const helpModalCloseBtn = document.getElementById('helpModalCloseBtn');
+      if (helpCharmBtn) {
+        helpCharmBtn.addEventListener('click', function() {
+          if (helpModal) helpModal.classList.add('open');
+        });
+      }
+      if (helpModalCloseBtn) helpModalCloseBtn.addEventListener('click', function() { if (helpModal) helpModal.classList.remove('open'); });
+      if (helpModal) helpModal.addEventListener('click', function(e) { if (e.target === helpModal) helpModal.classList.remove('open'); });
+    })();
+
     (function initThemeShortcut() {
       var THEME_ORDER = ['megadrive', 'tron', 'tron-ares', 'matrix', 'catppuccin', 'catppuccin-latte', 'everforest', 'tokyo-night', 'sms', 'gb', 'ps5', 'lcars', 'macintosh', 'msdos'];
       document.addEventListener('keydown', function(e) {
+        if (e.altKey && e.shiftKey && (e.key === 'E' || e.key === 'e')) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (window._showTestEventModal) window._showTestEventModal();
+        }
         if (e.altKey && e.shiftKey && (e.key === 'T' || e.key === 't')) {
           e.preventDefault();
           e.stopPropagation();
@@ -3245,6 +3445,118 @@ if (file_exists($dataFile)) {
     updateDayBars();
     setInterval(updateClock, 1000);
     setInterval(updateDayBars, 60000);
+
+    (function initEventNotifications() {
+      const EVENT_MODAL_DURATION_MS = 30000;
+      const EVENT_MODAL_DURATION_SEC = 30;
+      let eventsShownToday = new Set();
+      let pendingEventNotification = null;
+      let eventModalCountdownInterval = null;
+      let eventModalAutoCloseTimeout = null;
+
+      const modal = document.getElementById('eventNotificationModal');
+      const titleEl = document.getElementById('eventNotificationTitle');
+      const timeEl = document.getElementById('eventNotificationTime');
+      const progressFill = document.getElementById('eventNotificationProgressFill');
+      const countdownEl = document.getElementById('eventNotificationCountdown');
+      const dismissBtn = document.getElementById('eventNotificationDismissBtn');
+
+      function eventKey(block) {
+        const d = new Date();
+        const y = d.getFullYear(), m = d.getMonth(), day = d.getDate();
+        const t = Math.round((block.time ?? block.start ?? 0) * 60);
+        return y + '-' + m + '-' + day + '-' + t + '-' + (block.id || block.label || '');
+      }
+
+      function closeEventModal() {
+        if (!modal) return;
+        modal.classList.remove('open');
+        if (eventModalCountdownInterval) {
+          clearInterval(eventModalCountdownInterval);
+          eventModalCountdownInterval = null;
+        }
+        if (eventModalAutoCloseTimeout) {
+          clearTimeout(eventModalAutoCloseTimeout);
+          eventModalAutoCloseTimeout = null;
+        }
+      }
+
+      function showEventNotification(block) {
+        if (!modal || !titleEl || !timeEl || !progressFill || !countdownEl) return;
+        const label = block.label || block.name || block.title || 'Event';
+        const timeStr = decimalToTimeStr(block.time ?? block.start ?? 0);
+        titleEl.textContent = label;
+        timeEl.textContent = 'Time: ' + timeStr;
+        modal.classList.add('open');
+        let remainingSec = EVENT_MODAL_DURATION_SEC;
+        progressFill.style.width = '100%';
+        countdownEl.textContent = 'Closing in ' + remainingSec + 's';
+        if (modal.querySelector('[role="progressbar"]')) {
+          modal.querySelector('[role="progressbar"]').setAttribute('aria-valuenow', remainingSec);
+        }
+        eventModalCountdownInterval = setInterval(function() {
+          remainingSec--;
+          if (remainingSec <= 0) {
+            closeEventModal();
+            return;
+          }
+          const pct = (remainingSec / EVENT_MODAL_DURATION_SEC) * 100;
+          progressFill.style.width = pct + '%';
+          countdownEl.textContent = 'Closing in ' + remainingSec + 's';
+          const bar = modal.querySelector('[role="progressbar"]');
+          if (bar) bar.setAttribute('aria-valuenow', remainingSec);
+        }, 1000);
+        eventModalAutoCloseTimeout = setTimeout(closeEventModal, EVENT_MODAL_DURATION_MS);
+      }
+
+      function triggerEventNotification(block) {
+        if (window._screensaverActive) {
+          pendingEventNotification = { block: block };
+          return;
+        }
+        showEventNotification(block);
+      }
+
+      window._showPendingEventNotification = function() {
+        if (pendingEventNotification) {
+          const block = pendingEventNotification.block;
+          pendingEventNotification = null;
+          showEventNotification(block);
+        }
+      };
+
+      window._showTestEventModal = function() {
+        const now = new Date();
+        const h = now.getHours(), m = now.getMinutes();
+        showEventNotification({ label: 'Test Event', time: h + m / 60 });
+      };
+
+      if (dismissBtn) {
+        dismissBtn.addEventListener('click', closeEventModal);
+      }
+
+      setInterval(function() {
+        const blocks = getTimeBlocks();
+        if (!blocks.length) return;
+        const now = new Date();
+        const mins = minsSinceMidnight(now.getHours(), now.getMinutes());
+        const todayPrefix = now.getFullYear() + '-' + now.getMonth() + '-' + now.getDate() + '-';
+        if (eventsShownToday.size > 0) {
+          const keys = Array.from(eventsShownToday);
+          eventsShownToday = new Set(keys.filter(function(k) { return k.startsWith(todayPrefix); }));
+        }
+        for (let i = 0; i < blocks.length; i++) {
+          const block = blocks[i];
+          const blockMins = Math.round((block.time ?? block.start ?? 0) * 60);
+          if (mins !== blockMins) continue;
+          const key = eventKey(block);
+          if (eventsShownToday.has(key)) continue;
+          eventsShownToday.add(key);
+          triggerEventNotification(block);
+          break;
+        }
+      }, 1000);
+    })();
 
     (function initScreensaver() {
       const IDLE_MS = 60000;
@@ -3387,6 +3699,7 @@ if (file_exists($dataFile)) {
         window._screensaverDayBarsEl = screensaverDayBars;
         modalsOpenBeforeScreensaver = [];
         document.querySelectorAll('.modal-overlay.open').forEach(function(m) {
+          if (m.id === 'eventNotificationModal') return;
           modalsOpenBeforeScreensaver.push(m.id || m);
           m.classList.remove('open');
         });
@@ -3415,6 +3728,7 @@ if (file_exists($dataFile)) {
           if (el) el.classList.add('open');
         });
         modalsOpenBeforeScreensaver = [];
+        if (window._showPendingEventNotification) window._showPendingEventNotification();
         if (mystifyRAF) {
           cancelAnimationFrame(mystifyRAF);
           mystifyRAF = null;
@@ -3860,7 +4174,8 @@ if (file_exists($dataFile)) {
     });
 
     (function initScratchPad() {
-      const el = document.getElementById('scratchPadText');
+      const textEl = document.getElementById('scratchPadText');
+      const basicEl = document.getElementById('scratchPadBasic');
       const textTab = document.getElementById('scratchPadTextTab');
       const basicTab = document.getElementById('scratchPadBasicTab');
       const stopBtn = document.getElementById('scratchPadStopBtn');
@@ -3872,7 +4187,168 @@ if (file_exists($dataFile)) {
       let stateBeforeRun = '';
       let stateBeforeOutput = '';
       let hasOutputFromRun = false;
-
+      function getBlockContainingCaret() {
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return null;
+        let node = sel.anchorNode || sel.focusNode;
+        if (!node || !textEl.contains(node)) return null;
+        while (node && node !== textEl) {
+          if (node.parentNode === textEl && node.nodeType === 1) {
+            var tag = node.tagName ? node.tagName.toUpperCase() : '';
+            if (tag === 'DIV' || tag === 'P') return node;
+          }
+          node = node.parentNode;
+        }
+        var first = textEl.querySelector(':scope > div, :scope > p');
+        return first || null;
+      }
+      function convertLineToCheckbox(block, checked, textAfter) {
+        const rest = textAfter != null ? textAfter : ((block.querySelector('.scratch-pad-line-text') || {}).textContent || (block.textContent || '').trim());
+        const label = document.createElement('label');
+        label.style.display = 'flex';
+        label.style.alignItems = 'center';
+        label.style.gap = '0.35rem';
+        label.style.flex = '1';
+        label.style.flexWrap = 'nowrap';
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.checked = !!checked;
+        cb.contentEditable = 'false';
+        const textSpan = document.createElement('span');
+        textSpan.className = 'scratch-pad-line-text';
+        textSpan.textContent = rest || '';
+        label.appendChild(cb);
+        label.appendChild(textSpan);
+        block.innerHTML = '';
+        block.className = 'scratch-pad-line';
+        block.appendChild(label);
+        return textSpan;
+      }
+      function tryConvertCurrentLineOnEnter() {
+        const block = getBlockContainingCaret();
+        if (!block || !block.parentNode) return null;
+        const text = (block.textContent || '').trim();
+        const mBracket = text.match(/^\s*\[\s?([xX]?)\s?\]\s*(.*)$/);
+        const mDash = text.match(/^\s*-\s+(.*)$/);
+        if (mBracket) {
+          convertLineToCheckbox(block, /[xX]/.test(mBracket[1]), mBracket[2] || '');
+          return block;
+        }
+        if (mDash) {
+          convertLineToCheckbox(block, false, mDash[1] || '');
+          return block;
+        }
+        return null;
+      }
+      function isCursorAtStartOfCheckboxLine(block) {
+        if (!block) return false;
+        const span = block.querySelector('.scratch-pad-line-text');
+        if (!span) return false;
+        const sel = window.getSelection();
+        if (!sel || sel.rangeCount === 0) return false;
+        let node = sel.anchorNode;
+        if (!node) return false;
+        if (!span.contains(node) && node !== span) return false;
+        if (node === span) return sel.anchorOffset === 0;
+        while (node && node !== span) { node = node.parentNode; }
+        if (node !== span) return false;
+        const range = sel.getRangeAt(0);
+        const preCaret = range.cloneRange();
+        preCaret.selectNodeContents(span);
+        preCaret.setEnd(range.startContainer, range.startOffset);
+        return preCaret.toString().length === 0;
+      }
+      function convertCheckboxLineToPlainText(block) {
+        const cb = block.querySelector('input[type="checkbox"]');
+        const span = block.querySelector('.scratch-pad-line-text');
+        if (!cb || !span) return false;
+        const text = span.textContent || '';
+        const prefix = cb.checked ? '[x] ' : '[ ] ';
+        block.innerHTML = '';
+        block.className = 'scratch-pad-line';
+        block.textContent = prefix + text;
+        const range = document.createRange();
+        range.setStart(block.firstChild, prefix.length);
+        range.collapse(true);
+        const sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+        return true;
+      }
+      function serializeTextEditor() {
+        const lines = [];
+        const blocks = textEl.querySelectorAll(':scope > div, :scope > p');
+        if (blocks.length) {
+          blocks.forEach(function(block) {
+            const cb = block.querySelector('input[type="checkbox"]');
+            const textSpan = block.querySelector('.scratch-pad-line-text');
+            const rest = textSpan ? textSpan.textContent : (block.textContent || '').trim();
+            if (cb) lines.push((cb.checked ? '[x] ' : '[ ] ') + rest);
+            else lines.push(rest);
+          });
+        } else {
+          const raw = (textEl.innerText || '').split(/\r?\n/);
+          raw.forEach(function(line) {
+            const m = line.match(/^\s*\[\s?([xX]?)\s?\]\s*(.*)$/);
+            if (m) lines.push((m[1] ? '[x] ' : '[ ] ') + m[2]);
+            else if (line.match(/^\s*-\s+/)) lines.push('[ ] ' + line.replace(/^\s*-\s+/, ''));
+            else lines.push(line);
+          });
+        }
+        return lines.join('\n');
+      }
+      function deserializeTextEditor(text) {
+        const lines = (text || '').split(/\r?\n/);
+        const frag = document.createDocumentFragment();
+        lines.forEach(function(line) {
+          const div = document.createElement('div');
+          div.className = 'scratch-pad-line';
+          const mBracket = line.match(/^\s*\[\s?([xX]?)\s?\]\s*(.*)$/);
+          const mDash = line.match(/^\s*-\s+(.*)$/);
+          if (mBracket) {
+            const checked = /[xX]/.test(mBracket[1]);
+            const label = document.createElement('label');
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '0.35rem';
+            label.style.flex = '1';
+            label.style.flexWrap = 'nowrap';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = checked;
+            cb.contentEditable = 'false';
+            const span = document.createElement('span');
+            span.className = 'scratch-pad-line-text';
+            span.textContent = mBracket[2] || '';
+            span.contentEditable = 'true';
+            label.appendChild(cb);
+            label.appendChild(span);
+            div.appendChild(label);
+          } else if (mDash) {
+            const label = document.createElement('label');
+            label.style.display = 'flex';
+            label.style.alignItems = 'center';
+            label.style.gap = '0.35rem';
+            label.style.flex = '1';
+            label.style.flexWrap = 'nowrap';
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.contentEditable = 'false';
+            const span = document.createElement('span');
+            span.className = 'scratch-pad-line-text';
+            span.textContent = mDash[1] || '';
+            span.contentEditable = 'true';
+            label.appendChild(cb);
+            label.appendChild(span);
+            div.appendChild(label);
+          } else {
+            div.textContent = line;
+          }
+          frag.appendChild(div);
+        });
+        textEl.innerHTML = '';
+        textEl.appendChild(frag);
+      }
       try {
         const legacy = localStorage.getItem('devStartPageScratch') || '';
         textContent = localStorage.getItem('devStartPageScratchText') || '';
@@ -3885,8 +4361,8 @@ if (file_exists($dataFile)) {
         }
       } catch (e) {}
       function saveContent() {
-        if (activeTab === 'text') textContent = el.value;
-        else if (activeTab === 'basic') basicContent = el.value;
+        if (activeTab === 'text') textContent = serializeTextEditor();
+        else if (activeTab === 'basic') basicContent = basicEl.value;
         try {
           localStorage.setItem('devStartPageScratchText', textContent);
           localStorage.setItem('devStartPageScratchBasic', basicContent);
@@ -3898,9 +4374,17 @@ if (file_exists($dataFile)) {
         initialLoad = false;
         activeTab = tab;
         try { localStorage.setItem('devStartPageScratchTab', activeTab); } catch (e) {}
-        if (tab === 'text') el.value = textContent;
-        else el.value = basicContent;
-        el.placeholder = tab === 'text' ? 'Notes, reminders, quick thoughts...' : '10 PRINT "Hello"\n20 GOTO 10\nRUN';
+        if (tab === 'text') {
+          textEl.style.display = '';
+          basicEl.style.display = 'none';
+          deserializeTextEditor(textContent);
+          basicEl.value = basicContent;
+        } else {
+          textEl.style.display = 'none';
+          basicEl.style.display = '';
+          basicEl.value = basicContent;
+          basicEl.placeholder = '10 PRINT "Hello"\n20 GOTO 10\nRUN';
+        }
         textTab.classList.toggle('active', tab === 'text');
         basicTab.classList.toggle('active', tab === 'basic');
         updateActionButtons();
@@ -3914,9 +4398,47 @@ if (file_exists($dataFile)) {
           stopBtn.title = isStreaming ? 'Stop execution' : 'Reset to before RUN';
         }
       }
-      el.addEventListener('input', saveContent);
+      textEl.addEventListener('input', saveContent);
+      textEl.addEventListener('keydown', function(e) {
+        if (activeTab !== 'text') return;
+        if (e.key === 'Backspace') {
+          const block = getBlockContainingCaret();
+          if (block && isCursorAtStartOfCheckboxLine(block)) {
+            e.preventDefault();
+            convertCheckboxLineToPlainText(block);
+            saveContent();
+          }
+          return;
+        }
+        if (e.key !== 'Enter') return;
+        const block = tryConvertCurrentLineOnEnter();
+        if (block) {
+          e.preventDefault();
+          const newBlock = document.createElement('div');
+          newBlock.className = 'scratch-pad-line';
+          if (block.nextSibling) {
+            textEl.insertBefore(newBlock, block.nextSibling);
+          } else {
+            textEl.appendChild(newBlock);
+          }
+          const sel = window.getSelection();
+          const range = document.createRange();
+          range.setStart(newBlock, 0);
+          range.collapse(true);
+          sel.removeAllRanges();
+          sel.addRange(range);
+          saveContent();
+        }
+      });
+      basicEl.addEventListener('input', saveContent);
       if (textTab) textTab.addEventListener('click', () => switchTab('text'));
       if (basicTab) basicTab.addEventListener('click', () => switchTab('basic'));
+      textEl.addEventListener('click', function(e) {
+        if (e.target.type === 'checkbox') saveContent();
+      });
+      textEl.addEventListener('focus', function() {
+        try { document.execCommand('defaultParagraphSeparator', false, 'div'); } catch (e) {}
+      });
       switchTab(activeTab);
 
       function runBasic(source) {
@@ -4018,10 +4540,10 @@ if (file_exists($dataFile)) {
         return outBuf.join('');
       }
 
-      el.addEventListener('keydown', function(e) {
+      basicEl.addEventListener('keydown', function(e) {
         if (e.key !== 'Enter' || activeTab !== 'basic' || isStreaming) return;
-        const text = el.value;
-        const pos = el.selectionStart;
+        const text = basicEl.value;
+        const pos = basicEl.selectionStart;
         const lineStart = text.lastIndexOf('\n', pos - 1) + 1;
         const currentLine = text.slice(lineStart, pos).trim();
         if (currentLine.toUpperCase() !== 'RUN') return;
@@ -4035,8 +4557,8 @@ if (file_exists($dataFile)) {
         const lines = output.split('\n');
         const linesPerSec = 10;
         const intervalMs = 1000 / linesPerSec;
-        el.value = stateBeforeOutput;
-        el.readOnly = true;
+        basicEl.value = stateBeforeOutput;
+        basicEl.readOnly = true;
         isStreaming = true;
         updateActionButtons();
         let lineIdx = 0;
@@ -4045,19 +4567,19 @@ if (file_exists($dataFile)) {
           if (lineIdx < lines.length) {
             const line = lines[lineIdx];
             const suffix = (lineIdx < lines.length - 1 || !output.endsWith('\n')) ? '\n' : '';
-            el.value += line + suffix;
-            el.scrollTop = el.scrollHeight;
+            basicEl.value += line + suffix;
+            basicEl.scrollTop = basicEl.scrollHeight;
             lineIdx++;
           }
           if (lineIdx >= lines.length) {
-            el.value += after;
-            el.readOnly = false;
-            basicContent = el.value;
+            basicEl.value += after;
+            basicEl.readOnly = false;
+            basicContent = basicEl.value;
             saveContent();
             isStreaming = false;
             hasOutputFromRun = true;
             updateActionButtons();
-            el.selectionStart = el.selectionEnd = el.value.length;
+            basicEl.selectionStart = basicEl.selectionEnd = basicEl.value.length;
             return;
           }
           streamTimeoutId = setTimeout(tick, intervalMs);
@@ -4070,14 +4592,14 @@ if (file_exists($dataFile)) {
             if (streamTimeoutId) clearTimeout(streamTimeoutId);
             streamTimeoutId = null;
             isStreaming = false;
-            el.readOnly = false;
+            basicEl.readOnly = false;
             hasOutputFromRun = true;
-            basicContent = el.value;
+            basicContent = basicEl.value;
             saveContent();
           } else if (hasOutputFromRun) {
-            el.value = stateBeforeOutput;
-            el.selectionStart = el.selectionEnd = stateBeforeOutput.length;
-            basicContent = el.value;
+            basicEl.value = stateBeforeOutput;
+            basicEl.selectionStart = basicEl.selectionEnd = stateBeforeOutput.length;
+            basicContent = basicEl.value;
             hasOutputFromRun = false;
             saveContent();
           }
