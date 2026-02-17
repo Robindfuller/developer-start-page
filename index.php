@@ -37,6 +37,9 @@ if (file_exists($dataFile)) {
       --card-border: #4a4480;
       --bevel-light: #5a54a0;
       --bevel-dark: #1a1630;
+      --palette-1: #00cc66;
+      --palette-2: #0088ff;
+      --palette-3: #ffaa00;
     }
 
     /* Tron theme */
@@ -60,6 +63,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #0a0e17;
       --delete-btn-border: #00ffff;
       --delete-btn-hover: #00e5ff;
+      --palette-1: #00ff88;
+      --palette-2: #00d4ff;
+      --palette-3: #ff00aa;
     }
 
     /* Tron Ares theme (red) */
@@ -83,6 +89,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #170a0a;
       --delete-btn-border: #ff3366;
       --delete-btn-hover: #ff3366;
+      --palette-1: #00ff88;
+      --palette-2: #ff3366;
+      --palette-3: #ff0066;
     }
 
     /* Matrix theme */
@@ -106,6 +115,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #0d0d0d;
       --delete-btn-border: #33ff66;
       --delete-btn-hover: #33ff66;
+      --palette-1: #00ff41;
+      --palette-2: #33ff66;
+      --palette-3: #00cc34;
     }
 
     /* Sega Master System theme (8-bit) */
@@ -129,6 +141,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #181830;
       --delete-btn-border: #00aaff;
       --delete-btn-hover: #00aaff;
+      --palette-1: #00aaff;
+      --palette-2: #33bbff;
+      --palette-3: #ff8844;
     }
 
     /* PlayStation 5 theme (ultra modern) */
@@ -152,6 +167,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #ffffff;
       --delete-btn-border: #006fcd;
       --delete-btn-hover: #006fcd;
+      --palette-1: #00c853;
+      --palette-2: #006fcd;
+      --palette-3: #ffab00;
     }
 
     /* Original Game Boy theme */
@@ -175,6 +193,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #9bbc0f;
       --delete-btn-border: #306230;
       --delete-btn-hover: #306230;
+      --palette-1: #306230;
+      --palette-2: #0f380f;
+      --palette-3: #506230;
     }
 
     /* Original Macintosh (1984) theme – 1-bit black and white */
@@ -198,6 +219,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #ffffff;
       --delete-btn-border: #000000;
       --delete-btn-hover: #000000;
+      --palette-1: #000000;
+      --palette-2: #000000;
+      --palette-3: #000000;
     }
 
     /* MS-DOS theme – mid-90s window (gray chrome, black/white content, subtle color) */
@@ -221,6 +245,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #000000;
       --delete-btn-border: #808080;
       --delete-btn-hover: #d4d0c8;
+      --palette-1: #00a000;
+      --palette-2: #0000aa;
+      --palette-3: #aa5500;
     }
 
     /* Catppuccin Mocha theme (dark) – Hyprland-style */
@@ -244,6 +271,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #1e1e2e;
       --delete-btn-border: #eba0ac;
       --delete-btn-hover: #eba0ac;
+      --palette-1: #a6e3a1;
+      --palette-2: #89b4fa;
+      --palette-3: #f9e2af;
     }
 
     /* Catppuccin Latte theme (light) – Hyprland-style */
@@ -267,6 +297,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #ffffff;
       --delete-btn-border: #e64553;
       --delete-btn-hover: #e64553;
+      --palette-1: #40a02b;
+      --palette-2: #1e66f5;
+      --palette-3: #df8e1d;
     }
 
     /* Everforest theme (dark) */
@@ -290,6 +323,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #2D353B;
       --delete-btn-border: #E69875;
       --delete-btn-hover: #E69875;
+      --palette-1: #A7C080;
+      --palette-2: #7FBBB3;
+      --palette-3: #DBBC7F;
     }
 
     /* Tokyo Night theme (dark) */
@@ -313,6 +349,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #1a1b26;
       --delete-btn-border: #ff9e64;
       --delete-btn-hover: #ff9e64;
+      --palette-1: #9ece6a;
+      --palette-2: #7dcfff;
+      --palette-3: #e0af68;
     }
 
     /* Star Trek: The Next Generation / LCARS theme */
@@ -336,6 +375,9 @@ if (file_exists($dataFile)) {
       --delete-btn-fg: #0a0a12;
       --delete-btn-border: #ff6644;
       --delete-btn-hover: #ff6644;
+      --palette-1: #ffaa33;
+      --palette-2: #8899ff;
+      --palette-3: #cc99ff;
     }
 
     * { box-sizing: border-box; }
@@ -1014,12 +1056,12 @@ if (file_exists($dataFile)) {
     }
     .link-icon:hover { background: var(--button-hover); color: white; }
 
-    .link-card--dev { border-left: 5px solid #00cc66; }
-    .link-card--dev:hover { border-left-color: #66bb6a; }
-    .link-card--nhs { border-left: 5px solid #0088ff; }
-    .link-card--nhs:hover { border-left-color: #33aaff; }
-    .link-card--private { border-left: 5px solid #ffaa00; }
-    .link-card--private:hover { border-left-color: #ffcc33; }
+    .link-card--accent1 { border-left: 5px solid var(--palette-1); }
+    .link-card--accent1:hover { border-left-color: var(--palette-1); }
+    .link-card--accent2 { border-left: 5px solid var(--palette-2); }
+    .link-card--accent2:hover { border-left-color: var(--palette-2); }
+    .link-card--accent3 { border-left: 5px solid var(--palette-3); }
+    .link-card--accent3:hover { border-left-color: var(--palette-3); }
 
     .link-card-content .link-title {
       display: -webkit-box;
@@ -1054,6 +1096,57 @@ if (file_exists($dataFile)) {
       font-size: 0.9rem;
       font-family: inherit;
       box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3);
+    }
+    .color-select-wrap { position: relative; margin-bottom: 0.75rem; }
+    .color-select-trigger {
+      display: flex; align-items: center; gap: 0.5rem;
+      width: 100%; padding: 0.5rem;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      font-size: 0.9rem; font-family: inherit;
+      box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3);
+      cursor: pointer; text-align: left;
+    }
+    .color-select-trigger:hover, .color-select-trigger:focus {
+      border-color: var(--button-bg);
+      outline: none;
+    }
+    .color-swatch {
+      display: inline-block;
+      width: 1rem; height: 1rem;
+      flex-shrink: 0;
+      border: 1px solid rgba(0,0,0,0.2);
+      border-radius: 2px;
+    }
+    .color-swatch--none {
+      background: repeating-linear-gradient(-45deg, var(--card-border), var(--card-border) 2px, transparent 2px, transparent 4px);
+      background-size: 6px 6px;
+    }
+    .color-swatch--accent1 { background: var(--palette-1); }
+    .color-swatch--accent2 { background: var(--palette-2); }
+    .color-swatch--accent3 { background: var(--palette-3); }
+    .color-select-label { flex: 1; }
+    .color-select-chevron { font-size: 0.6rem; opacity: 0.7; }
+    .color-select-dropdown {
+      position: absolute; left: 0; right: 0; top: 100%; margin-top: 2px;
+      background: var(--bg-alt);
+      border: 2px solid var(--card-border);
+      box-shadow: 4px 4px 0 var(--bevel-dark);
+      z-index: 10;
+      max-height: 180px; overflow-y: auto;
+    }
+    .color-select-dropdown:not([hidden]) { display: block; }
+    .color-select-option {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      cursor: pointer;
+      font-size: 0.9rem; font-family: inherit;
+      color: var(--content);
+    }
+    .color-select-option:hover, .color-select-option:focus {
+      background: var(--card-bg);
+      outline: none;
     }
     .modal-actions {
       display: flex;
@@ -1345,9 +1438,9 @@ if (file_exists($dataFile)) {
       background: rgba(0, 255, 255, 0.12);
       box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1), 0 0 15px rgba(0, 255, 255, 0.2);
     }
-    html[data-theme="tron"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
-    html[data-theme="tron"] .link-card--nhs { border-left-color: #00d4ff; box-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
-    html[data-theme="tron"] .link-card--private { border-left-color: #ff00aa; box-shadow: 0 0 8px rgba(255, 0, 170, 0.3); }
+    html[data-theme="tron"] .link-card--accent1,
+    html[data-theme="tron"] .link-card--accent2,
+    html[data-theme="tron"] .link-card--accent3 { box-shadow: 0 0 8px rgba(0, 212, 255, 0.3); }
     html[data-theme="tron"] .day-bar-track {
       border-color: #00ffff;
       box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1), 0 0 5px rgba(0, 255, 255, 0.2);
@@ -1418,9 +1511,9 @@ if (file_exists($dataFile)) {
       background: rgba(255, 0, 64, 0.12);
       box-shadow: inset 0 0 20px rgba(255, 0, 64, 0.1), 0 0 15px rgba(255, 0, 64, 0.2);
     }
-    html[data-theme="tron-ares"] .link-card--dev { border-left-color: #00ff88; box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
-    html[data-theme="tron-ares"] .link-card--nhs { border-left-color: #ff3366; box-shadow: 0 0 8px rgba(255, 51, 102, 0.3); }
-    html[data-theme="tron-ares"] .link-card--private { border-left-color: #ff0066; box-shadow: 0 0 8px rgba(255, 0, 102, 0.3); }
+    html[data-theme="tron-ares"] .link-card--accent1 { box-shadow: 0 0 8px rgba(0, 255, 136, 0.3); }
+    html[data-theme="tron-ares"] .link-card--accent2,
+    html[data-theme="tron-ares"] .link-card--accent3 { box-shadow: 0 0 8px rgba(255, 51, 102, 0.3); }
     html[data-theme="tron-ares"] .day-bar-track {
       border-color: #ff0040;
       box-shadow: inset 0 0 10px rgba(255, 0, 64, 0.1), 0 0 5px rgba(255, 0, 64, 0.2);
@@ -1526,9 +1619,6 @@ if (file_exists($dataFile)) {
     html[data-theme="matrix"] .scratch-pad-tab.active { background: #0d0d0d; color: #00ff41; }
 
     /* Game Boy theme overrides */
-    html[data-theme="gb"] .link-card--dev { border-left-color: #306230; }
-    html[data-theme="gb"] .link-card--nhs { border-left-color: #0f380f; }
-    html[data-theme="gb"] .link-card--private { border-left-color: #506230; }
     html[data-theme="gb"] .link-card:hover {
       background: #9bbc0f;
     }
@@ -1653,9 +1743,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       transform: translateY(-1px);
     }
-    html[data-theme="catppuccin"] .link-card--dev { border-left: 4px solid #a6e3a1; }
-    html[data-theme="catppuccin"] .link-card--nhs { border-left: 4px solid #89b4fa; }
-    html[data-theme="catppuccin"] .link-card--private { border-left: 4px solid #f9e2af; }
+    html[data-theme="catppuccin"] .link-card--accent1,
+    html[data-theme="catppuccin"] .link-card--accent2,
+    html[data-theme="catppuccin"] .link-card--accent3 { border-left-width: 4px; }
     html[data-theme="catppuccin"] .link-icon,
     html[data-theme="catppuccin"] .edit-item-btn,
     html[data-theme="catppuccin"] .delete-item-btn {
@@ -1809,9 +1899,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
       transform: translateY(-1px);
     }
-    html[data-theme="catppuccin-latte"] .link-card--dev { border-left: 4px solid #40a02b; }
-    html[data-theme="catppuccin-latte"] .link-card--nhs { border-left: 4px solid #1e66f5; }
-    html[data-theme="catppuccin-latte"] .link-card--private { border-left: 4px solid #df8e1d; }
+    html[data-theme="catppuccin-latte"] .link-card--accent1,
+    html[data-theme="catppuccin-latte"] .link-card--accent2,
+    html[data-theme="catppuccin-latte"] .link-card--accent3 { border-left-width: 4px; }
     html[data-theme="catppuccin-latte"] .link-icon,
     html[data-theme="catppuccin-latte"] .edit-item-btn,
     html[data-theme="catppuccin-latte"] .delete-item-btn {
@@ -1965,9 +2055,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
       transform: translateY(-1px);
     }
-    html[data-theme="everforest"] .link-card--dev { border-left: 4px solid #A7C080; }
-    html[data-theme="everforest"] .link-card--nhs { border-left: 4px solid #7FBBB3; }
-    html[data-theme="everforest"] .link-card--private { border-left: 4px solid #DBBC7F; }
+    html[data-theme="everforest"] .link-card--accent1,
+    html[data-theme="everforest"] .link-card--accent2,
+    html[data-theme="everforest"] .link-card--accent3 { border-left-width: 4px; }
     html[data-theme="everforest"] .link-icon,
     html[data-theme="everforest"] .edit-item-btn,
     html[data-theme="everforest"] .delete-item-btn {
@@ -2113,9 +2203,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
       transform: translateY(-1px);
     }
-    html[data-theme="tokyo-night"] .link-card--dev { border-left: 4px solid #9ece6a; }
-    html[data-theme="tokyo-night"] .link-card--nhs { border-left: 4px solid #7dcfff; }
-    html[data-theme="tokyo-night"] .link-card--private { border-left: 4px solid #e0af68; }
+    html[data-theme="tokyo-night"] .link-card--accent1,
+    html[data-theme="tokyo-night"] .link-card--accent2,
+    html[data-theme="tokyo-night"] .link-card--accent3 { border-left-width: 4px; }
     html[data-theme="tokyo-night"] .link-icon,
     html[data-theme="tokyo-night"] .edit-item-btn,
     html[data-theme="tokyo-night"] .delete-item-btn {
@@ -2262,9 +2352,9 @@ if (file_exists($dataFile)) {
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
       transform: translateY(-1px);
     }
-    html[data-theme="ps5"] .link-card--dev { border-left: 3px solid #00c853; }
-    html[data-theme="ps5"] .link-card--nhs { border-left: 3px solid #006fcd; }
-    html[data-theme="ps5"] .link-card--private { border-left: 3px solid #ffab00; }
+    html[data-theme="ps5"] .link-card--accent1,
+    html[data-theme="ps5"] .link-card--accent2,
+    html[data-theme="ps5"] .link-card--accent3 { border-left-width: 3px; }
     html[data-theme="ps5"] .day-bar-track {
       border-radius: 8px;
       border-width: 1px;
@@ -2360,9 +2450,9 @@ if (file_exists($dataFile)) {
       box-shadow: none;
     }
     html[data-theme="macintosh"] .link-card:hover .link-subtitle { color: #ffffff; }
-    html[data-theme="macintosh"] .link-card--dev,
-    html[data-theme="macintosh"] .link-card--nhs,
-    html[data-theme="macintosh"] .link-card--private { border-left: 4px solid #000000; }
+    html[data-theme="macintosh"] .link-card--accent1,
+    html[data-theme="macintosh"] .link-card--accent2,
+    html[data-theme="macintosh"] .link-card--accent3 { border-left-width: 4px; }
     html[data-theme="macintosh"] .day-bar-track {
       border: 2px solid #000000;
       background: #ffffff;
@@ -2500,9 +2590,6 @@ if (file_exists($dataFile)) {
       background: #f0f0f0;
       box-shadow: 1px 1px 0 #ffffff inset, -1px -1px 0 #404040 inset, 1px 1px 0 #404040;
     }
-    html[data-theme="msdos"] .link-card--dev { border-left: 4px solid #00a000; }
-    html[data-theme="msdos"] .link-card--nhs { border-left: 4px solid #0000aa; }
-    html[data-theme="msdos"] .link-card--private { border-left: 4px solid #aa5500; }
     html[data-theme="msdos"] .day-bar-track {
       background: #c0c0c0;
       border: 2px solid #808080;
@@ -2663,9 +2750,9 @@ if (file_exists($dataFile)) {
       background: rgba(255, 136, 0, 0.12);
       box-shadow: inset 0 0 15px rgba(255, 136, 0, 0.1), 0 0 15px rgba(255, 136, 0, 0.18);
     }
-    html[data-theme="lcars"] .link-card--dev { border-left-color: #ffaa33; box-shadow: 0 0 8px rgba(255, 170, 51, 0.25); }
-    html[data-theme="lcars"] .link-card--nhs { border-left-color: #8899ff; box-shadow: 0 0 8px rgba(136, 153, 255, 0.25); }
-    html[data-theme="lcars"] .link-card--private { border-left-color: #cc99ff; box-shadow: 0 0 8px rgba(204, 153, 255, 0.25); }
+    html[data-theme="lcars"] .link-card--accent1,
+    html[data-theme="lcars"] .link-card--accent2,
+    html[data-theme="lcars"] .link-card--accent3 { box-shadow: 0 0 8px rgba(255, 170, 51, 0.25); }
     html[data-theme="lcars"] .day-bar-track {
       border-color: #ff8800;
       box-shadow: inset 0 0 10px rgba(255, 136, 0, 0.08), 0 0 6px rgba(255, 136, 0, 0.15);
@@ -3380,13 +3467,38 @@ if (file_exists($dataFile)) {
         <input type="text" id="modalItemTitle" placeholder="Item title" required>
         <label>URL</label>
         <input type="url" id="modalItemUrl" placeholder="https://..." required>
-        <label>Color</label>
-        <select id="modalItemColor">
-          <option value="">None</option>
-          <option value="dev">Dev (green)</option>
-          <option value="nhs">NHS (blue)</option>
-          <option value="private">Private (amber)</option>
-        </select>
+        <label id="colorSelectLabel">Color</label>
+        <div class="color-select-wrap">
+          <select id="modalItemColor" aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0">
+            <option value="">None</option>
+            <option value="accent1">Accent 1</option>
+            <option value="accent2">Accent 2</option>
+            <option value="accent3">Accent 3</option>
+          </select>
+          <button type="button" class="color-select-trigger" id="colorSelectTrigger" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="colorSelectLabel">
+            <span class="color-swatch color-swatch--none" aria-hidden="true"></span>
+            <span class="color-select-label">None</span>
+            <span class="color-select-chevron" aria-hidden="true">▼</span>
+          </button>
+          <div class="color-select-dropdown" id="colorSelectDropdown" role="listbox" aria-label="Link color" hidden>
+            <div class="color-select-option" role="option" data-value="" tabindex="0">
+              <span class="color-swatch color-swatch--none" aria-hidden="true"></span>
+              <span>None</span>
+            </div>
+            <div class="color-select-option" role="option" data-value="accent1" tabindex="0">
+              <span class="color-swatch color-swatch--accent1" aria-hidden="true"></span>
+              <span>Accent 1</span>
+            </div>
+            <div class="color-select-option" role="option" data-value="accent2" tabindex="0">
+              <span class="color-swatch color-swatch--accent2" aria-hidden="true"></span>
+              <span>Accent 2</span>
+            </div>
+            <div class="color-select-option" role="option" data-value="accent3" tabindex="0">
+              <span class="color-swatch color-swatch--accent3" aria-hidden="true"></span>
+              <span>Accent 3</span>
+            </div>
+          </div>
+        </div>
         <div class="modal-actions">
           <button class="btn-cancel" type="button" id="modalCancelBtn">Cancel</button>
           <button class="btn-save" type="submit" id="modalSaveBtn">Save</button>
@@ -4044,6 +4156,59 @@ if (file_exists($dataFile)) {
     const modalItemColor = document.getElementById('modalItemColor');
     const modalCancelBtn = document.getElementById('modalCancelBtn');
     const modalSaveBtn = document.getElementById('modalSaveBtn');
+    const colorSelectTrigger = document.getElementById('colorSelectTrigger');
+    const colorSelectDropdown = document.getElementById('colorSelectDropdown');
+
+    function syncColorSelectDisplay() {
+      if (!modalItemColor) return;
+      var val = modalItemColor.value || '';
+      var labels = { '': 'None', accent1: 'Accent 1', accent2: 'Accent 2', accent3: 'Accent 3' };
+      if (colorSelectTrigger) {
+        var lbl = colorSelectTrigger.querySelector('.color-select-label');
+        var swatch = colorSelectTrigger.querySelector('.color-swatch');
+        if (lbl) lbl.textContent = labels[val] || 'None';
+        if (swatch) swatch.className = 'color-swatch color-swatch--' + (val || 'none');
+      }
+      if (colorSelectDropdown) {
+        colorSelectDropdown.querySelectorAll('.color-select-option').forEach(function(opt) {
+          opt.setAttribute('aria-selected', opt.dataset.value === val ? 'true' : 'false');
+        });
+      }
+    }
+    (function initColorSelect() {
+      if (!colorSelectTrigger || !colorSelectDropdown || !modalItemColor) return;
+      colorSelectTrigger.addEventListener('click', function(e) {
+        e.preventDefault();
+        var open = !colorSelectDropdown.hidden;
+        colorSelectDropdown.hidden = open;
+        colorSelectTrigger.setAttribute('aria-expanded', !open);
+        if (!open) colorSelectDropdown.querySelector('.color-select-option').focus();
+      });
+      colorSelectDropdown.querySelectorAll('.color-select-option').forEach(function(opt) {
+        opt.addEventListener('click', function() {
+          modalItemColor.value = opt.dataset.value || '';
+          syncColorSelectDisplay();
+          colorSelectDropdown.hidden = true;
+          colorSelectTrigger.setAttribute('aria-expanded', 'false');
+        });
+        opt.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); opt.click(); }
+          if (e.key === 'Escape') {
+            colorSelectDropdown.hidden = true;
+            colorSelectTrigger.setAttribute('aria-expanded', 'false');
+            colorSelectTrigger.focus();
+          }
+        });
+      });
+      document.addEventListener('click', function(e) {
+        if (colorSelectDropdown && !colorSelectDropdown.hidden &&
+            !colorSelectTrigger.contains(e.target) && !colorSelectDropdown.contains(e.target)) {
+          colorSelectDropdown.hidden = true;
+          colorSelectTrigger.setAttribute('aria-expanded', 'false');
+        }
+      });
+      syncColorSelectDisplay();
+    })();
 
     function api(action, body) {
       const opts = { method: body ? 'POST' : 'GET' };
@@ -4065,8 +4230,14 @@ if (file_exists($dataFile)) {
       });
     }
 
+    function normalizePaletteColor(c) {
+      if (!c) return '';
+      const map = { dev: 'accent1', nhs: 'accent2', private: 'accent3' };
+      return map[c] || (c === 'accent1' || c === 'accent2' || c === 'accent3' ? c : '');
+    }
     function renderCard(item, categoryId) {
-      const colorClass = item.color ? ' link-card--' + item.color : '';
+      const color = normalizePaletteColor(item.color);
+      const colorClass = color ? ' link-card--' + color : '';
       return `
         <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${item.url}">
           <div class="link-card-content">
@@ -4214,6 +4385,9 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = '';
       modalItemUrl.value = '';
       modalItemColor.value = '';
+      if (colorSelectDropdown) colorSelectDropdown.hidden = true;
+      if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
+      syncColorSelectDisplay();
       itemModal.classList.add('open');
     }
 
@@ -4225,7 +4399,10 @@ if (file_exists($dataFile)) {
       modalCategoryId.value = categoryId;
       modalItemTitle.value = item.title;
       modalItemUrl.value = item.url;
-      modalItemColor.value = item.color || '';
+      modalItemColor.value = normalizePaletteColor(item.color) || '';
+      if (colorSelectDropdown) colorSelectDropdown.hidden = true;
+      if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
+      syncColorSelectDisplay();
       itemModal.classList.add('open');
     }
 
