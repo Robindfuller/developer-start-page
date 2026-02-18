@@ -1042,8 +1042,8 @@ if (file_exists($dataFile)) {
       align-items: flex-start;
       justify-content: space-between;
       min-height: 0;
-      aspect-ratio: 4/2;
-      padding: 0.65rem;
+      aspect-ratio: 4/1.5;
+      padding: 0.5rem 0.65rem;
       background: var(--card-bg);
       border: 3px solid var(--card-border);
       color: var(--content);
@@ -1061,13 +1061,16 @@ if (file_exists($dataFile)) {
     .link-card.sortable-ghost { opacity: 0.4; }
 
     .link-card-content { flex: 1; min-width: 0; }
+    .link-card:not(.sortable-ghost) .link-card-content { cursor: pointer; }
+    .edit-mode .link-card .link-card-content { cursor: grab; }
 
     .link-actions {
-      display: flex;
+      display: none;
       gap: 0.2rem;
       margin-top: 0.35rem;
       width: 100%;
     }
+    .edit-mode .link-actions { display: flex; }
     .edit-item-btn, .delete-item-btn {
       display: none;
       width: 1.5rem; height: 1.5rem;
@@ -1089,18 +1092,6 @@ if (file_exists($dataFile)) {
     }
     .delete-item-btn:hover { background: var(--delete-btn-hover, #b91c1c); }
     .edit-mode .edit-item-btn, .edit-mode .delete-item-btn { display: inline-flex; }
-
-    .link-icon {
-      display: inline-flex; align-items: center; justify-content: center;
-      flex: 1; min-width: 0;
-      height: 1.5rem;
-      font-size: 0.65rem; text-decoration: none; transition: background 0.15s;
-      font-family: 'Silkscreen', monospace;
-      background: var(--button-bg); color: white;
-      border: 2px solid #cc5500;
-      box-shadow: 2px 2px 0 #994400;
-    }
-    .link-icon:hover { background: var(--button-hover); color: white; }
 
     .link-card--accent1 { border-left: 5px solid var(--palette-1); }
     .link-card--accent1:hover { border-left-color: var(--palette-1); }
@@ -1249,6 +1240,33 @@ if (file_exists($dataFile)) {
     .help-modal-content .help-shortcuts code {
       color: var(--button-bg);
       font-weight: 700;
+    }
+    #helpModal .modal {
+      max-width: 900px;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+    }
+    #helpModal .help-modal-content {
+      overflow-y: auto;
+      max-height: calc(85vh - 5rem);
+      flex: 1;
+      min-height: 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--card-border) var(--bevel-dark);
+    }
+    #helpModal .help-modal-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    #helpModal .help-modal-content::-webkit-scrollbar-track {
+      background: var(--bevel-dark);
+    }
+    #helpModal .help-modal-content::-webkit-scrollbar-thumb {
+      background: var(--card-border);
+      border-radius: 2px;
+    }
+    #helpModal .help-modal-content::-webkit-scrollbar-thumb:hover {
+      background: var(--bevel-light);
     }
 
     .midi-add-row input,
@@ -4559,14 +4577,13 @@ if (file_exists($dataFile)) {
       const color = normalizePaletteColor(item.color);
       const colorClass = color ? ' link-card--' + color : '';
       return `
-        <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${item.url}">
-          <div class="link-card-content">
+        <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${escapeHtml(item.url)}">
+          <div class="link-card-content" title="Double-click to visit">
             <span class="link-title">${escapeHtml(item.title)}</span>
           </div>
           <div class="link-actions">
             <button class="edit-item-btn" type="button" data-tooltip="Edit">✎</button>
             <button class="delete-item-btn" type="button" data-tooltip="Delete">✕</button>
-            <a class="link-icon" href="${escapeHtml(item.url)}" target="_blank" rel="noopener" data-tooltip="Visit">Visit</a>
           </div>
         </div>
       `;
@@ -4614,14 +4631,15 @@ if (file_exists($dataFile)) {
             if (confirm('Delete this item?')) deleteItem(btn.closest('.link-card').dataset.id);
           });
         });
-        linksEl.querySelectorAll('.link-icon').forEach(a => {
-          a.addEventListener('click', function(e) {
+        linksEl.querySelectorAll('.link-card').forEach(card => {
+          const content = card.querySelector('.link-card-content');
+          if (!content) return;
+          content.addEventListener('dblclick', function(e) {
             if (app.classList.contains('edit-mode')) return;
             e.preventDefault();
-            const href = this.getAttribute('href');
+            const href = card.dataset.href;
             if (!href) return;
-            const btn = this;
-            const rect = btn.getBoundingClientRect();
+            const rect = content.getBoundingClientRect();
             const overlay = document.createElement('div');
             overlay.className = 'visit-zoom-overlay';
             const box = document.createElement('div');
