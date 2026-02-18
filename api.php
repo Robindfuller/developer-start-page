@@ -328,15 +328,40 @@ switch ($action) {
         foreach ($data['categories'] as $c) {
             $maxOrder = max($maxOrder, isset($c['order']) ? $c['order'] : 0);
         }
+        $forceNewRow = isset($input['forceNewRow']) && !empty($input['forceNewRow']);
         $category = array(
             'id' => generateCategoryId(),
             'title' => $title,
             'order' => $maxOrder + 1,
-            'items' => array()
+            'items' => array(),
+            'forceNewRow' => $forceNewRow
         );
         $data['categories'][] = $category;
         saveData($data);
         echo json_encode(['success' => true, 'category' => $category]);
+        break;
+
+    case 'editCategory':
+        $categoryId = isset($input['categoryId']) ? trim($input['categoryId']) : '';
+        if ($categoryId === '') {
+            echo json_encode(['error' => 'Category ID required']);
+            exit;
+        }
+        $found = false;
+        foreach ($data['categories'] as &$cat) {
+            if (isset($cat['id']) && $cat['id'] === $categoryId) {
+                if (isset($input['title'])) $cat['title'] = trim($input['title']);
+                if (isset($input['forceNewRow'])) $cat['forceNewRow'] = !empty($input['forceNewRow']);
+                $found = true;
+                break;
+            }
+        }
+        if (!$found) {
+            echo json_encode(['error' => 'Category not found']);
+            exit;
+        }
+        saveData($data);
+        echo json_encode(['success' => true]);
         break;
 
     case 'addTimeBlock':

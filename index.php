@@ -972,6 +972,42 @@ if (file_exists($dataFile)) {
     h1 { font-size: 1.1rem; font-weight: 700; margin: 0; color: var(--content); font-family: 'Silkscreen', monospace; letter-spacing: 0.05em; }
 
     section { margin-bottom: 2rem; }
+    .category-row {
+      display: flex;
+      flex-wrap: nowrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      align-items: flex-start;
+    }
+    .category-row--full section {
+      flex: 1 1 100%;
+      min-width: 0;
+    }
+    .category-row section {
+      margin-bottom: 0;
+    }
+    .category-row--shared {
+      gap: 0.5rem;
+    }
+    .category-row--shared section {
+      flex: 0 0 auto;
+      min-width: 0;
+    }
+    .category-row--shared section .links {
+      width: max-content;
+    }
+    .category-row--shared .links {
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+    .category-row--shared .link-card {
+      flex: 0 0 10.8rem !important;
+      width: 10.8rem !important;
+      min-width: 10.8rem !important;
+      max-width: 10.8rem !important;
+      flex-shrink: 0 !important;
+      box-sizing: border-box;
+    }
 
     .section-header {
       display: flex;
@@ -983,6 +1019,12 @@ if (file_exists($dataFile)) {
       font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 0.1em; color: var(--content-muted);
       font-family: 'Silkscreen', monospace;
+    }
+    .edit-mode .section-title {
+      cursor: pointer;
+    }
+    .edit-mode .section-title:hover {
+      color: var(--content);
     }
     .add-item-btn {
       display: none;
@@ -1236,6 +1278,41 @@ if (file_exists($dataFile)) {
     }
     .modal h3 { margin: 0 0 1rem 0; font-size: 1rem; font-family: inherit; }
     .modal label { display: block; margin-bottom: 0.25rem; font-size: 0.8rem; color: var(--content-muted); font-family: inherit; }
+    .category-modal-checkbox-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: nowrap;
+      cursor: pointer;
+      font-size: 0.8rem;
+      color: var(--content-muted);
+      font-family: inherit;
+    }
+    .category-modal-checkbox-wrap input[type="checkbox"] {
+      margin: 0;
+      padding: 0;
+      flex-shrink: 0;
+      width: 1.1em;
+      height: 1.1em;
+      min-width: 1.1em;
+      min-height: 1.1em;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      border-radius: 2px;
+      box-sizing: border-box;
+    }
+    .category-modal-checkbox-wrap input[type="checkbox"]:checked {
+      background: var(--card-border);
+      border-color: var(--card-border);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M10.3 2.8L4.5 8.6 1.7 5.8 2.8 4.7l1.7 1.7 5.1-5.1 1.1 1.1z'/%3E%3C/svg%3E");
+      background-size: 70%;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
     .modal input, .modal select {
       width: 100%;
       padding: 0.5rem;
@@ -3722,8 +3799,13 @@ if (file_exists($dataFile)) {
     <div class="modal">
       <form id="categoryForm" novalidate>
         <h3 id="categoryModalTitle">Add Category</h3>
+        <input type="hidden" id="categoryModalCategoryId">
         <label>Title</label>
         <input type="text" id="categoryModalTitleInput" placeholder="e.g. Dev Environment" required>
+        <label class="category-modal-checkbox-wrap">
+          <input type="checkbox" id="categoryModalForceNewRow">
+          <span>Force new row (don't share row with other categories)</span>
+        </label>
         <div class="modal-actions">
           <button class="btn-cancel" type="button" id="categoryModalCancelBtn">Cancel</button>
           <button class="btn-save" type="submit" id="categoryModalSaveBtn">Save</button>
@@ -4166,7 +4248,7 @@ if (file_exists($dataFile)) {
       });
     })();
     const clockEl = document.getElementById('clock');
-    let data = <?= json_encode($initialData) ?>;
+    let data = <?= json_encode($initialData, JSON_HEX_TAG) ?>;
     let sortables = [];
 
     function updateClock() {
@@ -4758,20 +4840,74 @@ if (file_exists($dataFile)) {
       categoriesContainer.appendChild(addCatRow);
       document.getElementById('addCategoryBtn').addEventListener('click', openAddCategoryModal);
 
-      (data.categories || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0)).forEach(cat => {
-        const items = (cat.items || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-        const section = document.createElement('section');
-        section.dataset.categoryId = cat.id;
-        section.innerHTML = `
-          <div class="section-header">
-            <div class="section-title">${escapeHtml(cat.title)}</div>
-            <button class="add-item-btn" type="button" data-category-id="${cat.id}">+ Add</button>
-          </div>
-          <div class="links">${items.map(i => renderCard(i, cat.id)).join('')}</div>
-        `;
-        categoriesContainer.appendChild(section);
+      const sortedCats = (data.categories || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+      const rows = [];
+      let currentRow = [];
+      let currentRowCount = 0;
 
-        const linksEl = section.querySelector('.links');
+      sortedCats.forEach(cat => {
+        const itemCount = (cat.items || []).length;
+        const forceNew = !!cat.forceNewRow;
+
+        if (forceNew && currentRow.length > 0) {
+          rows.push(currentRow);
+          currentRow = [];
+          currentRowCount = 0;
+        }
+
+        if (itemCount >= 6) {
+          if (currentRow.length > 0) {
+            rows.push(currentRow);
+            currentRow = [];
+            currentRowCount = 0;
+          }
+          rows.push([cat]);
+          return;
+        }
+
+        if (currentRowCount + itemCount > 5) {
+          rows.push(currentRow);
+          currentRow = [];
+          currentRowCount = 0;
+        }
+
+        currentRow.push(cat);
+        currentRowCount += itemCount;
+      });
+      if (currentRow.length > 0) rows.push(currentRow);
+
+      rows.forEach(rowCats => {
+        const singleWithMany = rowCats.length === 1 && (rowCats[0].items || []).length >= 6;
+        const rowEl = document.createElement('div');
+        rowEl.className = 'category-row' + (singleWithMany ? ' category-row--full' : ' category-row--shared');
+
+        rowCats.forEach(cat => {
+          const items = (cat.items || []).sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+          const section = document.createElement('section');
+          section.dataset.categoryId = cat.id;
+          section.innerHTML = `
+            <div class="section-header">
+              <div class="section-title" data-tooltip="Edit category">${escapeHtml(cat.title)}</div>
+              <button class="add-item-btn" type="button" data-category-id="${cat.id}">+ Add</button>
+            </div>
+            <div class="links">${items.map(i => renderCard(i, cat.id)).join('')}</div>
+          `;
+          rowEl.appendChild(section);
+
+          const titleEl = section.querySelector('.section-title');
+          if (titleEl) {
+            titleEl.addEventListener('click', function() {
+              if (app.classList.contains('edit-mode')) openEditCategoryModal(cat.id);
+            });
+          }
+        });
+
+        categoriesContainer.appendChild(rowEl);
+
+        rowCats.forEach(cat => {
+          const section = rowEl.querySelector('section[data-category-id="' + cat.id + '"]');
+          if (!section) return;
+          const linksEl = section.querySelector('.links');
         section.querySelector('.add-item-btn').addEventListener('click', () => openAddModal(cat.id));
         linksEl.querySelectorAll('.edit-item-btn').forEach(btn => {
           btn.addEventListener('click', e => {
@@ -4865,7 +5001,7 @@ if (file_exists($dataFile)) {
                 const targetRect = modalInner.getBoundingClientRect();
                 folderModal.classList.remove('open');
                 folderModal.style.visibility = '';
-                runVisitZoomToModal(card, targetRect, () => openFolderModal(card.querySelector('.link-title').textContent, subLinks));
+                runVisitZoomToModal(card, targetRect, function() { openFolderModal(card.querySelector('.link-title').textContent, subLinks); });
               } else {
                 openFolderModal(card.querySelector('.link-title').textContent, subLinks);
               }
@@ -4873,7 +5009,7 @@ if (file_exists($dataFile)) {
             }
             const href = (item && item.url ? item.url : card.dataset.href || '').trim();
             if (!href) return;
-            runVisitZoomAnimation(card, () => window.open(href, '_blank', 'noopener'));
+            runVisitZoomAnimation(card, function() { window.open(href, '_blank', 'noopener'); });
           });
         });
         sortables.push(new Sortable(linksEl, {
@@ -4883,6 +5019,7 @@ if (file_exists($dataFile)) {
           disabled: true,
           onEnd: () => saveOrder(cat.id, linksEl)
         }));
+        });
       });
       if (typeof syncSortablesEditMode === 'function') syncSortablesEditMode();
     }
@@ -4909,10 +5046,24 @@ if (file_exists($dataFile)) {
 
     const categoryModal = document.getElementById('categoryModal');
     const categoryModalTitleInput = document.getElementById('categoryModalTitleInput');
+    const categoryModalCategoryId = document.getElementById('categoryModalCategoryId');
+    const categoryModalForceNewRow = document.getElementById('categoryModalForceNewRow');
 
     function openAddCategoryModal() {
       document.getElementById('categoryModalTitle').textContent = 'Add Category';
+      categoryModalCategoryId.value = '';
       categoryModalTitleInput.value = '';
+      if (categoryModalForceNewRow) categoryModalForceNewRow.checked = false;
+      categoryModal.classList.add('open');
+    }
+
+    function openEditCategoryModal(categoryId) {
+      const cat = data.categories && data.categories.find(c => c.id === categoryId);
+      if (!cat) return;
+      document.getElementById('categoryModalTitle').textContent = 'Edit Category';
+      categoryModalCategoryId.value = categoryId;
+      categoryModalTitleInput.value = cat.title || '';
+      if (categoryModalForceNewRow) categoryModalForceNewRow.checked = !!cat.forceNewRow;
       categoryModal.classList.add('open');
     }
 
@@ -4926,18 +5077,41 @@ if (file_exists($dataFile)) {
         alert('Title is required');
         return;
       }
-      api('addCategory', { title })
-        .then((res) => {
-          if (res && res.success && res.category) {
-            data.categories = data.categories || [];
-            data.categories.push(res.category);
-            closeCategoryModal();
-            render();
-          } else {
-            alert(res && res.error ? res.error : 'Save failed.');
-          }
-        })
-        .catch((e) => alert('Save failed: ' + (e.message || 'Please try again.')));
+      const categoryId = categoryModalCategoryId ? categoryModalCategoryId.value.trim() : '';
+      const isEdit = categoryId.length > 0;
+      const forceNewRow = categoryModalForceNewRow ? categoryModalForceNewRow.checked : false;
+
+      if (isEdit) {
+        api('editCategory', { action: 'editCategory', categoryId, title, forceNewRow })
+          .then((res) => {
+            if (res && res.success) {
+              const cat = data.categories && data.categories.find(c => c.id === categoryId);
+              if (cat) {
+                cat.title = title;
+                cat.forceNewRow = forceNewRow;
+              }
+              closeCategoryModal();
+              render();
+            } else {
+              alert(res && res.error ? res.error : 'Save failed.');
+            }
+          })
+          .catch((e) => alert('Save failed: ' + (e.message || 'Please try again.')));
+      } else {
+        api('addCategory', { action: 'addCategory', title, forceNewRow })
+          .then((res) => {
+            if (res && res.success && res.category) {
+              data.categories = data.categories || [];
+              res.category.forceNewRow = forceNewRow;
+              data.categories.push(res.category);
+              closeCategoryModal();
+              render();
+            } else {
+              alert(res && res.error ? res.error : 'Save failed.');
+            }
+          })
+          .catch((e) => alert('Save failed: ' + (e.message || 'Please try again.')));
+      }
     }
 
     const editModalTip = document.getElementById('editModalTip');
