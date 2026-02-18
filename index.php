@@ -3738,7 +3738,7 @@ if (file_exists($dataFile)) {
         <label>Title</label>
         <input type="text" id="modalItemTitle" placeholder="Item title" required>
         <label>URL</label>
-        <input type="url" id="modalItemUrl" placeholder="https://..." required>
+        <input type="text" id="modalItemUrl" placeholder="https://... or gmail.com" required>
         <label id="colorSelectLabel">Color</label>
         <div class="color-select-wrap">
           <select id="modalItemColor" aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0">
@@ -3771,6 +3771,7 @@ if (file_exists($dataFile)) {
             </div>
           </div>
         </div>
+        <p class="modal-tip" id="editModalTip" style="display:none;margin-top:0.5rem;font-size:0.8rem;opacity:0.85;">Tip: Close data.json in your editor before saving to avoid conflicts.</p>
         <div class="modal-actions">
           <button class="btn-cancel" type="button" id="modalCancelBtn">Cancel</button>
           <button class="btn-save" type="submit" id="modalSaveBtn">Save</button>
@@ -4713,6 +4714,7 @@ if (file_exists($dataFile)) {
         .catch((e) => alert('Save failed: ' + (e.message || 'Please try again.')));
     }
 
+    const editModalTip = document.getElementById('editModalTip');
     function openAddModal(categoryId) {
       modalTitleEl.textContent = 'Add Item';
       modalItemId.value = '';
@@ -4720,6 +4722,7 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = '';
       modalItemUrl.value = '';
       modalItemColor.value = '';
+      if (editModalTip) editModalTip.style.display = 'none';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
       syncColorSelectDisplay();
@@ -4735,6 +4738,7 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = item.title;
       modalItemUrl.value = item.url;
       modalItemColor.value = normalizePaletteColor(item.color) || '';
+      if (editModalTip) editModalTip.style.display = 'block';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
       syncColorSelectDisplay();
@@ -4787,11 +4791,11 @@ if (file_exists($dataFile)) {
               closeModal();
               render();
             } else {
-              alert('Save failed. Please try again.');
+              alert(res && res.error ? res.error : 'Save failed. Please try again.');
             }
           })
-          .catch(() => {
-            alert('Save failed. Check if the server is responding.');
+          .catch((e) => {
+            alert('Save failed. ' + (e && e.message ? e.message : 'Check if the server is responding.'));
           });
       } else {
         api('add', { categoryId, title, subtitle, url, color })
@@ -4801,11 +4805,11 @@ if (file_exists($dataFile)) {
               closeModal();
               render();
             } else {
-              alert('Save failed. Please try again.');
+              alert(res && res.error ? res.error : 'Save failed. Please try again.');
             }
           })
-          .catch(() => {
-            alert('Save failed. Check if the server is responding.');
+          .catch((e) => {
+            alert('Save failed. ' + (e && e.message ? e.message : 'Check if the server is responding.'));
           });
       }
     }

@@ -61,6 +61,7 @@ function saveData($data) {
             });
         }
     }
+    unset($cat);
     $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     $tmpFile = $dataFile . '.tmp.' . getmypid();
     $written = file_put_contents($tmpFile, $json);
@@ -190,7 +191,8 @@ switch ($action) {
         $itemId = isset($input['id']) ? $input['id'] : '';
         $found = false;
         foreach ($data['categories'] as &$cat) {
-            foreach (isset($cat['items']) ? $cat['items'] : array() as &$item) {
+            if (!isset($cat['items'])) $cat['items'] = array();
+            foreach ($cat['items'] as &$item) {
                 if ($item['id'] === $itemId) {
                     if (isset($input['title'])) $item['title'] = trim($input['title']);
                     if (isset($input['subtitle'])) $item['subtitle'] = trim($input['subtitle']);
@@ -201,6 +203,7 @@ switch ($action) {
                 }
             }
         }
+        unset($cat, $item);
         if (!$found) {
             echo json_encode(['success' => false, 'error' => 'Item not found.']);
             exit;
@@ -216,31 +219,6 @@ switch ($action) {
             http_response_code(500);
             echo json_encode(['success' => false, 'error' => 'Write failed. Path: ' . $dataFile]);
             exit;
-        }
-        // Verify: read back and confirm our change persisted
-        clearstatcache(true, $dataFile);
-        $verify = @file_get_contents($dataFile);
-        if ($verify !== false) {
-            $check = json_decode($verify, true);
-            $expectedUrl = isset($input['url']) ? trim($input['url']) : null;
-            foreach (isset($check['categories']) ? $check['categories'] : array() as $c) {
-                foreach (isset($c['items']) ? $c['items'] : array() as $i) {
-                    if ((isset($i['id']) ? $i['id'] : '') === $itemId) {
-                        $actualUrl = isset($i['url']) ? $i['url'] : '';
-                        if ($expectedUrl !== null && $actualUrl !== $expectedUrl) {
-                            error_log('saveData verify failed: expected ' . $expectedUrl . ' got ' . $actualUrl . ' - data.json may be open in an editor (close it)');
-                            http_response_code(500);
-                            echo json_encode([
-                                'success' => false,
-                                'error' => 'Save did not persist. Close data.json in your editor and try again.',
-                                '_debug' => ['expected' => $expectedUrl, 'actual' => $actualUrl]
-                            ]);
-                            exit;
-                        }
-                        break 2;
-                    }
-                }
-            }
         }
         echo json_encode(['success' => true]);
         break;
