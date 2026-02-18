@@ -4952,17 +4952,26 @@ if (file_exists($dataFile)) {
       if (subLinksSection) subLinksSection.style.display = isFolder ? '' : 'none';
     }
 
+    function setItemTypeSelection(isFolder) {
+      if (modalItemTypeLink) {
+        modalItemTypeLink.classList.remove('active');
+        if (!isFolder) modalItemTypeLink.classList.add('active');
+      }
+      if (modalItemTypeFolder) {
+        modalItemTypeFolder.classList.remove('active');
+        if (isFolder) modalItemTypeFolder.classList.add('active');
+      }
+      syncItemTypeUI();
+    }
+
     (function initItemTypeSplit() {
       [modalItemTypeLink, modalItemTypeFolder].forEach(function(btn) {
         if (!btn) return;
         btn.addEventListener('click', function() {
-          modalItemTypeLink.classList.toggle('active', btn === modalItemTypeLink);
-          modalItemTypeFolder.classList.toggle('active', btn === modalItemTypeFolder);
-          syncItemTypeUI();
+          setItemTypeSelection(btn === modalItemTypeFolder);
         });
       });
     })();
-
     function openAddModal(categoryId) {
       modalTitleEl.textContent = 'Add Item';
       modalItemId.value = '';
@@ -4970,10 +4979,8 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = '';
       modalItemUrl.value = '';
       modalItemColor.value = '';
-      if (modalItemTypeLink) modalItemTypeLink.classList.add('active');
-      if (modalItemTypeFolder) modalItemTypeFolder.classList.remove('active');
+      setItemTypeSelection(false);
       if (window._renderSubLinksList) window._renderSubLinksList([]);
-      syncItemTypeUI();
       if (editModalTip) editModalTip.style.display = 'none';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
@@ -4990,16 +4997,16 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = item.title;
       modalItemUrl.value = item.url || '';
       modalItemColor.value = normalizePaletteColor(item.color) || '';
+      const hasUrl = (item.url || '').trim().length > 0;
       const hasSubLinks = item.subLinks && item.subLinks.length > 0;
-      if (modalItemTypeLink) modalItemTypeLink.classList.toggle('active', !hasSubLinks);
-      if (modalItemTypeFolder) modalItemTypeFolder.classList.toggle('active', hasSubLinks);
+      const isFolder = hasSubLinks && !hasUrl;
       if (window._renderSubLinksList) window._renderSubLinksList(item.subLinks || []);
-      syncItemTypeUI();
       if (editModalTip) editModalTip.style.display = 'block';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
       syncColorSelectDisplay();
       itemModal.classList.add('open');
+      setItemTypeSelection(isFolder);
     }
 
     function closeModal() {
