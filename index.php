@@ -1060,7 +1060,14 @@ if (file_exists($dataFile)) {
     .edit-mode .link-card:active { cursor: grabbing; }
     .link-card.sortable-ghost { opacity: 0.4; }
 
-    .link-card-content { flex: 1; min-width: 0; }
+    .link-card-content {
+      flex: 1;
+      min-width: 0;
+      align-self: stretch;
+      margin: -0.5rem -0.65rem;
+      padding: 0.5rem 0.65rem;
+      cursor: pointer;
+    }
     .link-card:not(.sortable-ghost) .link-card-content { cursor: pointer; }
     .edit-mode .link-card .link-card-content { cursor: grab; }
 
@@ -1952,12 +1959,11 @@ if (file_exists($dataFile)) {
       border-color: #45475a;
       background: #313244;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     html[data-theme="catppuccin"] .link-card:hover {
       background: #45475a;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-      transform: translateY(-1px);
     }
     html[data-theme="catppuccin"] .link-card--accent1,
     html[data-theme="catppuccin"] .link-card--accent2,
@@ -2088,6 +2094,11 @@ if (file_exists($dataFile)) {
       background: #45475a;
       color: #cdd6f4;
     }
+    html[data-theme="catppuccin"] .folder-link-item:hover {
+      background: #585b70;
+      color: #cdd6f4;
+      border-color: #6c7086;
+    }
 
     /* Catppuccin Latte component overrides */
     html[data-theme="catppuccin-latte"] .clock {
@@ -2108,12 +2119,11 @@ if (file_exists($dataFile)) {
       border-color: #bcc0cc;
       background: #ccd0da;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     html[data-theme="catppuccin-latte"] .link-card:hover {
       background: #bcc0cc;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-      transform: translateY(-1px);
     }
     html[data-theme="catppuccin-latte"] .link-card--accent1,
     html[data-theme="catppuccin-latte"] .link-card--accent2,
@@ -2244,6 +2254,11 @@ if (file_exists($dataFile)) {
       background: #bcc0cc;
       color: #4c4f69;
     }
+    html[data-theme="catppuccin-latte"] .folder-link-item:hover {
+      background: #acb0be;
+      color: #4c4f69;
+      border-color: #9ca0b0;
+    }
 
     /* Everforest component overrides */
     html[data-theme="everforest"] .clock {
@@ -2264,12 +2279,11 @@ if (file_exists($dataFile)) {
       border-color: #3D484D;
       background: #343F44;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     html[data-theme="everforest"] .link-card:hover {
       background: #3D484D;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-      transform: translateY(-1px);
     }
     html[data-theme="everforest"] .link-card--accent1,
     html[data-theme="everforest"] .link-card--accent2,
@@ -2392,6 +2406,11 @@ if (file_exists($dataFile)) {
       background: #3D484D;
       color: #D3C6AA;
     }
+    html[data-theme="everforest"] .folder-link-item:hover {
+      background: #475258;
+      color: #D3C6AA;
+      border-color: #5C6A72;
+    }
 
     /* Tokyo Night component overrides */
     html[data-theme="tokyo-night"] .clock {
@@ -2412,12 +2431,11 @@ if (file_exists($dataFile)) {
       border-color: #414868;
       background: #24283b;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     html[data-theme="tokyo-night"] .link-card:hover {
       background: #414868;
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-      transform: translateY(-1px);
     }
     html[data-theme="tokyo-night"] .link-card--accent1,
     html[data-theme="tokyo-night"] .link-card--accent2,
@@ -2540,6 +2558,11 @@ if (file_exists($dataFile)) {
       background: #414868;
       color: #c0caf5;
     }
+    html[data-theme="tokyo-night"] .folder-link-item:hover {
+      background: #565f89;
+      color: #c0caf5;
+      border-color: #6c7190;
+    }
 
     /* Megadrive/16-bit theme scratch-pad – retro chunky borders */
     html[data-theme="megadrive"] .scratch-pad {
@@ -2581,12 +2604,11 @@ if (file_exists($dataFile)) {
       border-width: 1px;
       border-color: rgba(255, 255, 255, 0.1);
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-      transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
     }
     html[data-theme="ps5"] .link-card:hover {
       border-color: rgba(255, 255, 255, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
-      transform: translateY(-1px);
     }
     html[data-theme="ps5"] .link-card--accent1,
     html[data-theme="ps5"] .link-card--accent2,
@@ -4127,6 +4149,7 @@ if (file_exists($dataFile)) {
             app.classList.toggle('edit-mode');
             emb.classList.toggle('active', app.classList.contains('edit-mode'));
             emb.dataset.tooltip = app.classList.contains('edit-mode') ? 'Done (Alt+Shift+D)' : 'Edit (Alt+Shift+D)';
+            if (typeof syncSortablesEditMode === 'function') syncSortablesEditMode();
           }
         }
         if (e.altKey && e.shiftKey && (e.key === 'C' || e.key === 'c')) {
@@ -4826,8 +4849,9 @@ if (file_exists($dataFile)) {
         linksEl.querySelectorAll('.link-card').forEach(card => {
           const content = card.querySelector('.link-card-content');
           if (!content) return;
-          content.addEventListener('click', function(e) {
+          card.addEventListener('click', function(e) {
             if (app.classList.contains('edit-mode')) return;
+            if (e.target.closest('.edit-item-btn, .delete-item-btn')) return;
             e.preventDefault();
             const item = data.categories.flatMap(c => c.items || []).find(i => i.id === card.dataset.id);
             const subLinks = item && item.subLinks && Array.isArray(item.subLinks) ? item.subLinks : [];
@@ -4841,7 +4865,7 @@ if (file_exists($dataFile)) {
                 const targetRect = modalInner.getBoundingClientRect();
                 folderModal.classList.remove('open');
                 folderModal.style.visibility = '';
-                runVisitZoomToModal(content, targetRect, () => openFolderModal(card.querySelector('.link-title').textContent, subLinks));
+                runVisitZoomToModal(card, targetRect, () => openFolderModal(card.querySelector('.link-title').textContent, subLinks));
               } else {
                 openFolderModal(card.querySelector('.link-title').textContent, subLinks);
               }
@@ -4849,16 +4873,18 @@ if (file_exists($dataFile)) {
             }
             const href = (item && item.url ? item.url : card.dataset.href || '').trim();
             if (!href) return;
-            runVisitZoomAnimation(content, () => window.open(href, '_blank', 'noopener'));
+            runVisitZoomAnimation(card, () => window.open(href, '_blank', 'noopener'));
           });
         });
         sortables.push(new Sortable(linksEl, {
           animation: 150,
           ghostClass: 'sortable-ghost',
           delay: 200,
+          disabled: true,
           onEnd: () => saveOrder(cat.id, linksEl)
         }));
       });
+      if (typeof syncSortablesEditMode === 'function') syncSortablesEditMode();
     }
 
     function saveOrder(categoryId, linksEl) {
@@ -5218,10 +5244,15 @@ if (file_exists($dataFile)) {
     timeBlocksModal.addEventListener('click', e => { if (e.target === timeBlocksModal) closeTimeBlocksModal(); });
     timeBlockFormModal.addEventListener('click', e => { if (e.target === timeBlockFormModal) closeTimeBlockFormModal(); });
 
+    function syncSortablesEditMode() {
+      const isEditMode = app.classList.contains('edit-mode');
+      sortables.forEach(s => { if (s && s.option) s.option('disabled', !isEditMode); });
+    }
     editModeBtn.addEventListener('click', () => {
       app.classList.toggle('edit-mode');
       editModeBtn.classList.toggle('active', app.classList.contains('edit-mode'));
       editModeBtn.dataset.tooltip = app.classList.contains('edit-mode') ? 'Done (Alt+Shift+D)' : 'Edit (Alt+Shift+D)';
+      syncSortablesEditMode();
     });
 
     (function initScratchPad() {
