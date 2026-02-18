@@ -1472,6 +1472,75 @@ if (file_exists($dataFile)) {
       max-height: 40vh;
     }
 
+    html[data-theme="tron"],
+    html[data-theme="tron-ares"],
+    html[data-theme="matrix"] { overflow: hidden; }
+    html[data-theme="tron"] body,
+    html[data-theme="tron-ares"] body,
+    html[data-theme="matrix"] body { overflow: hidden; min-height: 100vh; min-height: 100dvh; }
+    html[data-theme="tron"] .app,
+    html[data-theme="tron-ares"] .app,
+    html[data-theme="matrix"] .app {
+      position: fixed;
+      top: 1.5em;
+      right: 1.5em;
+      bottom: 1.5em;
+      left: 1.5em;
+      margin: 0;
+      min-height: 0;
+      overflow-y: auto;
+      overflow-x: auto;
+      border: 2px solid var(--card-border);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.15), 0 0 40px rgba(0, 255, 255, 0.05);
+      scrollbar-width: thin;
+      scrollbar-color: #00ffff #050810;
+      scrollbar-gutter: stable;
+    }
+    html[data-theme="tron"] .app::-webkit-scrollbar { width: 12px; height: 12px; }
+    html[data-theme="tron"] .app::-webkit-scrollbar-track { background: #050810; }
+    html[data-theme="tron"] .app::-webkit-scrollbar-thumb { background: #00ffff; }
+    html[data-theme="tron"] .app::-webkit-scrollbar-thumb:hover { background: #00e5ff; }
+    html[data-theme="tron-ares"] .app {
+      box-shadow: 0 0 20px rgba(255, 0, 64, 0.15), 0 0 40px rgba(255, 0, 64, 0.05);
+      scrollbar-color: #ff0040 #100505;
+    }
+    html[data-theme="tron-ares"] .app::-webkit-scrollbar { width: 12px; height: 12px; }
+    html[data-theme="tron-ares"] .app::-webkit-scrollbar-track { background: #100505; }
+    html[data-theme="tron-ares"] .app::-webkit-scrollbar-thumb { background: #ff0040; }
+    html[data-theme="tron-ares"] .app::-webkit-scrollbar-thumb:hover { background: #ff3366; }
+    html[data-theme="matrix"] .app {
+      box-shadow: 0 0 20px rgba(0, 255, 65, 0.15), 0 0 40px rgba(0, 255, 65, 0.05);
+      scrollbar-color: #00ff41 #050505;
+    }
+    html[data-theme="matrix"] .app::-webkit-scrollbar { width: 12px; height: 12px; }
+    html[data-theme="matrix"] .app::-webkit-scrollbar-track { background: #050505; }
+    html[data-theme="matrix"] .app::-webkit-scrollbar-thumb { background: #00ff41; }
+    html[data-theme="matrix"] .app::-webkit-scrollbar-thumb:hover { background: #33ff66; }
+    html[data-theme="tron"] .charms-menu,
+    html[data-theme="tron-ares"] .charms-menu,
+    html[data-theme="matrix"] .charms-menu {
+      left: calc(1.5em + 2px + 1rem);
+      bottom: calc(1.5em + 2px + 1rem);
+    }
+    html[data-theme="tron"] .sidebar,
+    html[data-theme="tron-ares"] .sidebar,
+    html[data-theme="matrix"] .sidebar {
+      min-height: 0;
+    }
+    html[data-theme="tron"] .scratch-pad,
+    html[data-theme="tron-ares"] .scratch-pad,
+    html[data-theme="matrix"] .scratch-pad {
+      flex: 0 1 auto;
+      min-height: 0;
+      overflow: hidden;
+    }
+    html[data-theme="tron"] .scratch-pad-body,
+    html[data-theme="tron-ares"] .scratch-pad-body,
+    html[data-theme="matrix"] .scratch-pad-body {
+      min-height: 4.5rem;
+      max-height: 12rem;
+      overflow-y: auto;
+    }
     html[data-theme="tron"] .clock {
       color: #00ffff;
       text-shadow: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.5);
@@ -3318,6 +3387,28 @@ if (file_exists($dataFile)) {
       visibility: hidden;
       pointer-events: none;
       transition: opacity 0.6s ease, visibility 0.6s ease;
+    }
+    html[data-theme="tron"] body.screensaver-active .app,
+    html[data-theme="tron-ares"] body.screensaver-active .app,
+    html[data-theme="matrix"] body.screensaver-active .app {
+      position: static;
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: auto;
+      margin: 2rem;
+      max-height: none;
+      min-height: 100vh;
+      overflow: visible;
+      border: none;
+      box-shadow: none;
+      scrollbar-gutter: auto;
+    }
+    html[data-theme="tron"] body.screensaver-active .charms-menu,
+    html[data-theme="tron-ares"] body.screensaver-active .charms-menu,
+    html[data-theme="matrix"] body.screensaver-active .charms-menu {
+      left: 1rem;
+      bottom: 1rem;
     }
 
     /* Header indicators – offline & stop music on far right of title */
