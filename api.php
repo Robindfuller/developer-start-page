@@ -163,12 +163,23 @@ $data = loadData();
 switch ($action) {
     case 'add':
         $categoryId = isset($input['categoryId']) ? $input['categoryId'] : '';
+        $subLinks = array();
+        if (!empty($input['subLinks']) && is_array($input['subLinks'])) {
+            foreach ($input['subLinks'] as $s) {
+                $st = trim(isset($s['title']) ? $s['title'] : '');
+                $su = trim(isset($s['url']) ? $s['url'] : '');
+                if ($st !== '' && $su !== '') {
+                    $subLinks[] = array('title' => $st, 'url' => $su);
+                }
+            }
+        }
         $item = array(
             'id' => generateId(),
             'title' => trim(isset($input['title']) ? $input['title'] : ''),
             'subtitle' => trim(isset($input['subtitle']) ? $input['subtitle'] : ''),
             'url' => trim(isset($input['url']) ? $input['url'] : ''),
             'color' => isset($input['color']) ? $input['color'] : '',
+            'subLinks' => $subLinks,
             'order' => 999
         );
         foreach ($data['categories'] as &$cat) {
@@ -198,6 +209,16 @@ switch ($action) {
                     if (isset($input['subtitle'])) $item['subtitle'] = trim($input['subtitle']);
                     if (isset($input['url'])) $item['url'] = trim($input['url']);
                     if (isset($input['color'])) $item['color'] = $input['color'];
+                    if (isset($input['subLinks']) && is_array($input['subLinks'])) {
+                        $item['subLinks'] = array();
+                        foreach ($input['subLinks'] as $s) {
+                            $st = trim(isset($s['title']) ? $s['title'] : '');
+                            $su = trim(isset($s['url']) ? $s['url'] : '');
+                            if ($st !== '' && $su !== '') {
+                                $item['subLinks'][] = array('title' => $st, 'url' => $su);
+                            }
+                        }
+                    }
                     $found = true;
                     break 2;
                 }

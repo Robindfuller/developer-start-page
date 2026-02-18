@@ -1100,6 +1100,112 @@ if (file_exists($dataFile)) {
     .link-card--accent3 { border-left: 5px solid var(--palette-3); }
     .link-card--accent3:hover { border-left-color: var(--palette-3); }
 
+    .item-type-split {
+      display: inline-flex;
+      margin: 0.75rem 0;
+      background: var(--bevel-dark);
+      border: 2px solid var(--card-border);
+      box-shadow: inset 2px 2px 0 rgba(0,0,0,0.3);
+    }
+    .item-type-segment {
+      flex: 1;
+      min-width: 5rem;
+      padding: 0.5rem 0.85rem;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: transparent;
+      border: none;
+      color: var(--content-muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .item-type-segment:not(:first-child) {
+      border-left: 2px solid var(--card-border);
+    }
+    .item-type-segment:hover {
+      color: var(--content);
+      background: rgba(255,255,255,0.05);
+    }
+    .item-type-segment.active {
+      background: var(--card-bg);
+      color: var(--content);
+      box-shadow: inset 1px 1px 0 var(--bevel-light);
+    }
+    .url-field-wrap { margin-bottom: 0; }
+    .sub-links-section { margin: 1rem 0 0.75rem 0; }
+    .sub-links-hint { font-weight: 400; opacity: 0.75; font-size: 0.75rem; }
+    .sub-links-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 0.5rem 0;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+    .sub-link-row {
+      display: flex;
+      gap: 0.35rem;
+      align-items: center;
+    }
+    .sub-link-row input { flex: 1; margin-bottom: 0; min-width: 0; }
+    .sub-link-row .sub-link-title { flex: 1; }
+    .sub-link-row .sub-link-url { flex: 1.5; }
+    .sub-link-row .sub-link-remove {
+      flex-shrink: 0;
+      width: 1.75rem; height: 1.75rem;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--delete-btn-bg, #dc2626);
+      border: 2px solid var(--delete-btn-border, #992222);
+      color: var(--delete-btn-fg, white);
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+    .sub-link-row .sub-link-remove:hover {
+      background: var(--delete-btn-hover, #b91c1c);
+    }
+    .btn-sub-link-add {
+      padding: 0.35rem 0.6rem;
+      font-size: 0.8rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-sub-link-add:hover {
+      background: var(--card-border);
+      color: var(--button-fg, var(--bg));
+    }
+    .folder-modal .modal { max-width: 420px; }
+    .folder-modal-title { margin-bottom: 0.75rem; }
+    .folder-modal-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      max-height: 320px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    .folder-link-item {
+      display: block;
+      padding: 0.6rem 0.85rem;
+      background: var(--card-bg);
+      border: 2px solid var(--card-border);
+      color: var(--content);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-family: inherit;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .folder-link-item:hover {
+      background: var(--card-border);
+      color: var(--button-fg, var(--bg));
+      border-color: var(--button-bg);
+    }
+
     .link-card-content .link-title {
       display: -webkit-box;
       -webkit-line-clamp: 2; -webkit-box-orient: vertical;
@@ -3651,7 +3757,7 @@ if (file_exists($dataFile)) {
       <div class="help-modal-content">
         <p>Welcome! This is your developer start page. Here&rsquo;s a quick overview:</p>
         <ul>
-          <li><strong>Categories & links</strong> — Click cards to visit; use Edit mode to add, edit, reorder, or delete.</li>
+          <li><strong>Categories & links</strong> — Click cards to visit; add sub-links in edit mode to get a folder modal. Use Edit mode to add, edit, reorder, or delete.</li>
           <li><strong>Scratchpad</strong> — Text notes with checkboxes (<code>[ ]</code> or <code>-</code> for bullets); Basic tab runs a simple BASIC interpreter.</li>
           <li><strong>Daily events</strong> — Edit mode shows &ldquo;Edit blocks&rdquo; to customize your day timeline.</li>
           <li><strong>Charms</strong> — Fullscreen, music, screensaver, theme switcher, and this help.</li>
@@ -3754,8 +3860,19 @@ if (file_exists($dataFile)) {
         <input type="hidden" id="modalCategoryId">
         <label>Title</label>
         <input type="text" id="modalItemTitle" placeholder="Item title" required>
-        <label>URL</label>
-        <input type="text" id="modalItemUrl" placeholder="https://... or gmail.com" required>
+        <div class="item-type-split" role="group" aria-label="Item type">
+          <button type="button" class="item-type-segment active" data-type="link" id="modalItemTypeLink">Link</button>
+          <button type="button" class="item-type-segment" data-type="folder" id="modalItemTypeFolder">Folder</button>
+        </div>
+        <div class="url-field-wrap" id="urlFieldWrap">
+          <label>URL</label>
+          <input type="text" id="modalItemUrl" placeholder="https://...">
+        </div>
+        <div class="sub-links-section" id="subLinksSection" style="display:none">
+          <label>Sub-links</label>
+          <div class="sub-links-list" id="subLinksList"></div>
+          <button type="button" class="btn-sub-link-add" id="addSubLinkBtn">+ Add sub-link</button>
+        </div>
         <label id="colorSelectLabel">Color</label>
         <div class="color-select-wrap">
           <select id="modalItemColor" aria-hidden="true" tabindex="-1" style="position:absolute;opacity:0;pointer-events:none;width:0;height:0">
@@ -3794,6 +3911,16 @@ if (file_exists($dataFile)) {
           <button class="btn-save" type="submit" id="modalSaveBtn">Save</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <div class="modal-overlay folder-modal" id="folderModal">
+    <div class="modal">
+      <h3 class="folder-modal-title" id="folderModalTitle">Links</h3>
+      <div class="folder-modal-links" id="folderModalLinks"></div>
+      <div class="modal-actions">
+        <button class="btn-cancel" type="button" id="folderModalCloseBtn">Close</button>
+      </div>
     </div>
   </div>
 
@@ -4576,9 +4703,14 @@ if (file_exists($dataFile)) {
     function renderCard(item, categoryId) {
       const color = normalizePaletteColor(item.color);
       const colorClass = color ? ' link-card--' + color : '';
+      const subLinks = item.subLinks && Array.isArray(item.subLinks) && item.subLinks.length > 0 ? item.subLinks : [];
+      const hasSubLinks = subLinks.length > 0;
+      const folderClass = hasSubLinks ? ' has-sub-links' : '';
+      const titleTip = hasSubLinks ? 'Click to open folder' : 'Click to visit';
+      const hrefVal = hasSubLinks ? '' : (item.url || '');
       return `
-        <div class="link-card${colorClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${escapeHtml(item.url)}">
-          <div class="link-card-content" title="Double-click to visit">
+        <div class="link-card${colorClass}${folderClass}" data-id="${item.id}" data-category-id="${categoryId}" data-href="${escapeHtml(hrefVal)}">
+          <div class="link-card-content" title="${titleTip}">
             <span class="link-title">${escapeHtml(item.title)}</span>
           </div>
           <div class="link-actions">
@@ -4631,48 +4763,99 @@ if (file_exists($dataFile)) {
             if (confirm('Delete this item?')) deleteItem(btn.closest('.link-card').dataset.id);
           });
         });
+        function runVisitZoomAnimation(contentEl, onComplete) {
+          const rect = contentEl.getBoundingClientRect();
+          const overlay = document.createElement('div');
+          overlay.className = 'visit-zoom-overlay';
+          const box = document.createElement('div');
+          box.className = 'visit-zoom-box';
+          const w = window.innerWidth;
+          const h = window.innerHeight;
+          const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-duration')) * 1000 || 350;
+          const easing = getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-easing').trim() || 'ease-in-out';
+          box.style.left = rect.left + 'px';
+          box.style.top = rect.top + 'px';
+          box.style.width = rect.width + 'px';
+          box.style.height = rect.height + 'px';
+          box.style.transition = 'left ' + (duration / 1000) + 's ' + easing + ', top ' + (duration / 1000) + 's ' + easing + ', width ' + (duration / 1000) + 's ' + easing + ', height ' + (duration / 1000) + 's ' + easing;
+          overlay.appendChild(box);
+          document.body.appendChild(overlay);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              box.style.left = '0';
+              box.style.top = '0';
+              box.style.width = w + 'px';
+              box.style.height = h + 'px';
+            });
+          });
+          setTimeout(() => {
+            overlay.classList.add('zoom-done');
+            if (onComplete) onComplete();
+            setTimeout(() => overlay.remove(), 50);
+          }, duration);
+        }
+        function runVisitZoomToModal(contentEl, targetRect, onComplete) {
+          const rect = contentEl.getBoundingClientRect();
+          const overlay = document.createElement('div');
+          overlay.className = 'visit-zoom-overlay';
+          const box = document.createElement('div');
+          box.className = 'visit-zoom-box';
+          const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-duration')) * 1000 || 350;
+          const easing = getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-easing').trim() || 'ease-in-out';
+          box.style.left = rect.left + 'px';
+          box.style.top = rect.top + 'px';
+          box.style.width = rect.width + 'px';
+          box.style.height = rect.height + 'px';
+          box.style.transition = 'left ' + (duration / 1000) + 's ' + easing + ', top ' + (duration / 1000) + 's ' + easing + ', width ' + (duration / 1000) + 's ' + easing + ', height ' + (duration / 1000) + 's ' + easing;
+          overlay.appendChild(box);
+          document.body.appendChild(overlay);
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              box.style.left = targetRect.left + 'px';
+              box.style.top = targetRect.top + 'px';
+              box.style.width = targetRect.width + 'px';
+              box.style.height = targetRect.height + 'px';
+            });
+          });
+          setTimeout(() => {
+            overlay.classList.add('zoom-done');
+            if (onComplete) onComplete();
+            setTimeout(() => overlay.remove(), 50);
+          }, duration);
+        }
         linksEl.querySelectorAll('.link-card').forEach(card => {
           const content = card.querySelector('.link-card-content');
           if (!content) return;
-          content.addEventListener('dblclick', function(e) {
+          content.addEventListener('click', function(e) {
             if (app.classList.contains('edit-mode')) return;
             e.preventDefault();
-            const href = card.dataset.href;
+            const item = data.categories.flatMap(c => c.items || []).find(i => i.id === card.dataset.id);
+            const subLinks = item && item.subLinks && Array.isArray(item.subLinks) ? item.subLinks : [];
+            if (subLinks.length > 0) {
+              prepareFolderModalContent(card.querySelector('.link-title').textContent, subLinks);
+              const folderModal = document.getElementById('folderModal');
+              const modalInner = folderModal ? folderModal.querySelector('.modal') : null;
+              if (modalInner) {
+                folderModal.classList.add('open');
+                folderModal.style.visibility = 'hidden';
+                const targetRect = modalInner.getBoundingClientRect();
+                folderModal.classList.remove('open');
+                folderModal.style.visibility = '';
+                runVisitZoomToModal(content, targetRect, () => openFolderModal(card.querySelector('.link-title').textContent, subLinks));
+              } else {
+                openFolderModal(card.querySelector('.link-title').textContent, subLinks);
+              }
+              return;
+            }
+            const href = (item && item.url ? item.url : card.dataset.href || '').trim();
             if (!href) return;
-            const rect = content.getBoundingClientRect();
-            const overlay = document.createElement('div');
-            overlay.className = 'visit-zoom-overlay';
-            const box = document.createElement('div');
-            box.className = 'visit-zoom-box';
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            const duration = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-duration')) * 1000 || 350;
-            const easing = getComputedStyle(document.documentElement).getPropertyValue('--visit-zoom-easing').trim() || 'ease-in-out';
-            box.style.left = rect.left + 'px';
-            box.style.top = rect.top + 'px';
-            box.style.width = rect.width + 'px';
-            box.style.height = rect.height + 'px';
-            box.style.transition = 'left ' + (duration / 1000) + 's ' + easing + ', top ' + (duration / 1000) + 's ' + easing + ', width ' + (duration / 1000) + 's ' + easing + ', height ' + (duration / 1000) + 's ' + easing;
-            overlay.appendChild(box);
-            document.body.appendChild(overlay);
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                box.style.left = '0';
-                box.style.top = '0';
-                box.style.width = w + 'px';
-                box.style.height = h + 'px';
-              });
-            });
-            setTimeout(() => {
-              overlay.classList.add('zoom-done');
-              window.open(href, '_blank', 'noopener');
-              setTimeout(() => overlay.remove(), 50);
-            }, duration);
+            runVisitZoomAnimation(content, () => window.open(href, '_blank', 'noopener'));
           });
         });
         sortables.push(new Sortable(linksEl, {
           animation: 150,
           ghostClass: 'sortable-ghost',
+          delay: 200,
           onEnd: () => saveOrder(cat.id, linksEl)
         }));
       });
@@ -4732,6 +4915,28 @@ if (file_exists($dataFile)) {
     }
 
     const editModalTip = document.getElementById('editModalTip');
+    const urlFieldWrap = document.getElementById('urlFieldWrap');
+    const subLinksSection = document.getElementById('subLinksSection');
+    const modalItemTypeLink = document.getElementById('modalItemTypeLink');
+    const modalItemTypeFolder = document.getElementById('modalItemTypeFolder');
+
+    function syncItemTypeUI() {
+      const isFolder = modalItemTypeFolder && modalItemTypeFolder.classList.contains('active');
+      if (urlFieldWrap) urlFieldWrap.style.display = isFolder ? 'none' : '';
+      if (subLinksSection) subLinksSection.style.display = isFolder ? '' : 'none';
+    }
+
+    (function initItemTypeSplit() {
+      [modalItemTypeLink, modalItemTypeFolder].forEach(function(btn) {
+        if (!btn) return;
+        btn.addEventListener('click', function() {
+          modalItemTypeLink.classList.toggle('active', btn === modalItemTypeLink);
+          modalItemTypeFolder.classList.toggle('active', btn === modalItemTypeFolder);
+          syncItemTypeUI();
+        });
+      });
+    })();
+
     function openAddModal(categoryId) {
       modalTitleEl.textContent = 'Add Item';
       modalItemId.value = '';
@@ -4739,6 +4944,10 @@ if (file_exists($dataFile)) {
       modalItemTitle.value = '';
       modalItemUrl.value = '';
       modalItemColor.value = '';
+      if (modalItemTypeLink) modalItemTypeLink.classList.add('active');
+      if (modalItemTypeFolder) modalItemTypeFolder.classList.remove('active');
+      if (window._renderSubLinksList) window._renderSubLinksList([]);
+      syncItemTypeUI();
       if (editModalTip) editModalTip.style.display = 'none';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
@@ -4753,8 +4962,13 @@ if (file_exists($dataFile)) {
       modalItemId.value = itemId;
       modalCategoryId.value = categoryId;
       modalItemTitle.value = item.title;
-      modalItemUrl.value = item.url;
+      modalItemUrl.value = item.url || '';
       modalItemColor.value = normalizePaletteColor(item.color) || '';
+      const hasSubLinks = item.subLinks && item.subLinks.length > 0;
+      if (modalItemTypeLink) modalItemTypeLink.classList.toggle('active', !hasSubLinks);
+      if (modalItemTypeFolder) modalItemTypeFolder.classList.toggle('active', hasSubLinks);
+      if (window._renderSubLinksList) window._renderSubLinksList(item.subLinks || []);
+      syncItemTypeUI();
       if (editModalTip) editModalTip.style.display = 'block';
       if (colorSelectDropdown) colorSelectDropdown.hidden = true;
       if (colorSelectTrigger) colorSelectTrigger.setAttribute('aria-expanded', 'false');
@@ -4766,17 +4980,53 @@ if (file_exists($dataFile)) {
       itemModal.classList.remove('open');
     }
 
+    function prepareFolderModalContent(title, subLinks) {
+      const titleEl = document.getElementById('folderModalTitle');
+      const linksEl = document.getElementById('folderModalLinks');
+      if (!titleEl || !linksEl) return;
+      titleEl.textContent = title || 'Links';
+      const html = subLinks.map(function(s) {
+        const url = (s.url || '').trim();
+        const href = url.startsWith('http') || url.startsWith('//') ? url : 'https://' + url;
+        return '<a class="folder-link-item" href="' + escapeHtml(href) + '" target="_blank" rel="noopener">' + escapeHtml(s.title || 'Link') + '</a>';
+      }).join('');
+      linksEl.innerHTML = html || '<p class="empty-state-msg">No sub-links</p>';
+    }
+    function openFolderModal(title, subLinks) {
+      const modal = document.getElementById('folderModal');
+      if (!modal) return;
+      prepareFolderModalContent(title, subLinks);
+      modal.classList.add('open');
+    }
+    function closeFolderModal() {
+      const modal = document.getElementById('folderModal');
+      if (modal) modal.classList.remove('open');
+    }
+
     function saveItem() {
       const id = modalItemId.value;
       const title = modalItemTitle.value.trim();
       const subtitle = '';
-      const url = modalItemUrl.value.trim();
+      const isFolder = modalItemTypeFolder && modalItemTypeFolder.classList.contains('active');
+      const url = isFolder ? '' : modalItemUrl.value.trim();
       const color = modalItemColor.value;
       const categoryId = modalCategoryId.value;
+      const subLinks = isFolder && window._getSubLinksFromForm ? window._getSubLinksFromForm() : [];
 
-      if (!title || !url) {
-        alert('Title and URL are required');
+      if (!title) {
+        alert('Title is required');
         return;
+      }
+      if (isFolder) {
+        if (subLinks.length === 0) {
+          alert('Add at least one sub-link for folder mode');
+          return;
+        }
+      } else {
+        if (!url) {
+          alert('URL is required for link mode');
+          return;
+        }
       }
 
       function updateLocalEdit() {
@@ -4787,6 +5037,7 @@ if (file_exists($dataFile)) {
             item.subtitle = subtitle;
             item.url = url;
             item.color = color;
+            item.subLinks = subLinks;
             return;
           }
         }
@@ -4801,7 +5052,7 @@ if (file_exists($dataFile)) {
       }
 
       if (id) {
-        api('edit', { id, title, subtitle, url, color })
+        api('edit', { id, title, subtitle, url, color, subLinks })
           .then((res) => {
             if (res && res.success !== false) {
               updateLocalEdit();
@@ -4815,7 +5066,7 @@ if (file_exists($dataFile)) {
             alert('Save failed. ' + (e && e.message ? e.message : 'Check if the server is responding.'));
           });
       } else {
-        api('add', { categoryId, title, subtitle, url, color })
+        api('add', { categoryId, title, subtitle, url, color, subLinks })
           .then((res) => {
             if (res && res.success && res.item) {
               updateLocalAdd(res.item);
@@ -5444,6 +5695,63 @@ if (file_exists($dataFile)) {
       saveItem();
     });
     itemModal.addEventListener('click', e => { if (e.target === itemModal) closeModal(); });
+
+    (function initSubLinks() {
+      const subLinksList = document.getElementById('subLinksList');
+      const addSubLinkBtn = document.getElementById('addSubLinkBtn');
+      if (!subLinksList || !addSubLinkBtn) return;
+      function renderSubLinksList(items) {
+        subLinksList.innerHTML = (items || []).map(function(s, i) {
+          return '<div class="sub-link-row" data-index="' + i + '">' +
+            '<input type="text" class="sub-link-title" placeholder="Title" value="' + escapeHtml(s.title || '') + '">' +
+            '<input type="text" class="sub-link-url" placeholder="URL" value="' + escapeHtml(s.url || '') + '">' +
+            '<button type="button" class="sub-link-remove" aria-label="Remove">✕</button>' +
+            '</div>';
+        }).join('');
+        subLinksList.querySelectorAll('.sub-link-remove').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var row = btn.closest('.sub-link-row');
+            if (row) row.remove();
+          });
+        });
+      }
+      function getSubLinksFromForm() {
+        var rows = subLinksList.querySelectorAll('.sub-link-row');
+        var out = [];
+        rows.forEach(function(row) {
+          var title = (row.querySelector('.sub-link-title') || {}).value || '';
+          var url = (row.querySelector('.sub-link-url') || {}).value || '';
+          title = title.trim();
+          url = url.trim();
+          if (title && url) out.push({ title: title, url: url });
+        });
+        return out;
+      }
+      addSubLinkBtn.addEventListener('click', function() {
+        var div = document.createElement('div');
+        div.className = 'sub-link-row';
+        div.innerHTML = '<input type="text" class="sub-link-title" placeholder="Title">' +
+          '<input type="text" class="sub-link-url" placeholder="URL">' +
+          '<button type="button" class="sub-link-remove" aria-label="Remove">✕</button>';
+        div.querySelector('.sub-link-remove').addEventListener('click', function() { div.remove(); });
+        subLinksList.appendChild(div);
+      });
+      window._renderSubLinksList = renderSubLinksList;
+      window._getSubLinksFromForm = getSubLinksFromForm;
+    })();
+
+    document.getElementById('folderModalCloseBtn').addEventListener('click', closeFolderModal);
+    document.getElementById('folderModal').addEventListener('click', function(e) {
+      if (e.target.id === 'folderModal') closeFolderModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        if (document.getElementById('folderModal').classList.contains('open')) {
+          closeFolderModal();
+          e.preventDefault();
+        }
+      }
+    });
 
     document.getElementById('categoryModalCancelBtn').addEventListener('click', closeCategoryModal);
     document.getElementById('categoryForm').addEventListener('submit', function(e) {
