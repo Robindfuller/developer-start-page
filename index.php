@@ -5562,6 +5562,11 @@ if (file_exists($dataFile)) {
       }
       function deserializeTextEditor(text) {
         const lines = (text || '').split(/\r?\n/);
+        const hasContent = lines.some(function(line) { return line.trim().length > 0; });
+        if (!hasContent) {
+          textEl.innerHTML = '';
+          return;
+        }
         const frag = document.createDocumentFragment();
         lines.forEach(function(line) {
           const div = document.createElement('div');
