@@ -3677,8 +3677,8 @@ if (file_exists($dataFile)) {
       image-rendering: crisp-edges;
     }
 
-    /* Responsive: narrow viewport / mobile – links as list, progress bar full width */
-    @media (max-width: 768px) {
+    /* Responsive: narrow viewport / mobile – links as list when narrower than five boxes (56rem) + app padding (4rem) */
+    @media (max-width: 60rem) {
       .app { padding: 1rem; }
       .sidebar { max-width: none; }
       .category-row {
