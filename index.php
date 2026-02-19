@@ -3676,6 +3676,69 @@ if (file_exists($dataFile)) {
       image-rendering: pixelated;
       image-rendering: crisp-edges;
     }
+
+    /* Responsive: narrow viewport / mobile – links as list, progress bar full width */
+    @media (max-width: 768px) {
+      .app { padding: 1rem; }
+      .sidebar { max-width: none; }
+      .category-row {
+        flex-direction: column;
+        flex-wrap: wrap;
+      }
+      .category-row--shared {
+        flex-direction: column;
+      }
+      .category-row--shared section {
+        flex: 1 1 100%;
+        width: 100%;
+      }
+      .category-row--shared section .links {
+        width: 100%;
+      }
+      .category-row--shared .links {
+        flex-direction: column;
+        flex-wrap: wrap;
+        overflow: visible;
+      }
+      .category-row--shared .link-card {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: none !important;
+      }
+      .links {
+        flex-direction: column;
+        flex-wrap: wrap;
+        overflow: visible;
+        scroll-snap-type: none;
+      }
+      .link-card {
+        flex: 1 1 100%;
+        width: 100%;
+        min-width: 0;
+        aspect-ratio: auto;
+        min-height: 2.5rem;
+      }
+      .midi-progress-wrap {
+        width: 100%;
+      }
+      .midi-progress-bar {
+        width: 100%;
+      }
+      .charms-menu {
+        top: 1rem;
+        left: 1rem;
+        bottom: auto;
+        flex-direction: column-reverse;
+      }
+      .charms-menu .charms-tray {
+        transform: translateY(-0.5rem);
+      }
+      .charms-menu:hover .charms-tray,
+      .charms-menu:focus-within .charms-tray {
+        transform: translateY(0);
+      }
+    }
   </style>
 </head>
 <body>
